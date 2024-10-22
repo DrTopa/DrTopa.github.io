@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 80%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+
+        #logoutBtn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Leaderboard</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>High Score</th>
+            </tr>
+        </thead>
+        <tbody id="leaderboard">
+            <!-- Leaderboard entries will be added here dynamically -->
+        </tbody>
+    </table>
+
+    <button id="logoutBtn" onclick="logout()">Log Out</button>
+
+    <script>
+        // Check if user is logged in
+        const currentUser = localStorage.getItem('currentUser');
+        if (!currentUser) {
+            alert('You are not logged in. Redirecting to login page...');
+            window.location.href = 'login.html'; // Redirect to login if not logged in
+        }
+
+        function displayLeaderboard() {
+            const leaderboard = document.getElementById('leaderboard');
+            leaderboard.innerHTML = ''; // Clear existing entries
+            const scores = {};
+
+            // Iterate through localStorage to get scores
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                // Match keys that store game1 scores
+                if (key.endsWith('_game1_score')) {
+                    const username = key.split('_')[0]; // Get the username
+                    const score = parseInt(localStorage.getItem(key), 10);
+                    scores[username] = score; // Store scores in an object
+                }
+            }
+
+            // Sort scores in descending order
+            const sortedScores = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+
+            // Populate the leaderboard
+            sortedScores.forEach(([username, score]) => {
+                const row = leaderboard.insertRow();
+                row.insertCell(0).innerText = username;
+                row.insertCell(1).innerText = score;
+            });
+        }
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            alert('You have been logged out.');
+            window.location.href = 'login.html';
+        }
+
+        // Display the leaderboard when the page loads
+        window.onload = displayLeaderboard;
+    </script>
+
+</body>
+</html>
