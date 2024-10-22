@@ -3,69 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game 1</title>
+    <title>Game 1 - Button Press</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
+            flex-direction: column;
             height: 100vh;
-            background-color: #f7f7f7;
+            background-color: #f0f0f0;
             margin: 0;
         }
 
         h1 {
-            font-size: 3em;
-            color: #333;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        #score {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+
+        #pressButton {
+            padding: 15px 30px;
+            font-size: 1.5em;
+            cursor: pointer;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+
+        #pressButton:hover {
+            background-color: #0056b3;
+        }
+
+        #message {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: red;
         }
     </style>
 </head>
 <body>
 
-    <h1>Welcome to Game 1!</h1>
-
-</body>
-</html>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game 1</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f7f7f7;
-            margin: 0;
-        }
-
-        h1 {
-            font-size: 3em;
-            color: #333;
-        }
-    </style>
-</head>
-<body>
-
-    <h1>Welcome to Game 1!</h1>
+    <h1>Press the Button Game!</h1>
+    <div id="score">Score: 0</div>
+    <button id="pressButton">Press Me!</button>
+    <div id="message"></div>
 
     <script>
+        let score = 0;
+        let attempts = 0;
+        const maxAttempts = 2;
+        let countdown;
+
         // Check if user is logged in
         const currentUser = localStorage.getItem('currentUser');
-
         if (!currentUser) {
-            // If no user is logged in, redirect to the login page
             alert('You are not logged in. Redirecting to login page...');
-            window.location.href = 'login.html';
+            window.location.href = 'login.html'; // Redirect to login if not logged in
         }
+
+        // Button click event
+        document.getElementById('pressButton').addEventListener('click', function() {
+            if (attempts < maxAttempts) {
+                score++;
+                document.getElementById('score').innerText = `Score: ${score}`;
+            }
+        });
+
+        function startGame() {
+            score = 0;
+            document.getElementById('score').innerText = `Score: ${score}`;
+            document.getElementById('message').innerText = '';
+
+            // Start countdown
+            countdown = setTimeout(endGame, 30000); // 30 seconds
+        }
+
+        function endGame() {
+            attempts++;
+            clearTimeout(countdown);
+            if (attempts < maxAttempts) {
+                document.getElementById('message').innerText = `Time's up! Your score: ${score}. You have ${maxAttempts - attempts} attempt(s) left.`;
+                setTimeout(startGame, 2000); // Restart the game after 2 seconds
+            } else {
+                document.getElementById('message').innerText = `Game over! Your final score: ${score}.`;
+                recordScore(score);
+            }
+        }
+
+        function recordScore(finalScore) {
+            const user = localStorage.getItem('currentUser');
+            if (user) {
+                let highScore = localStorage.getItem(`${user}_game1_score`) || 0;
+                if (finalScore > highScore) {
+                    localStorage.setItem(`${user}_game1_score`, finalScore);
+                }
+            }
+        }
+
+        // Start the game when the page loads
+        window.onload = startGame;
     </script>
 
 </body>
 </html>
-
