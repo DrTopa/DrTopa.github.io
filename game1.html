@@ -75,12 +75,8 @@
 
     <script>
         let score = 0;
-        let attempts = 0;
-        const maxAttempts = 2; // Max attempts for improving score
-        let gameCount = 0; // Track the number of games played
         let countdown;
         let timeLeft = 10;
-        let gameStarted = false; // Track whether the game has started
 
         // Check if user is logged in
         const currentUser = localStorage.getItem('currentUser');
@@ -90,19 +86,19 @@
         }
 
         // Retrieve the number of games played from local storage
-        gameCount = parseInt(localStorage.getItem(`${currentUser}_game1_play_count`) || 0);
+        let gameCount = parseInt(localStorage.getItem(`${currentUser}_game1_play_count`) || 0);
+
+        // Check if the user has already played the game twice
+        if (gameCount >= 2) {
+            document.getElementById('message').innerText = 'You have already played this game too many times.';
+            document.getElementById('pressButton').disabled = true; // Disable the button
+            return; // Exit the script
+        }
 
         // Button click event to start the game
         document.getElementById('pressButton').addEventListener('click', function() {
-            if (!gameStarted) {
-                startGame(); // Start game only on first button press
-                gameStarted = true; // Set game started to true
-            }
-
-            if (timeLeft > 0) {
-                score++;
-                document.getElementById('score').innerText = `Score: ${score}`;
-            }
+            // Start the game only on first button press
+            startGame();
         });
 
         function startGame() {
@@ -121,43 +117,29 @@
                     endGame();
                 }
             }, 1000); // Update every second
+
+            // Enable button click tracking
+            document.getElementById('pressButton').onclick = function() {
+                if (timeLeft > 0) {
+                    score++;
+                    document.getElementById('score').innerText = `Score: ${score}`;
+                }
+            };
         }
 
         function endGame() {
             clearInterval(countdown);
-            gameCount++;
-            attempts++;
+            gameCount++; // Increment game count
+            localStorage.setItem(`${currentUser}_game1_play_count`, gameCount); // Update games played
+
+            // Show message and record score
             document.getElementById('message').innerText = `Time's up! Your score: ${score}.`;
 
-            // Update games played in local storage
-            localStorage.setItem(`${currentUser}_game1_play_count`, gameCount);
+            recordScore(score);
 
-            // Record score only if under the max attempts
-            if (attempts <= maxAttempts) {
-                recordScore(score);
-            } else {
-                document.getElementById('message').innerText += ' You cannot improve your score anymore.';
-            }
-
-            // Show number of attempts left
-            if (attempts < maxAttempts) {
-                document.getElementById('message').innerText += ` You have ${maxAttempts - attempts} attempt(s) left.`;
-                setTimeout(() => {
-                    document.getElementById('message').innerText = ''; // Clear message
-                    resetGame(); // Reset game state for the next attempt
-                }, 2000); // Restart after 2 seconds
-            } else {
-                document.getElementById('message').innerText += ' Game over!';
-                document.getElementById('pressButton').disabled = true; // Disable the button
-            }
-        }
-
-        function resetGame() {
-            score = 0;
-            timeLeft = 10;
-            gameStarted = false; // Allow the game to start again
-            document.getElementById('score').innerText = `Score: ${score}`;
-            document.getElementById('countdown').innerText = `Time Left: ${timeLeft}`;
+            // Disable the button and show game over message
+            document.getElementById('pressButton').disabled = true; // Disable the button
+            document.getElementById('message').innerText += ' Game over!';
         }
 
         function recordScore(finalScore) {
@@ -170,10 +152,7 @@
                 }
             }
         }
-
-        // Start the game when the page loads (but only after the first click)
     </script>
 
 </body>
 </html>
-
