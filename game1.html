@@ -51,22 +51,34 @@
             font-size: 1.2em;
             color: red;
         }
+
+        #leaderboardLink {
+            margin-top: 20px;
+            font-size: 1.2em;
+            cursor: pointer;
+            color: blue;
+        }
+
+        #leaderboardLink:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
 
     <h1>Press the Button Game!</h1>
-    <div id="countdown">Time Left: 30</div>
+    <div id="countdown">Time Left: 10</div>
     <div id="score">Score: 0</div>
     <button id="pressButton">Press Me!</button>
     <div id="message"></div>
+    <div id="leaderboardLink" onclick="window.location.href='leaderboard.html';">View Leaderboard</div>
 
     <script>
         let score = 0;
         let attempts = 0;
         const maxAttempts = 2;
         let countdown;
-        let timeLeft = 30;
+        let timeLeft = 10;
 
         // Check if user is logged in
         const currentUser = localStorage.getItem('currentUser');
@@ -77,7 +89,7 @@
 
         // Button click event
         document.getElementById('pressButton').addEventListener('click', function() {
-            if (attempts < maxAttempts && timeLeft > 0) {
+            if (timeLeft > 0) {
                 score++;
                 document.getElementById('score').innerText = `Score: ${score}`;
             }
@@ -85,7 +97,7 @@
 
         function startGame() {
             score = 0;
-            timeLeft = 30;
+            timeLeft = 10;
             document.getElementById('score').innerText = `Score: ${score}`;
             document.getElementById('countdown').innerText = `Time Left: ${timeLeft}`;
             document.getElementById('message').innerText = '';
@@ -102,14 +114,21 @@
         }
 
         function endGame() {
-            attempts++;
             clearInterval(countdown);
+            attempts++;
+            document.getElementById('message').innerText = `Time's up! Your score: ${score}.`;
+
+            // Record score
+            recordScore(score);
+
             if (attempts < maxAttempts) {
-                document.getElementById('message').innerText = `Time's up! Your score: ${score}. You have ${maxAttempts - attempts} attempt(s) left.`;
-                setTimeout(startGame, 2000); // Restart the game after 2 seconds
+                document.getElementById('message').innerText += ` You have ${maxAttempts - attempts} attempt(s) left.`;
+                setTimeout(() => {
+                    document.getElementById('message').innerText = ''; // Clear message
+                    startGame(); // Restart the game
+                }, 2000); // Restart after 2 seconds
             } else {
-                document.getElementById('message').innerText = `Game over! Your final score: ${score}.`;
-                recordScore(score);
+                document.getElementById('message').innerText += ' Game over!';
                 document.getElementById('pressButton').disabled = true; // Disable the button
             }
         }
