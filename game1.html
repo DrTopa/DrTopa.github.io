@@ -80,6 +80,7 @@
         let gameCount = 0; // Track the number of games played
         let countdown;
         let timeLeft = 10;
+        let gameStarted = false; // Track whether the game has started
 
         // Check if user is logged in
         const currentUser = localStorage.getItem('currentUser');
@@ -93,8 +94,9 @@
 
         // Button click event to start the game
         document.getElementById('pressButton').addEventListener('click', function() {
-            if (timeLeft === 10) {
+            if (!gameStarted) {
                 startGame(); // Start game only on first button press
+                gameStarted = true; // Set game started to true
             }
 
             if (timeLeft > 0) {
@@ -127,7 +129,7 @@
             attempts++;
             document.getElementById('message').innerText = `Time's up! Your score: ${score}.`;
 
-            // Record score if under the max attempts
+            // Record score only if under the max attempts
             if (attempts <= maxAttempts) {
                 recordScore(score);
             } else {
@@ -142,12 +144,20 @@
                 document.getElementById('message').innerText += ` You have ${maxAttempts - attempts} attempt(s) left.`;
                 setTimeout(() => {
                     document.getElementById('message').innerText = ''; // Clear message
-                    startGame(); // Restart the game
+                    resetGame(); // Reset game state for the next attempt
                 }, 2000); // Restart after 2 seconds
             } else {
                 document.getElementById('message').innerText += ' Game over!';
                 document.getElementById('pressButton').disabled = true; // Disable the button
             }
+        }
+
+        function resetGame() {
+            score = 0;
+            timeLeft = 10;
+            gameStarted = false; // Allow the game to start again
+            document.getElementById('score').innerText = `Score: ${score}`;
+            document.getElementById('countdown').innerText = `Time Left: ${timeLeft}`;
         }
 
         function recordScore(finalScore) {
