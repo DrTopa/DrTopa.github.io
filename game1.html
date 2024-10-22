@@ -27,3 +27,45 @@
 
 </body>
 </html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game 1</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f7f7f7;
+            margin: 0;
+        }
+
+        h1 {
+            font-size: 3em;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Welcome to Game 1!</h1>
+
+    <script>
+        // Check if user is logged in
+        const currentUser = localStorage.getItem('currentUser');
+
+        if (!currentUser) {
+            // If no user is logged in, redirect to the login page
+            alert('You are not logged in. Redirecting to login page...');
+            window.location.href = 'login.html';
+        }
+    </script>
+
+</body>
+</html>
+
