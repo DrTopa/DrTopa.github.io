@@ -14,6 +14,7 @@
             height: 100vh;
             background-color: #f0f0f0;
             margin: 0;
+            position: relative; /* Added for positioning the version number */
         }
 
         h1 {
@@ -62,6 +63,15 @@
         #leaderboardLink:hover {
             text-decoration: underline;
         }
+
+        /* New styles for version number */
+        #version {
+            position: absolute; /* Position it absolutely within the body */
+            top: 10px; /* Distance from the top */
+            right: 10px; /* Distance from the right */
+            font-size: 1em; /* Font size */
+            color: #555; /* Text color */
+        }
     </style>
 </head>
 <body>
@@ -72,6 +82,9 @@
     <button id="pressButton">Press Me!</button>
     <div id="message"></div>
     <div id="leaderboardLink" onclick="window.location.href='leaderboard.html';">View Leaderboard</div>
+
+    <!-- Version number display -->
+    <div id="version">Version 1.0</div>
 
     <script>
         let score = 0;
