@@ -79,6 +79,8 @@
             // Check if username exists in the dataset
             if (users.includes(username)) {
                 alert('Login successful!');
+                // Store the logged-in user
+                localStorage.setItem('currentUser', username);
                 // Redirect to the homepage (you can change this to your home page URL)
                 window.location.href = 'index.html';
             } else {
