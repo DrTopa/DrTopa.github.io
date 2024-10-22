@@ -97,13 +97,20 @@
 
         // Button click event to start the game
         document.getElementById('pressButton').addEventListener('click', function() {
-            // Start the game only on first button press
-            startGame();
+            // Start the game only on first button press if not already playing
+            if (timeLeft === 10) { // If the game is not already running
+                startGame();
+            }
+            // Increase score on button press
+            if (timeLeft > 0) {
+                score++;
+                document.getElementById('score').innerText = `Score: ${score}`;
+            }
         });
 
         function startGame() {
-            score = 0;
-            timeLeft = 10;
+            score = 0; // Reset score
+            timeLeft = 10; // Reset timer
             document.getElementById('score').innerText = `Score: ${score}`;
             document.getElementById('countdown').innerText = `Time Left: ${timeLeft}`;
             document.getElementById('message').innerText = '';
@@ -117,14 +124,6 @@
                     endGame();
                 }
             }, 1000); // Update every second
-
-            // Enable button click tracking
-            document.getElementById('pressButton').onclick = function() {
-                if (timeLeft > 0) {
-                    score++;
-                    document.getElementById('score').innerText = `Score: ${score}`;
-                }
-            };
         }
 
         function endGame() {
@@ -146,8 +145,8 @@
             const user = localStorage.getItem('currentUser');
             if (user) {
                 let highScore = localStorage.getItem(`${user}_game1_score`) || 0;
-                // Only update score if it's higher than the existing score
-                if (finalScore > highScore) {
+                // Only update score if it's higher than the existing score and game count is less than 2
+                if (finalScore > highScore && gameCount < 2) {
                     localStorage.setItem(`${user}_game1_score`, finalScore);
                 }
             }
@@ -156,3 +155,4 @@
 
 </body>
 </html>
+
