@@ -76,7 +76,8 @@
     <script>
         let score = 0;
         let attempts = 0;
-        const maxAttempts = 2;
+        const maxAttempts = 2; // Max attempts for improving score
+        let gameCount = 0; // Track the number of games played
         let countdown;
         let timeLeft = 10;
 
@@ -87,8 +88,15 @@
             window.location.href = 'login.html'; // Redirect to login if not logged in
         }
 
-        // Button click event
+        // Retrieve the number of games played from local storage
+        gameCount = parseInt(localStorage.getItem(`${currentUser}_game1_play_count`) || 0);
+
+        // Button click event to start the game
         document.getElementById('pressButton').addEventListener('click', function() {
+            if (timeLeft === 10) {
+                startGame(); // Start game only on first button press
+            }
+
             if (timeLeft > 0) {
                 score++;
                 document.getElementById('score').innerText = `Score: ${score}`;
@@ -115,12 +123,21 @@
 
         function endGame() {
             clearInterval(countdown);
+            gameCount++;
             attempts++;
             document.getElementById('message').innerText = `Time's up! Your score: ${score}.`;
 
-            // Record score
-            recordScore(score);
+            // Record score if under the max attempts
+            if (attempts <= maxAttempts) {
+                recordScore(score);
+            } else {
+                document.getElementById('message').innerText += ' You cannot improve your score anymore.';
+            }
 
+            // Update games played in local storage
+            localStorage.setItem(`${currentUser}_game1_play_count`, gameCount);
+
+            // Show number of attempts left
             if (attempts < maxAttempts) {
                 document.getElementById('message').innerText += ` You have ${maxAttempts - attempts} attempt(s) left.`;
                 setTimeout(() => {
@@ -143,9 +160,9 @@
             }
         }
 
-        // Start the game when the page loads
-        window.onload = startGame;
+        // Start the game when the page loads (but only after the first click)
     </script>
 
 </body>
 </html>
+
