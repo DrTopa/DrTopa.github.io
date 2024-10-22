@@ -8,9 +8,9 @@
         body {
             font-family: Arial, sans-serif;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            flex-direction: column;
             height: 100vh;
             background-color: #f0f0f0;
             margin: 0;
@@ -35,8 +35,14 @@
             background-color: #218838;
         }
 
+        .container {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr); /* 8 columns */
+            gap: 10px; /* Space between boxes */
+            margin-bottom: 20px; /* Space for leaderboard button */
+        }
+
         .box {
-            width: 60px;
             height: 60px;
             background-color: #007BFF;
             color: white;
@@ -44,7 +50,6 @@
             justify-content: center;
             align-items: center;
             font-size: 1.5em;
-            margin: 10px;
             cursor: pointer;
             border-radius: 5px;
             transition: background-color 0.3s;
@@ -63,12 +68,34 @@
         #leaderboardBox:hover {
             background-color: #e0a800;
         }
+
+        #logoutButton {
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        #logoutButton:hover {
+            background-color: #c82333;
+        }
+
+        .welcome {
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
 
     <h1>Calendrier de l'Avent</h1>
-    <div>
+
+    <div class="welcome" id="welcomeMessage"></div>
+
+    <div class="container">
         <div class="box" onclick="window.location.href='game1.html';">1</div>
         <div class="box" onclick="window.location.href='game2.html';">2</div>
         <div class="box" onclick="window.location.href='game3.html';">3</div>
@@ -96,11 +123,22 @@
         <div id="leaderboardBox" class="box" onclick="window.location.href='leaderboard.html';">Leaderboard</div>
     </div>
 
+    <button id="logoutButton" onclick="logout()">Log Out</button>
+
     <script>
         // Display the logged-in user's name
         const currentUser = localStorage.getItem('currentUser');
         if (currentUser) {
-            document.body.insertAdjacentHTML('afterbegin', `<h2 style="text-align:center;">Welcome, ${currentUser}!</h2>`);
+            document.getElementById('welcomeMessage').innerText = `Welcome, ${currentUser}!`;
+        } else {
+            alert('You are not logged in. Redirecting to login page...');
+            window.location.href = 'login.html'; // Redirect to login if not logged in
+        }
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            alert('You have logged out. Redirecting to login page...');
+            window.location.href = 'login.html'; // Redirect to login after logout
         }
     </script>
 
