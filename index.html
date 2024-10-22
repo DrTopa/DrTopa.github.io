@@ -5,105 +5,91 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Advent Calendar</title>
     <style>
-        /* Basic Styling for the Page */
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
             display: flex;
             justify-content: center;
             align-items: center;
+            flex-direction: column;
             height: 100vh;
+            background-color: #f0f0f0;
             margin: 0;
         }
 
-        /* Styling for the Container */
-        .calendar-container {
-            display: grid;
-            grid-template-columns: repeat(6, 100px);
-            grid-template-rows: repeat(4, 100px);
-            gap: 20px;
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
         }
 
-        /* Styling for each box */
-        .calendar-box {
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 10px;
+        }
+
+        .box {
+            width: 100px;
+            height: 100px;
             display: flex;
             justify-content: center;
             align-items: center;
             background-color: #007BFF;
             color: white;
-            font-size: 24px;
-            font-weight: bold;
-            text-align: center;
+            font-size: 1.5em;
             border-radius: 10px;
             cursor: pointer;
             text-decoration: none;
-            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
         }
 
-        .calendar-box:hover {
+        .box:hover {
             background-color: #0056b3;
         }
+
+        .logout-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
 
-    <div class="calendar-container">
-        <!-- Creating 24 Boxes -->
-        <a href="game1.html" class="calendar-box">1</a>
-        <a href="game2.html" class="calendar-box">2</a>
-        <a href="game3.html" class="calendar-box">3</a>
-        <a href="game4.html" class="calendar-box">4</a>
-        <a href="game5.html" class="calendar-box">5</a>
-        <a href="game6.html" class="calendar-box">6</a>
-        <a href="game7.html" class="calendar-box">7</a>
-        <a href="game8.html" class="calendar-box">8</a>
-        <a href="game9.html" class="calendar-box">9</a>
-        <a href="game10.html" class="calendar-box">10</a>
-        <a href="game11.html" class="calendar-box">11</a>
-        <a href="game12.html" class="calendar-box">12</a>
-        <a href="game13.html" class="calendar-box">13</a>
-        <a href="game14.html" class="calendar-box">14</a>
-        <a href="game15.html" class="calendar-box">15</a>
-        <a href="game16.html" class="calendar-box">16</a>
-        <a href="game17.html" class="calendar-box">17</a>
-        <a href="game18.html" class="calendar-box">18</a>
-        <a href="game19.html" class="calendar-box">19</a>
-        <a href="game20.html" class="calendar-box">20</a>
-        <a href="game21.html" class="calendar-box">21</a>
-        <a href="game22.html" class="calendar-box">22</a>
-        <a href="game23.html" class="calendar-box">23</a>
-        <a href="game24.html" class="calendar-box">24</a>
+    <h1>Advent Calendar</h1>
+
+    <div class="calendar">
+        <!-- Create 24 boxes with links to the respective game pages -->
+        <a href="game1.html" class="box">1</a>
+        <a href="game2.html" class="box">2</a>
+        <a href="game3.html" class="box">3</a>
+        <a href="game4.html" class="box">4</a>
+        <a href="game5.html" class="box">5</a>
+        <a href="game6.html" class="box">6</a>
+        <a href="game7.html" class="box">7</a>
+        <a href="game8.html" class="box">8</a>
+        <a href="game9.html" class="box">9</a>
+        <a href="game10.html" class="box">10</a>
+        <a href="game11.html" class="box">11</a>
+        <a href="game12.html" class="box">12</a>
+        <a href="game13.html" class="box">13</a>
+        <a href="game14.html" class="box">14</a>
+        <a href="game15.html" class="box">15</a>
+        <a href="game16.html" class="box">16</a>
+        <a href="game17.html" class="box">17</a>
+        <a href="game18.html" class="box">18</a>
+        <a href="game19.html" class="box">19</a>
+        <a href="game20.html" class="box">20</a>
+        <a href="game21.html" class="box">21</a>
+        <a href="game22.html" class="box">22</a>
+        <a href="game23.html" class="box">23</a>
+        <a href="game24.html" class="box">24</a>
     </div>
 
-</body>
-</html>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game 1</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f7f7f7;
-            margin: 0;
-        }
-
-        h1 {
-            font-size: 3em;
-            color: #333;
-        }
-    </style>
-</head>
-<body>
-
-    <h1>Welcome to Game 1!</h1>
+    <!-- Logout button -->
+    <button class="logout-btn" onclick="logout()">Log Out</button>
 
     <script>
         // Check if user is logged in
@@ -112,6 +98,13 @@
         if (!currentUser) {
             // If no user is logged in, redirect to the login page
             alert('You are not logged in. Redirecting to login page...');
+            window.location.href = 'login.html';
+        }
+
+        // Logout function to clear currentUser and redirect to login
+        function logout() {
+            localStorage.removeItem('currentUser');
+            alert('You have been logged out.');
             window.location.href = 'login.html';
         }
     </script>
