@@ -84,7 +84,7 @@
     <div id="leaderboardLink" onclick="window.location.href='leaderboard.html';">View Leaderboard</div>
 
     <!-- Version number display -->
-    <div id="version">Version 1.1</div>
+    <div id="version">Version 1.2</div>
 
     <script>
         let score = 0;
@@ -129,10 +129,10 @@
 
             // Start countdown
             countdown = setInterval(() => {
-                timeLeft--;
-                document.getElementById('countdown').innerText = `Time Left: ${timeLeft}`;
-
-                if (timeLeft <= 0) {
+                if (timeLeft > 0) {
+                    timeLeft--;
+                    document.getElementById('countdown').innerText = `Time Left: ${timeLeft}`;
+                } else {
                     endGame();
                 }
             }, 1000); // Update every second
@@ -167,4 +167,3 @@
 
 </body>
 </html>
-
