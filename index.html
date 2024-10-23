@@ -89,46 +89,46 @@
   
   <!-- Box Grid -->
   <div class="box-grid">
-    <div class="box" onclick="goToGame(1)">1</div>
-    <div class="box" onclick="goToGame(2)">2</div>
-    <div class="box" onclick="goToGame(3)">3</div>
-    <div class="box" onclick="goToGame(4)">4</div>
-    <div class="box" onclick="goToGame(5)">5</div>
-    <div class="box" onclick="goToGame(6)">6</div>
-    <div class="box" onclick="goToGame(7)">7</div>
-    <div class="box" onclick="goToGame(8)">8</div>
-    <div class="box" onclick="goToGame(9)">9</div>
-    <div class="box" onclick="goToGame(10)">10</div>
-    <div class="box" onclick="goToGame(11)">11</div>
-    <div class="box" onclick="goToGame(12)">12</div>
-    <div class="box" onclick="goToGame(13)">13</div>
-    <div class="box" onclick="goToGame(14)">14</div>
-    <div class="box" onclick="goToGame(15)">15</div>
-    <div class="box" onclick="goToGame(16)">16</div>
-    <div class="box" onclick="goToGame(17)">17</div>
-    <div class="box" onclick="goToGame(18)">18</div>
-    <div class="box" onclick="goToGame(19)">19</div>
-    <div class="box" onclick="goToGame(20)">20</div>
-    <div class="box" onclick="goToGame(21)">21</div>
-    <div class="box" onclick="goToGame(22)">22</div>
-    <div class="box" onclick="goToGame(23)">23</div>
-    <div class="box" onclick="goToGame(24)">24</div>
+    <div class="box" data-game="1">1</div>
+    <div class="box" data-game="2">2</div>
+    <div class="box" data-game="3">3</div>
+    <div class="box" data-game="4">4</div>
+    <div class="box" data-game="5">5</div>
+    <div class="box" data-game="6">6</div>
+    <div class="box" data-game="7">7</div>
+    <div class="box" data-game="8">8</div>
+    <div class="box" data-game="9">9</div>
+    <div class="box" data-game="10">10</div>
+    <div class="box" data-game="11">11</div>
+    <div class="box" data-game="12">12</div>
+    <div class="box" data-game="13">13</div>
+    <div class="box" data-game="14">14</div>
+    <div class="box" data-game="15">15</div>
+    <div class="box" data-game="16">16</div>
+    <div class="box" data-game="17">17</div>
+    <div class="box" data-game="18">18</div>
+    <div class="box" data-game="19">19</div>
+    <div class="box" data-game="20">20</div>
+    <div class="box" data-game="21">21</div>
+    <div class="box" data-game="22">22</div>
+    <div class="box" data-game="23">23</div>
+    <div class="box" data-game="24">24</div>
   </div>
 
   <!-- Leaderboard Button -->
-  <div id="leaderboard" onclick="goToLeaderboard()">Leaderboard</div>
+  <div id="leaderboard">Leaderboard</div>
 
   <!-- Signup Button -->
-  <button onclick="showSignupForm()">Create Account</button>
+  <button id="signup-btn">Create Account</button>
   <!-- Login Button -->
-  <button onclick="showLoginForm()">Log In</button>
+  <button id="login-btn">Log In</button>
 
   <!-- Signup Form -->
   <div id="signup-form">
     <h2>Create Account</h2>
     <input class="form-input" type="email" id="signup-email" placeholder="Email" required>
     <input class="form-input" type="password" id="signup-password" placeholder="Password" required>
-    <button onclick="signUp()">Create Account</button>
+    <button id="create-account-btn">Create Account</button>
     <div id="message"></div>
   </div>
 
@@ -137,7 +137,7 @@
     <h2>Login</h2>
     <input class="form-input" type="email" id="login-email" placeholder="Email" required>
     <input class="form-input" type="password" id="login-password" placeholder="Password" required>
-    <button onclick="logIn()">Log In</button>
+    <button id="login-account-btn">Log In</button>
     <div id="message"></div>
   </div>
 
@@ -145,7 +145,7 @@
   <div class="version">V1.0</div>
 
   <!-- Import Firebase SDKs -->
-  <script type="module">
+  <script defer type="module">
     // Import the functions you need from the SDKs you need
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-analytics.js";
@@ -156,7 +156,7 @@
       apiKey: "AIzaSyC4bjg7lVwd8FU8MREaPhBsBENv5qmiYYM",
       authDomain: "calendrier-de-l-avent-54e3a.firebaseapp.com",
       projectId: "calendrier-de-l-avent-54e3a",
-      storageBucket: "calendrier-de-l-avent-54e3a",
+      storageBucket: "calendrier-de-l-avent-54e3a.appspot.com",
       messagingSenderId: "850639567855",
       appId: "1:850639567855:web:0d799a1ecca005fcff141a",
       measurementId: "G-PC1W7RYVEH"
@@ -167,61 +167,71 @@
     const analytics = getAnalytics(app);
     const auth = getAuth(app);
 
-    // Show the signup form
-    function showSignupForm() {
-      document.getElementById('signup-form').style.display = 'flex';
-      document.getElementById('login-form').style.display = 'none';
-      document.getElementById('message').innerText = ''; // Clear any messages
-    }
+    // Add event listeners after DOM is ready
+    window.addEventListener('DOMContentLoaded', (event) => {
+      // Show the signup form
+      document.getElementById('signup-btn').addEventListener('click', () => {
+        document.getElementById('signup-form').style.display = 'flex';
+        document.getElementById('login-form').style.display = 'none';
+        document.getElementById('message').innerText = ''; // Clear any messages
+      });
 
-    // Show the login form
-    function showLoginForm() {
-      document.getElementById('login-form').style.display = 'flex';
-      document.getElementById('signup-form').style.display = 'none';
-      document.getElementById('message').innerText = ''; // Clear any messages
-    }
+      // Show the login form
+      document.getElementById('login-btn').addEventListener('click', () => {
+        document.getElementById('login-form').style.display = 'flex';
+        document.getElementById('signup-form').style.display = 'none';
+        document.getElementById('message').innerText = ''; // Clear any messages
+      });
 
-    // Signup function
-    function signUp() {
-      const email = document.getElementById('signup-email').value;
-      const password = document.getElementById('signup-password').value;
+      // Signup function
+      document.getElementById('create-account-btn').addEventListener('click', () => {
+        const email = document.getElementById('signup-email').value;
+        const password = document.getElementById('signup-password').value;
 
-      createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          const user = userCredential.user;
-          document.getElementById('message').innerText = 'Account created successfully!';
-        })
-        .catch((error) => {
-          const errorMessage = error.message;
-          document.getElementById('message').innerText = `Error: ${errorMessage}`;
-        });
-    }
+        createUserWithEmailAndPassword(auth, email, password)
+          .then((userCredential) => {
+            const user = userCredential.user;
+            document.getElementById('message').innerText = 'Account created successfully!';
+          })
+          .catch((error) => {
+            const errorMessage = error.message;
+            document.getElementById('message').innerText = `Error: ${errorMessage}`;
+          });
+      });
 
-    // Login function
-    function logIn() {
-      const email = document.getElementById('login-email').value;
-      const password = document.getElementById('login-password').value;
+      // Login function
+      document.getElementById('login-account-btn').addEventListener('click', () => {
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
 
-      signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          const user = userCredential.user;
-          document.getElementById('message').innerText = 'Logged in successfully!';
-          // Redirect or update UI for logged in user
-        })
-        .catch((error) => {
-          const errorMessage = error.message;
-          document.getElementById('message').innerText = `Error: ${errorMessage}`;
-        });
-    }
+        signInWithEmailAndPassword(auth, email, password)
+          .then((userCredential) => {
+            const user = userCredential.user;
+            document.getElementById('message').innerText = 'Logged in successfully!';
+            // Redirect or update UI for logged in user
+          })
+          .catch((error) => {
+            const errorMessage = error.message;
+            document.getElementById('message').innerText = `Error: ${errorMessage}`;
+          });
+      });
+    });
 
     // Dummy functions for navigation
     function goToGame(gameNumber) {
       alert(`Going to game ${gameNumber}`);
     }
 
-    function goToLeaderboard() {
+    document.querySelectorAll('.box').forEach(box => {
+      box.addEventListener('click', (event) => {
+        const gameNumber = event.target.getAttribute('data-game');
+        goToGame(gameNumber);
+      });
+    });
+
+    document.getElementById('leaderboard').addEventListener('click', () => {
       alert("Going to the leaderboard!");
-    }
+    });
   </script>
 </body>
 </html>
