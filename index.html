@@ -142,7 +142,7 @@
   </div>
 
   <!-- Version number -->
-  <div class="version">V1.2</div>
+  <div class="version">V1.4</div>
 
   <!-- Import Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
@@ -214,24 +214,13 @@
     // Navigations (for later setup)
     function goToGame(gameId) {
       // Logic to redirect to game page
-      window.location.href = `game${gameId}.html`;
     }
 
     function goToLeaderboard() {
       // Logic to redirect to leaderboard page
-      window.location.href = 'leaderboard.html';
     }
-
-    // Display user status
-    firebase.auth().onAuthStateChanged((user) => {
-      const userStatus = document.getElementById('userStatus');
-      if (user) {
-        userStatus.innerText = `Logged in as: ${user.email}`;
-      } else {
-        userStatus.innerText = 'Not logged in';
-      }
-    });
   </script>
 </body>
 </html>
+
 
