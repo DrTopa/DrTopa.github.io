@@ -1,108 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f0f0f0;
-            margin: 0;
-        }
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
 
-        .login-container {
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyC4bjg7lVwd8FU8MREaPhBsBENv5qmiYYM",
+  authDomain: "calendrier-de-l-avent-54e3a.firebaseapp.com",
+  projectId: "calendrier-de-l-avent-54e3a",
+  storageBucket: "calendrier-de-l-avent-54e3a.appspot.com",
+  messagingSenderId: "850639567855",
+  appId: "1:850639567855:web:0d799a1ecca005fcff141a",
+  measurementId: "G-PC1W7RYVEH"
+};
 
-        h1 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        button {
-            width: 100%;
-            padding: 10px;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        .error-message {
-            color: red;
-            text-align: center;
-            margin-bottom: 10px;
-        }
-    </style>
-</head>
-<body>
-
-    <div class="login-container">
-        <h1>Login</h1>
-        <div id="error-message" class="error-message"></div>
-        
-        <input type="text" id="username" placeholder="Enter your username">
-        <button onclick="login()">Login</button>
-        <button onclick="signup()">Sign Up</button>
-    </div>
-
-    <script>
-        // Check if there are users stored in localStorage
-        let users = JSON.parse(localStorage.getItem('users')) || [];
-
-        // Function to log in
-        function login() {
-            const username = document.getElementById('username').value;
-
-            // Check if username exists in the dataset
-            if (users.includes(username)) {
-                alert('Login successful!');
-                // Store the logged-in user
-                localStorage.setItem('currentUser', username);
-                // Redirect to the homepage (you can change this to your home page URL)
-                window.location.href = 'index.html';
-            } else {
-                document.getElementById('error-message').innerText = 'Error: Username does not exist. Please sign up.';
-            }
-        }
-
-        // Function to sign up
-        function signup() {
-            const username = document.getElementById('username').value;
-
-            // Check if username already exists
-            if (users.includes(username)) {
-                document.getElementById('error-message').innerText = 'Error: Username already exists. Please log in.';
-            } else {
-                // Add new user to the dataset
-                users.push(username);
-                localStorage.setItem('users', JSON.stringify(users));
-                alert('Sign up successful! Please log in.');
-            }
-        }
-    </script>
-
-</body>
-</html>
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
