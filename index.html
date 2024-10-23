@@ -125,22 +125,50 @@
 
     <button id="logoutButton" onclick="logout()">Log Out</button>
 
-    <script>
-        // Display the logged-in user's name
-        const currentUser = localStorage.getItem('currentUser');
-        if (currentUser) {
-            document.getElementById('welcomeMessage').innerText = `Welcome, ${currentUser}!`;
-        } else {
-            alert('You are not logged in. Redirecting to login page...');
-            window.location.href = 'login.html'; // Redirect to login if not logged in
-        }
+   <!-- Sign Up Form -->
+<form id="signup-form">
+    <input type="email" id="signup-email" placeholder="Enter email">
+    <input type="password" id="signup-password" placeholder="Enter password">
+    <button type="submit">Sign Up</button>
+</form>
 
-        function logout() {
-            localStorage.removeItem('currentUser');
-            alert('You have logged out. Redirecting to login page...');
-            window.location.href = 'login.html'; // Redirect to login after logout
-        }
-    </script>
+<!-- Log In Form -->
+<form id="login-form">
+    <input type="email" id="login-email" placeholder="Enter email">
+    <input type="password" id="login-password" placeholder="Enter password">
+    <button type="submit">Log In</button>
+</form>
+// Get form elements
+const signupForm = document.getElementById('signup-form');
+const loginForm = document.getElementById('login-form');
+
+// Sign Up functionality
+signupForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = document.getElementById('signup-email').value;
+    const password = document.getElementById('signup-password').value;
+    firebase.auth().createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+            console.log('User signed up:', userCredential.user);
+        })
+        .catch((error) => {
+            console.error('Error signing up:', error.message);
+        });
+});
+
+// Log In functionality
+loginForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-password').value;
+    firebase.auth().signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+            console.log('User logged in:', userCredential.user);
+        })
+        .catch((error) => {
+            console.error('Error logging in:', error.message);
+        });
+});
 
 </body>
 </html>
