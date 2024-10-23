@@ -142,14 +142,16 @@
   </div>
 
   <!-- Version number -->
-  <div class="version">V1.4</div>
+  <div class="version">V1.0</div>
 
   <!-- Import Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js"></script>
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-analytics.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 
-  <script>
-    // Firebase configuration
+    // Your web app's Firebase configuration
     const firebaseConfig = {
       apiKey: "AIzaSyC4bjg7lVwd8FU8MREaPhBsBENv5qmiYYM",
       authDomain: "calendrier-de-l-avent-54e3a.firebaseapp.com",
@@ -161,8 +163,9 @@
     };
 
     // Initialize Firebase
-    const app = firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const auth = getAuth(app);
 
     // Show the signup form
     function showSignupForm() {
@@ -183,7 +186,7 @@
       const email = document.getElementById('signup-email').value;
       const password = document.getElementById('signup-password').value;
 
-      auth.createUserWithEmailAndPassword(email, password)
+      createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           const user = userCredential.user;
           document.getElementById('message').innerText = 'Account created successfully!';
@@ -199,7 +202,7 @@
       const email = document.getElementById('login-email').value;
       const password = document.getElementById('login-password').value;
 
-      auth.signInWithEmailAndPassword(email, password)
+      signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           const user = userCredential.user;
           document.getElementById('message').innerText = 'Logged in successfully!';
@@ -211,16 +214,14 @@
         });
     }
 
-    // Navigations (for later setup)
-    function goToGame(gameId) {
-      // Logic to redirect to game page
+    // Dummy functions for navigation
+    function goToGame(gameNumber) {
+      alert(`Going to game ${gameNumber}`);
     }
 
     function goToLeaderboard() {
-      // Logic to redirect to leaderboard page
+      alert("Going to the leaderboard!");
     }
   </script>
 </body>
 </html>
-
-
