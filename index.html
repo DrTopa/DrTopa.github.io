@@ -142,8 +142,9 @@
   </div>
 
   <!-- Version number -->
-  <div class="version">V1.1</div>
+  <div class="version">V1.2</div>
 
+  <!-- Import Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js"></script>
 
@@ -167,12 +168,14 @@
     function showSignupForm() {
       document.getElementById('signup-form').style.display = 'flex';
       document.getElementById('login-form').style.display = 'none';
+      document.getElementById('message').innerText = ''; // Clear any messages
     }
 
     // Show the login form
     function showLoginForm() {
       document.getElementById('login-form').style.display = 'flex';
       document.getElementById('signup-form').style.display = 'none';
+      document.getElementById('message').innerText = ''; // Clear any messages
     }
 
     // Signup function
@@ -200,6 +203,7 @@
         .then((userCredential) => {
           const user = userCredential.user;
           document.getElementById('message').innerText = 'Logged in successfully!';
+          // Redirect or update UI for logged in user
         })
         .catch((error) => {
           const errorMessage = error.message;
@@ -208,16 +212,26 @@
     }
 
     // Navigations (for later setup)
-    function goToGame(gameNumber) {
-      alert("Navigating to Game " + gameNumber);
-      // window.location.href = `game${gameNumber}.html`;
+    function goToGame(gameId) {
+      // Logic to redirect to game page
+      window.location.href = `game${gameId}.html`;
     }
 
     function goToLeaderboard() {
-      alert("Navigating to Leaderboard");
-      // window.location.href = 'leaderboard.html';
+      // Logic to redirect to leaderboard page
+      window.location.href = 'leaderboard.html';
     }
-  </script>
 
+    // Display user status
+    firebase.auth().onAuthStateChanged((user) => {
+      const userStatus = document.getElementById('userStatus');
+      if (user) {
+        userStatus.innerText = `Logged in as: ${user.email}`;
+      } else {
+        userStatus.innerText = 'Not logged in';
+      }
+    });
+  </script>
 </body>
 </html>
+
