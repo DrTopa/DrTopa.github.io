@@ -1,174 +1,214 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calendrier de l'Avent</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f0f0f0;
-            margin: 0;
-        }
-
-        h1 {
-            margin-bottom: 20px;
-        }
-
-        #leaderboardButton {
-            padding: 15px 30px;
-            font-size: 1.5em;
-            cursor: pointer;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            margin-top: 20px;
-        }
-
-        #leaderboardButton:hover {
-            background-color: #218838;
-        }
-
-        .container {
-            display: grid;
-            grid-template-columns: repeat(8, 1fr); /* 8 columns */
-            gap: 10px; /* Space between boxes */
-            margin-bottom: 20px; /* Space for leaderboard button */
-        }
-
-        .box {
-            height: 60px;
-            background-color: #007BFF;
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.5em;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-
-        .box:hover {
-            background-color: #0056b3;
-        }
-
-        #leaderboardBox {
-            width: 130px;
-            height: 60px;
-            background-color: #FFC107;
-        }
-
-        #leaderboardBox:hover {
-            background-color: #e0a800;
-        }
-
-        #logoutButton {
-            padding: 10px 20px;
-            font-size: 1em;
-            cursor: pointer;
-            background-color: #dc3545;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            margin-top: 20px;
-        }
-
-        #logoutButton:hover {
-            background-color: #c82333;
-        }
-
-        .welcome {
-            margin-bottom: 20px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Advent Calendar Games</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: 100vh;
+      background-color: #f0f0f0;
+      margin: 0;
+    }
+    h1 {
+      font-size: 2em;
+      margin-bottom: 20px;
+    }
+    #userStatus {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 1.2em;
+    }
+    .box-grid {
+      display: grid;
+      grid-template-columns: repeat(8, 100px);
+      gap: 10px;
+    }
+    .box {
+      width: 100px;
+      height: 100px;
+      background-color: #007BFF;
+      color: white;
+      font-size: 1.5em;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+    .box:hover {
+      background-color: #0056b3;
+    }
+    #leaderboard {
+      width: 320px;
+      height: 50px;
+      margin-top: 20px;
+      background-color: green;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      font-size: 1.5em;
+    }
+    #leaderboard:hover {
+      background-color: darkgreen;
+    }
+    #login-form, #signup-form {
+      margin-top: 20px;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+    }
+    .form-input {
+      padding: 10px;
+      margin: 5px 0;
+    }
+  </style>
 </head>
 <body>
 
-    <h1>Calendrier de l'Avent</h1>
+  <h1>Advent Calendar Games</h1>
+  <div id="userStatus"></div>
+  
+  <!-- Box Grid -->
+  <div class="box-grid">
+    <!-- Generate 24 boxes with numbers -->
+    <div class="box" onclick="goToGame(1)">1</div>
+    <div class="box" onclick="goToGame(2)">2</div>
+    <div class="box" onclick="goToGame(3)">3</div>
+    <div class="box" onclick="goToGame(4)">4</div>
+    <div class="box" onclick="goToGame(5)">5</div>
+    <div class="box" onclick="goToGame(6)">6</div>
+    <div class="box" onclick="goToGame(7)">7</div>
+    <div class="box" onclick="goToGame(8)">8</div>
+    <div class="box" onclick="goToGame(9)">9</div>
+    <div class="box" onclick="goToGame(10)">10</div>
+    <div class="box" onclick="goToGame(11)">11</div>
+    <div class="box" onclick="goToGame(12)">12</div>
+    <div class="box" onclick="goToGame(13)">13</div>
+    <div class="box" onclick="goToGame(14)">14</div>
+    <div class="box" onclick="goToGame(15)">15</div>
+    <div class="box" onclick="goToGame(16)">16</div>
+    <div class="box" onclick="goToGame(17)">17</div>
+    <div class="box" onclick="goToGame(18)">18</div>
+    <div class="box" onclick="goToGame(19)">19</div>
+    <div class="box" onclick="goToGame(20)">20</div>
+    <div class="box" onclick="goToGame(21)">21</div>
+    <div class="box" onclick="goToGame(22)">22</div>
+    <div class="box" onclick="goToGame(23)">23</div>
+    <div class="box" onclick="goToGame(24)">24</div>
+  </div>
 
-    <div class="welcome" id="welcomeMessage"></div>
+  <!-- Leaderboard Button -->
+  <div id="leaderboard" onclick="goToLeaderboard()">Leaderboard</div>
 
-    <div class="container">
-        <div class="box" onclick="window.location.href='game1.html';">1</div>
-        <div class="box" onclick="window.location.href='game2.html';">2</div>
-        <div class="box" onclick="window.location.href='game3.html';">3</div>
-        <div class="box" onclick="window.location.href='game4.html';">4</div>
-        <div class="box" onclick="window.location.href='game5.html';">5</div>
-        <div class="box" onclick="window.location.href='game6.html';">6</div>
-        <div class="box" onclick="window.location.href='game7.html';">7</div>
-        <div class="box" onclick="window.location.href='game8.html';">8</div>
-        <div class="box" onclick="window.location.href='game9.html';">9</div>
-        <div class="box" onclick="window.location.href='game10.html';">10</div>
-        <div class="box" onclick="window.location.href='game11.html';">11</div>
-        <div class="box" onclick="window.location.href='game12.html';">12</div>
-        <div class="box" onclick="window.location.href='game13.html';">13</div>
-        <div class="box" onclick="window.location.href='game14.html';">14</div>
-        <div class="box" onclick="window.location.href='game15.html';">15</div>
-        <div class="box" onclick="window.location.href='game16.html';">16</div>
-        <div class="box" onclick="window.location.href='game17.html';">17</div>
-        <div class="box" onclick="window.location.href='game18.html';">18</div>
-        <div class="box" onclick="window.location.href='game19.html';">19</div>
-        <div class="box" onclick="window.location.href='game20.html';">20</div>
-        <div class="box" onclick="window.location.href='game21.html';">21</div>
-        <div class="box" onclick="window.location.href='game22.html';">22</div>
-        <div class="box" onclick="window.location.href='game23.html';">23</div>
-        <div class="box" onclick="window.location.href='game24.html';">24</div>
-        <div id="leaderboardBox" class="box" onclick="window.location.href='leaderboard.html';">Leaderboard</div>
-    </div>
+  <!-- Signup Form -->
+  <div id="signup-form">
+    <h2>Create Account</h2>
+    <input class="form-input" type="email" id="signup-email" placeholder="Enter email">
+    <input class="form-input" type="password" id="signup-password" placeholder="Enter password">
+    <button onclick="signUp()">Sign Up</button>
+  </div>
 
-    <button id="logoutButton" onclick="logout()">Log Out</button>
+  <!-- Login Form -->
+  <div id="login-form">
+    <h2>Login</h2>
+    <input class="form-input" type="email" id="login-email" placeholder="Enter email">
+    <input class="form-input" type="password" id="login-password" placeholder="Enter password">
+    <button onclick="logIn()">Login</button>
+  </div>
 
-   <!-- Sign Up Form -->
-<form id="signup-form">
-    <input type="email" id="signup-email" placeholder="Enter email">
-    <input type="password" id="signup-password" placeholder="Enter password">
-    <button type="submit">Sign Up</button>
-</form>
+  <script type="module">
+    // Firebase SDK Initialization
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js";
 
-<!-- Log In Form -->
-<form id="login-form">
-    <input type="email" id="login-email" placeholder="Enter email">
-    <input type="password" id="login-password" placeholder="Enter password">
-    <button type="submit">Log In</button>
-</form>
-// Get form elements
-const signupForm = document.getElementById('signup-form');
-const loginForm = document.getElementById('login-form');
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyC4bjg7lVwd8FU8MREaPhBsBENv5qmiYYM",
+      authDomain: "calendrier-de-l-avent-54e3a.firebaseapp.com",
+      projectId: "calendrier-de-l-avent-54e3a",
+      storageBucket: "calendrier-de-l-avent-54e3a.appspot.com",
+      messagingSenderId: "850639567855",
+      appId: "1:850639567855:web:0d799a1ecca005fcff141a",
+      measurementId: "G-PC1W7RYVEH"
+    };
 
-// Sign Up functionality
-signupForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const email = document.getElementById('signup-email').value;
-    const password = document.getElementById('signup-password').value;
-    firebase.auth().createUserWithEmailAndPassword(email, password)
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth();
+
+    // Handle User Sign Up
+    function signUp() {
+      const email = document.getElementById('signup-email').value;
+      const password = document.getElementById('signup-password').value;
+      createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-            console.log('User signed up:', userCredential.user);
+          alert('Account created successfully');
         })
         .catch((error) => {
-            console.error('Error signing up:', error.message);
+          alert('Error: ' + error.message);
         });
-});
+    }
 
-// Log In functionality
-loginForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const email = document.getElementById('login-email').value;
-    const password = document.getElementById('login-password').value;
-    firebase.auth().signInWithEmailAndPassword(email, password)
+    // Handle User Login
+    function logIn() {
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+      signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-            console.log('User logged in:', userCredential.user);
+          alert('Logged in successfully');
         })
         .catch((error) => {
-            console.error('Error logging in:', error.message);
+          alert('Login failed: ' + error.message);
         });
-});
+    }
 
+    // Monitor Authentication State
+    onAuthStateChanged(auth, (user) => {
+      const userStatus = document.getElementById('userStatus');
+      if (user) {
+        // User is signed in, show the user's email
+        userStatus.innerHTML = `Logged in as: ${user.email} <button onclick="logOut()">Log Out</button>`;
+        document.getElementById('login-form').style.display = 'none';
+        document.getElementById('signup-form').style.display = 'none';
+      } else {
+        // No user is signed in
+        userStatus.innerHTML = 'Not logged in';
+        document.getElementById('login-form').style.display = 'flex';
+        document.getElementById('signup-form').style.display = 'flex';
+      }
+    });
+
+    // Handle Log Out
+    function logOut() {
+      signOut(auth).then(() => {
+        alert('Logged out');
+      });
+    }
+
+    // Navigation Functions
+    function goToGame(gameNumber) {
+      if (auth.currentUser) {
+        window.location.href = `game${gameNumber}.html`; // Redirect to the respective game page
+      } else {
+        alert('Please log in to play!');
+      }
+    }
+
+    function goToLeaderboard() {
+      if (auth.currentUser) {
+        window.location.href = 'leaderboard.html'; // Redirect to leaderboard
+      } else {
+        alert('Please log in to view the leaderboard');
+      }
+    }
+  </script>
 </body>
 </html>
