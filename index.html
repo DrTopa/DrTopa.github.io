@@ -208,7 +208,7 @@
           .then((userCredential) => {
             const user = userCredential.user;
             document.getElementById('message').innerText = 'Logged in successfully!';
-            // Redirect or update UI for logged in user
+            // Update the UI or redirect
           })
           .catch((error) => {
             const errorMessage = error.message;
