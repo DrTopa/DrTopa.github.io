@@ -69,6 +69,10 @@
       padding: 10px;
       margin: 5px 0;
     }
+    #message {
+      margin-top: 10px;
+      color: red;
+    }
   </style>
 </head>
 <body>
@@ -111,25 +115,17 @@
   <!-- Signup Form -->
   <div id="signup-form">
     <h2>Create Account</h2>
-    <input class="form-input" type="email" id="signup-email" placeholder="Enter email">
-    <input class="form-input" type="password" id="signup-password" placeholder="Enter password">
-    <button onclick="signUp()">Sign Up</button>
+    <input class="form-input" type="email" id="signup-email" placeholder="Email">
+    <input class="form-input" type="password" id="signup-password" placeholder="Password">
+    <button onclick="signUp()">Create Account</button>
+    <div id="message"></div>
   </div>
 
-  <!-- Login Form -->
-  <div id="login-form">
-    <h2>Login</h2>
-    <input class="form-input" type="email" id="login-email" placeholder="Enter email">
-    <input class="form-input" type="password" id="login-password" placeholder="Enter password">
-    <button onclick="logIn()">Login</button>
-  </div>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js"></script>
 
-  <script type="module">
-    // Firebase SDK Initialization
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js";
-
-    // Your web app's Firebase configuration
+  <script>
+    // Firebase configuration
     const firebaseConfig = {
       apiKey: "AIzaSyC4bjg7lVwd8FU8MREaPhBsBENv5qmiYYM",
       authDomain: "calendrier-de-l-avent-54e3a.firebaseapp.com",
@@ -141,74 +137,41 @@
     };
 
     // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth();
+    const app = firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
 
-    // Handle User Sign Up
+    // Signup function
     function signUp() {
       const email = document.getElementById('signup-email').value;
       const password = document.getElementById('signup-password').value;
-      createUserWithEmailAndPassword(auth, email, password)
+
+      // Sign up using Firebase Auth
+      auth.createUserWithEmailAndPassword(email, password)
         .then((userCredential) => {
-          alert('Account created successfully');
+          const user = userCredential.user;
+          document.getElementById('message').innerText = 'Account created successfully!';
+          console.log('User signed up: ', user);
         })
         .catch((error) => {
-          alert('Error: ' + error.message);
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          document.getElementById('message').innerText = `Error: ${errorMessage}`;
+          console.log('Error: ', errorCode, errorMessage);
         });
     }
 
-    // Handle User Login
-    function logIn() {
-      const email = document.getElementById('login-email').value;
-      const password = document.getElementById('login-password').value;
-      signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          alert('Logged in successfully');
-        })
-        .catch((error) => {
-          alert('Login failed: ' + error.message);
-        });
-    }
-
-    // Monitor Authentication State
-    onAuthStateChanged(auth, (user) => {
-      const userStatus = document.getElementById('userStatus');
-      if (user) {
-        // User is signed in, show the user's email
-        userStatus.innerHTML = `Logged in as: ${user.email} <button onclick="logOut()">Log Out</button>`;
-        document.getElementById('login-form').style.display = 'none';
-        document.getElementById('signup-form').style.display = 'none';
-      } else {
-        // No user is signed in
-        userStatus.innerHTML = 'Not logged in';
-        document.getElementById('login-form').style.display = 'flex';
-        document.getElementById('signup-form').style.display = 'flex';
-      }
-    });
-
-    // Handle Log Out
-    function logOut() {
-      signOut(auth).then(() => {
-        alert('Logged out');
-      });
-    }
-
-    // Navigation Functions
+    // Navigations (for later setup)
     function goToGame(gameNumber) {
-      if (auth.currentUser) {
-        window.location.href = `game${gameNumber}.html`; // Redirect to the respective game page
-      } else {
-        alert('Please log in to play!');
-      }
+      alert("Navigating to Game " + gameNumber);
+      // window.location.href = `game${gameNumber}.html`;
     }
 
     function goToLeaderboard() {
-      if (auth.currentUser) {
-        window.location.href = 'leaderboard.html'; // Redirect to leaderboard
-      } else {
-        alert('Please log in to view the leaderboard');
-      }
+      alert("Navigating to Leaderboard");
+      // window.location.href = 'leaderboard.html';
     }
   </script>
+
 </body>
 </html>
+
