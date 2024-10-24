@@ -56,8 +56,7 @@
     <div id="message"></div>
   </div>
 
-  <!-- Firebase Integration -->
-    <script defer type="module">
+ <script defer type="module">
     // Import Firebase SDKs
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
@@ -72,55 +71,87 @@
       appId: "1:850639567855:web:0d799a1ecca005fcff141a",
       measurementId: "G-PC1W7RYVEH"
     };
-      
+
+    // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    // Redirect to homepage if user is already logged in
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        window.location.href = 'homepage.html';  // Redirect to homepage if already logged in
-      }
+    // Add event listeners after DOM is ready
+    window.addEventListener('DOMContentLoaded', (event) => {
+      console.log("DOM fully loaded and parsed");
+
+      // Show the signup form
+      document.getElementById('signup-btn').addEventListener('click', () => {
+        document.getElementById('signup-form').style.display = 'flex';
+        document.getElementById('login-form').style.display = 'none';
+        document.getElementById('message').innerText = ''; // Clear any messages
+      });
+
+      // Show the login form
+      document.getElementById('login-btn').addEventListener('click', () => {
+        document.getElementById('login-form').style.display = 'flex';
+        document.getElementById('signup-form').style.display = 'none';
+        document.getElementById('message').innerText = ''; // Clear any messages
+      });
+
+      // Signup function
+      document.getElementById('create-account-btn').addEventListener('click', () => {
+        const email = document.getElementById('signup-email').value;
+        const password = document.getElementById('signup-password').value;
+
+        createUserWithEmailAndPassword(auth, email, password)
+          .then((userCredential) => {
+            const user = userCredential.user;
+            document.getElementById('message').innerText = 'Account created successfully!';
+            console.log('Account created:', user);
+          })
+          .catch((error) => {
+            const errorMessage = error.message;
+            document.getElementById('message').innerText = `Error: ${errorMessage}`;
+            console.error('Signup error:', error);
+          });
+      });
+
+      // Login function
+      document.getElementById('login-account-btn').addEventListener('click', () => {
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+
+        signInWithEmailAndPassword(auth, email, password)
+          .then((userCredential) => {
+            const user = userCredential.user;
+            document.getElementById('message').innerText = 'Logged in successfully!';
+            console.log('User logged in:', user);
+            
+            // You can add logic here to change the UI or redirect the user
+            updateUserUI(user); // Call the function to update the UI
+          })
+          .catch((error) => {
+            const errorMessage = error.message;
+            document.getElementById('message').innerText = `Error: ${errorMessage}`;
+            console.error('Login error:', error);
+          });
+      });
+
+      // Monitor authentication state (auto-login on refresh)
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          console.log('User is already logged in:', user);
+          updateUserUI(user);
+        } else {
+          console.log('No user is logged in');
+        }
+      });
     });
 
-    document.getElementById('signup-btn').addEventListener('click', () => {
-      document.getElementById('signup-form').style.display = 'block';
-      document.getElementById('login-form').style.display = 'none';
-      document.getElementById('message').innerText = ''; // Clear any messages
-    });
-
-    document.getElementById('login-btn').addEventListener('click', () => {
-      document.getElementById('login-form').style.display = 'block';
+    // Function to update UI after login
+    function updateUserUI(user) {
+      document.getElementById('message').innerText = `Welcome, ${user.email}`;
       document.getElementById('signup-form').style.display = 'none';
-      document.getElementById('message').innerText = ''; // Clear any messages
-    });
+      document.getElementById('login-form').style.display = 'none';
+      document.getElementById('userStatus').innerText = `Logged in as ${user.email}`;
+    }
 
-    document.getElementById('create-account-btn').addEventListener('click', () => {
-      const email = document.getElementById('signup-email').value;
-      const password = document.getElementById('signup-password').value;
-      createUserWithEmailAndPassword(auth, email, password)
-        .then(() => {
-          document.getElementById('message').innerText = 'Account created successfully!';
-        })
-        .catch((error) => {
-          document.getElementById('message').innerText = `Error: ${error.message}`;
-        });
-    });
+</script>
 
-    document.getElementById('login-account-btn').addEventListener('click', () => {
-      const email = document.getElementById('login-email').value;
-      const password = document.getElementById('login-password').value;
-      signInWithEmailAndPassword(auth, email, password)
-        .then(() => {
-          document.getElementById('message').innerText = 'Logged in successfully!';
-          window.location.href = 'homepage.html';  // Redirect to homepage after login
-        })
-        .catch((error) => {
-          document.getElementById('message').innerText = `Error: ${error.message}`;
-        });
-    });
-  </script>
-
-</body>
-</html>
-
+</script>
