@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Advent Calendar Games</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: 100vh;
+      background-color: #f0f0f0;
+      margin: 0;
+    }
+    h1 {
+      font-size: 2em;
+      margin-bottom: 20px;
+    }
+    .form-input {
+      padding: 10px;
+      margin: 5px 0;
+    }
+    #message {
+      margin-top: 10px;
+      color: red;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Advent Calendar Games - Login</h1>
+
+  <!-- Signup Button -->
+  <button id="signup-btn">Create Account</button>
+  <!-- Login Button -->
+  <button id="login-btn">Log In</button>
+
+  <!-- Signup Form -->
+  <div id="signup-form" style="display: none;">
+    <h2>Create Account</h2>
+    <input class="form-input" type="email" id="signup-email" placeholder="Email" required>
+    <input class="form-input" type="password" id="signup-password" placeholder="Password" required>
+    <button id="create-account-btn">Create Account</button>
+    <div id="message"></div>
+  </div>
+
+  <!-- Login Form -->
+  <div id="login-form" style="display: none;">
+    <h2>Login</h2>
+    <input class="form-input" type="email" id="login-email" placeholder="Email" required>
+    <input class="form-input" type="password" id="login-password" placeholder="Password" required>
+    <button id="login-account-btn">Log In</button>
+    <div id="message"></div>
+  </div>
+
+  <!-- Firebase Integration -->
+  <script defer type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "your-api-key",
+      authDomain: "your-auth-domain",
+      projectId: "your-project-id",
+      storageBucket: "your-storage-bucket",
+      messagingSenderId: "your-messaging-sender-id",
+      appId: "your-app-id",
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    document.getElementById('signup-btn').addEventListener('click', () => {
+      document.getElementById('signup-form').style.display = 'block';
+      document.getElementById('login-form').style.display = 'none';
+      document.getElementById('message').innerText = ''; // Clear any messages
+    });
+
+    document.getElementById('login-btn').addEventListener('click', () => {
+      document.getElementById('login-form').style.display = 'block';
+      document.getElementById('signup-form').style.display = 'none';
+      document.getElementById('message').innerText = ''; // Clear any messages
+    });
+
+    document.getElementById('create-account-btn').addEventListener('click', () => {
+      const email = document.getElementById('signup-email').value;
+      const password = document.getElementById('signup-password').value;
+      createUserWithEmailAndPassword(auth, email, password)
+        .then(() => {
+          document.getElementById('message').innerText = 'Account created successfully!';
+        })
+        .catch((error) => {
+          document.getElementById('message').innerText = `Error: ${error.message}`;
+        });
+    });
+
+    document.getElementById('login-account-btn').addEventListener('click', () => {
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+      signInWithEmailAndPassword(auth, email, password)
+        .then(() => {
+          document.getElementById('message').innerText = 'Logged in successfully!';
+          window.location.href = 'homepage.html';  // Redirect to homepage after login
+        })
+        .catch((error) => {
+          document.getElementById('message').innerText = `Error: ${error.message}`;
+        });
+    });
+
+    // Check if user is already logged in
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        window.location.href = 'homepage.html';  // Redirect to homepage if already logged in
+      }
+    });
+  </script>
+
+</body>
+</html>
