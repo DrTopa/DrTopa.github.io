@@ -111,6 +111,7 @@
       if (user) {
         userEmail = user.email;
         document.getElementById('userStatus').innerText = `Logged in as: ${userEmail}`;
+        console.log(`User logged in: ${userEmail}`);
 
         // Retrieve user data from Firestore
         const userDocRef = doc(db, 'users', userEmail);
@@ -121,9 +122,11 @@
           bestScore = userData.bestScore || 0;
           playCount = userData.playCount || 0;
           bestScoreDisplay.innerText = `Best Score: ${bestScore}`;
+          console.log(`Best score retrieved: ${bestScore}`);
         } else {
           // If no data exists, create a new record for the user
           await setDoc(userDocRef, { bestScore: 0, playCount: 0 });
+          console.log(`New user record created for: ${userEmail}`);
         }
       } else {
         window.location.href = 'login.html';  // Redirect if not logged in
@@ -156,6 +159,7 @@
             bestScore = clickCount;
             bestScoreDisplay.innerText = `Best Score: ${bestScore}`;
             await updateDoc(doc(db, 'users', userEmail), { bestScore });
+            console.log(`Best score updated: ${bestScore}`);
           }
         }
       }, 1000);
@@ -165,9 +169,9 @@
     clickBtn.addEventListener('click', () => {
       clickCount += 1;
       scoreDisplay.innerText = `Current Score: ${clickCount}`;
+      console.log(`Button clicked: Current Score ${clickCount}`);
     });
   </script>
 
 </body>
 </html>
-
