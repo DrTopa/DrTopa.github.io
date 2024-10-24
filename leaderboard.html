@@ -1,114 +1,165 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leaderboard</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            height: 100vh;
-            background-color: #f0f0f0;
-            margin: 0;
-        }
-
-        h1 {
-            font-size: 2.5em;
-            margin-bottom: 20px;
-        }
-
-        table {
-            width: 80%;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            padding: 10px;
-            border: 1px solid #ccc;
-            text-align: center;
-        }
-
-        th {
-            background-color: #007BFF;
-            color: white;
-        }
-
-        #logoutBtn {
-            margin-top: 20px;
-            padding: 10px 20px;
-            background-color: red;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Homepage - Advent Calendar Games</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: 100vh;
+      background-color: #f0f0f0;
+      margin: 0;
+    }
+    h1 {
+      font-size: 2em;
+      margin-bottom: 20px;
+    }
+    #userStatus {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 1.2em;
+    }
+    .box-grid {
+      display: grid;
+      grid-template-columns: repeat(8, 100px);
+      gap: 10px;
+    }
+    .box {
+      width: 100px;
+      height: 100px;
+      background-color: #007BFF;
+      color: white;
+      font-size: 1.5em;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+    .box:hover {
+      background-color: #0056b3;
+    }
+    #leaderboard {
+      width: 320px;
+      height: 50px;
+      margin-top: 20px;
+      background-color: green;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      font-size: 1.5em;
+    }
+    #leaderboard:hover {
+      background-color: darkgreen;
+    }
+    #logout-btn {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: red;
+      color: white;
+      cursor: pointer;
+      border: none;
+    }
+  </style>
 </head>
 <body>
 
-    <h1>Leaderboard</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>Username</th>
-                <th>High Score</th>
-            </tr>
-        </thead>
-        <tbody id="leaderboard">
-            <!-- Leaderboard entries will be added here dynamically -->
-        </tbody>
-    </table>
+  <h1>Advent Calendar Games</h1>
+  <div id="userStatus"></div>
 
-    <button id="logoutBtn" onclick="logout()">Log Out</button>
+  <!-- Box Grid -->
+  <div class="box-grid">
+    <div class="box" data-game="1">1</div>
+    <div class="box" data-game="2">2</div>
+    <div class="box" data-game="3">3</div>
+    <div class="box" data-game="4">4</div>
+    <div class="box" data-game="5">5</div>
+    <div class="box" data-game="6">6</div>
+    <div class="box" data-game="7">7</div>
+    <div class="box" data-game="8">8</div>
+    <div class="box" data-game="9">9</div>
+    <div class="box" data-game="10">10</div>
+    <div class="box" data-game="11">11</div>
+    <div class="box" data-game="12">12</div>
+    <div class="box" data-game="13">13</div>
+    <div class="box" data-game="14">14</div>
+    <div class="box" data-game="15">15</div>
+    <div class="box" data-game="16">16</div>
+    <div class="box" data-game="17">17</div>
+    <div class="box" data-game="18">18</div>
+    <div class="box" data-game="19">19</div>
+    <div class="box" data-game="20">20</div>
+    <div class="box" data-game="21">21</div>
+    <div class="box" data-game="22">22</div>
+    <div class="box" data-game="23">23</div>
+    <div class="box" data-game="24">24</div>
+  </div>
 
-    <script>
-        // Check if user is logged in
-        const currentUser = localStorage.getItem('currentUser');
-        if (!currentUser) {
-            alert('You are not logged in. Redirecting to login page...');
-            window.location.href = 'login.html'; // Redirect to login if not logged in
-        }
+  <!-- Leaderboard Button -->
+  <div id="leaderboard">Leaderboard</div>
 
-        function displayLeaderboard() {
-            const leaderboard = document.getElementById('leaderboard');
-            leaderboard.innerHTML = ''; // Clear existing entries
-            const scores = {};
+  <!-- Logout Button -->
+  <button id="logout-btn">Log Out</button>
 
-            // Iterate through localStorage to get scores
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                // Match keys that store game1 scores
-                if (key.endsWith('_game1_score')) {
-                    const username = key.split('_')[0]; // Get the username
-                    const score = parseInt(localStorage.getItem(key), 10);
-                    scores[username] = score; // Store scores in an object
-                }
-            }
+  <!-- Firebase Authentication and Logic -->
+  <script defer type="module">
+    // Import Firebase SDKs
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 
-            // Sort scores in descending order
-            const sortedScores = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+    // Your Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyC4bjg7lVwd8FU8MREaPhBsBENv5qmiYYM",
+      authDomain: "calendrier-de-l-avent-54e3a.firebaseapp.com",
+      projectId: "calendrier-de-l-avent-54e3a",
+      storageBucket: "calendrier-de-l-avent-54e3a.appspot.com",
+      messagingSenderId: "850639567855",
+      appId: "1:850639567855:web:0d799a1ecca005fcff141a",
+      measurementId: "G-PC1W7RYVEH"
+    };
 
-            // Populate the leaderboard
-            sortedScores.forEach(([username, score]) => {
-                const row = leaderboard.insertRow();
-                row.insertCell(0).innerText = username;
-                row.insertCell(1).innerText = score;
-            });
-        }
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
 
-        function logout() {
-            localStorage.removeItem('currentUser');
-            alert('You have been logged out.');
-            window.location.href = 'login.html';
-        }
+    // Ensure user is logged in, otherwise redirect to login page
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        window.location.href = 'login.html';  // Redirect to login if not logged in
+      } else {
+        document.getElementById('userStatus').innerText = `Logged in as ${user.email}`;
+      }
+    });
 
-        // Display the leaderboard when the page loads
-        window.onload = displayLeaderboard;
-    </script>
+    // Log out functionality
+    document.getElementById('logout-btn').addEventListener('click', () => {
+      signOut(auth).then(() => {
+        window.location.href = 'login.html';  // Redirect to login after logout
+      }).catch((error) => {
+        console.error('Logout error:', error);  // Log any errors during logout
+      });
+    });
+
+    // Add click event listeners to all game boxes
+    const boxes = document.querySelectorAll('.box');
+    boxes.forEach(box => {
+      box.addEventListener('click', () => {
+        const gameNumber = box.getAttribute('data-game');
+        window.location.href = `game${gameNumber}.html`;  // Redirect to the corresponding game page
+      });
+    });
+
+    // Add click event listener for the leaderboard button
+    document.getElementById('leaderboard').addEventListener('click', () => {
+      window.location.href = 'leaderboard.html';  // Redirect to the leaderboard page
+    });
+  </script>
 
 </body>
 </html>
