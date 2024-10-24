@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Homepage - Advent Calendar Games</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: 100vh;
+      background-color: #f0f0f0;
+      margin: 0;
+    }
+    h1 {
+      font-size: 2em;
+      margin-bottom: 20px;
+    }
+    #userStatus {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 1.2em;
+    }
+    .box-grid {
+      display: grid;
+      grid-template-columns: repeat(8, 100px);
+      gap: 10px;
+    }
+    .box {
+      width: 100px;
+      height: 100px;
+      background-color: #007BFF;
+      color: white;
+      font-size: 1.5em;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+    .box:hover {
+      background-color: #0056b3;
+    }
+    #leaderboard {
+      width: 320px;
+      height: 50px;
+      margin-top: 20px;
+      background-color: green;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      font-size: 1.5em;
+    }
+    #leaderboard:hover {
+      background-color: darkgreen;
+    }
+    #logout-btn {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: red;
+      color: white;
+      cursor: pointer;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Advent Calendar Games</h1>
+  <div id="userStatus"></div>
+
+  <!-- Box Grid -->
+  <div class="box-grid">
+    <div class="box" data-game="1">1</div>
+    <div class="box" data-game="2">2</div>
+    <div class="box" data-game="3">3</div>
+    <div class="box" data-game="4">4</div>
+    <div class="box" data-game="5">5</div>
+    <div class="box" data-game="6">6</div>
+    <div class="box" data-game="7">7</div>
+    <div class="box" data-game="8">8</div>
+    <div class="box" data-game="9">9</div>
+    <div class="box" data-game="10">10</div>
+    <div class="box" data-game="11">11</div>
+    <div class="box" data-game="12">12</div>
+    <div class="box" data-game="13">13</div>
+    <div class="box" data-game="14">14</div>
+    <div class="box" data-game="15">15</div>
+    <div class="box" data-game="16">16</div>
+    <div class="box" data-game="17">17</div>
+    <div class="box" data-game="18">18</div>
+    <div class="box" data-game="19">19</div>
+    <div class="box" data-game="20">20</div>
+    <div class="box" data-game="21">21</div>
+    <div class="box" data-game="22">22</div>
+    <div class="box" data-game="23">23</div>
+    <div class="box" data-game="24">24</div>
+  </div>
+
+  <!-- Leaderboard Button -->
+  <div id="leaderboard">Leaderboard</div>
+
+  <!-- Logout Button -->
+  <button id="logout-btn">Log Out</button>
+
+  <!-- Firebase Authentication and Logic -->
+  <script defer type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "your-api-key",
+      authDomain: "your-auth-domain",
+      projectId: "your-project-id",
+      storageBucket: "your-storage-bucket",
+      messagingSenderId: "your-messaging-sender-id",
+      appId: "your-app-id",
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Ensure user is logged in, otherwise redirect to login page
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        window.location.href = 'login.html';  // Redirect to login if not logged in
+      } else {
+        document.getElementById('userStatus').innerText = `Logged in as ${user.email}`;
+      }
+    });
+
+    // Log out functionality
+    document.getElementById('logout-btn').addEventListener('click', () => {
+      signOut(auth).then(() => {
+        window.location.href = 'login.html';  // Redirect to login after logout
+      });
+    });
+  </script>
+
+</body>
+</html>
