@@ -113,6 +113,121 @@
         document.getElementById('userStatus').innerText = `Logged in as: ${userEmail}`;
         console.log(`User logged in: ${userEmail}`);
 
+        // Retrieve user<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Game 1 - Click Challenge</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: 100vh;
+      background-color: #f0f0f0;
+      margin: 0;
+    }
+    h1 {
+      font-size: 2em;
+      margin-bottom: 20px;
+    }
+    #userStatus {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 1.2em;
+    }
+    #gameArea {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 50px;
+    }
+    #start-btn, #click-btn {
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 1.5em;
+      cursor: pointer;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+    }
+    #click-btn:disabled {
+      background-color: grey;
+      cursor: not-allowed;
+    }
+    #start-btn:hover, #click-btn:hover:not([disabled]) {
+      background-color: #0056b3;
+    }
+    #timer {
+      font-size: 2em;
+      margin: 20px;
+    }
+    #score, #best-score {
+      font-size: 1.5em;
+      margin: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Click Challenge - Game 1</h1>
+  <div id="userStatus"></div>
+
+  <div id="gameArea">
+    <button id="start-btn">Start Game</button>
+    <button id="click-btn" disabled>Click Me!</button>
+    <div id="timer">Time Left: 10s</div>
+    <div id="score">Current Score: 0</div>
+    <div id="best-score">Best Score: 0</div>
+  </div>
+
+  <!-- Firebase and Game Logic -->
+  <script defer type="module">
+    // Import Firebase SDKs
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyC4bjg7lVwd8FU8MREaPhBsBENv5qmiYYM",
+      authDomain: "calendrier-de-l-avent-54e3a.firebaseapp.com",
+      projectId: "calendrier-de-l-avent-54e3a",
+      storageBucket: "calendrier-de-l-avent-54e3a.appspot.com",
+      messagingSenderId: "850639567855",
+      appId: "1:850639567855:web:0d799a1ecca005fcff141a",
+      measurementId: "G-PC1W7RYVEH"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    let userEmail = '';
+    let bestScore = 0;
+    let playCount = 0;
+    let clickCount = 0;
+    let timer = null;
+
+    // Elements
+    const startBtn = document.getElementById('start-btn');
+    const clickBtn = document.getElementById('click-btn');
+    const timerDisplay = document.getElementById('timer');
+    const scoreDisplay = document.getElementById('score');
+    const bestScoreDisplay = document.getElementById('best-score');
+
+    // Ensure user is logged in
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        userEmail = user.email;
+        document.getElementById('userStatus').innerText = `Logged in as: ${userEmail}`;
+        console.log(`User logged in: ${userEmail}`);
+
         // Retrieve user data from Firestore
         const userDocRef = doc(db, 'users', userEmail);
         const userDocSnap = await getDoc(userDocRef);
@@ -135,6 +250,7 @@
 
     // Start the game
     startBtn.addEventListener('click', async () => {
+      // Start button logic inside try-catch to handle errors
       try {
         // Increment play count and update Firestore
         playCount += 1;
