@@ -145,7 +145,22 @@
         console.error('Logout error:', error);  // Log any errors during logout
       });
     });
+
+    // Add click event listeners to all game boxes
+    const boxes = document.querySelectorAll('.box');
+    boxes.forEach(box => {
+      box.addEventListener('click', () => {
+        const gameNumber = box.getAttribute('data-game');
+        window.location.href = `game${gameNumber}.html`;  // Redirect to the corresponding game page
+      });
+    });
+
+    // Add click event listener for the leaderboard button
+    document.getElementById('leaderboard').addEventListener('click', () => {
+      window.location.href = 'leaderboard.html';  // Redirect to the leaderboard page
+    });
   </script>
 
 </body>
 </html>
+
