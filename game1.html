@@ -1,169 +1,172 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game 1 - Button Press</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            height: 100vh;
-            background-color: #f0f0f0;
-            margin: 0;
-            position: relative; /* Added for positioning the version number */
-        }
-
-        h1 {
-            font-size: 2em;
-            margin-bottom: 20px;
-        }
-
-        #score {
-            font-size: 1.5em;
-            margin-bottom: 20px;
-        }
-
-        #countdown {
-            font-size: 1.5em;
-            margin-bottom: 20px;
-            color: red;
-        }
-
-        #pressButton {
-            padding: 15px 30px;
-            font-size: 1.5em;
-            cursor: pointer;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            border-radius: 5px;
-        }
-
-        #pressButton:hover {
-            background-color: #0056b3;
-        }
-
-        #message {
-            margin-top: 20px;
-            font-size: 1.2em;
-            color: red;
-        }
-
-        #leaderboardLink {
-            margin-top: 20px;
-            font-size: 1.2em;
-            cursor: pointer;
-            color: blue;
-        }
-
-        #leaderboardLink:hover {
-            text-decoration: underline;
-        }
-
-        /* New styles for version number */
-        #version {
-            position: absolute; /* Position it absolutely within the body */
-            top: 10px; /* Distance from the top */
-            right: 10px; /* Distance from the right */
-            font-size: 1em; /* Font size */
-            color: #555; /* Text color */
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Game 1 - Click Challenge</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: 100vh;
+      background-color: #f0f0f0;
+      margin: 0;
+    }
+    h1 {
+      font-size: 2em;
+      margin-bottom: 20px;
+    }
+    #userStatus {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 1.2em;
+    }
+    #gameArea {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 50px;
+    }
+    #start-btn, #click-btn {
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 1.5em;
+      cursor: pointer;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+    }
+    #click-btn:disabled {
+      background-color: grey;
+      cursor: not-allowed;
+    }
+    #start-btn:hover, #click-btn:hover:not([disabled]) {
+      background-color: #0056b3;
+    }
+    #timer {
+      font-size: 2em;
+      margin: 20px;
+    }
+    #score, #best-score {
+      font-size: 1.5em;
+      margin: 10px;
+    }
+  </style>
 </head>
 <body>
 
-    <h1>Press the Button Game!</h1>
-    <div id="countdown">Time Left: 10</div>
-    <div id="score">Score: 0</div>
-    <button id="pressButton">Press Me!</button>
-    <div id="message"></div>
-    <div id="leaderboardLink" onclick="window.location.href='leaderboard.html';">View Leaderboard</div>
+  <h1>Click Challenge - Game 1</h1>
+  <div id="userStatus"></div>
 
-    <!-- Version number display -->
-    <div id="version">Version 1.2</div>
+  <div id="gameArea">
+    <button id="start-btn">Start Game</button>
+    <button id="click-btn" disabled>Click Me!</button>
+    <div id="timer">Time Left: 10s</div>
+    <div id="score">Current Score: 0</div>
+    <div id="best-score">Best Score: 0</div>
+  </div>
 
-    <script>
-        let score = 0;
-        let countdown;
-        let timeLeft = 10;
+  <!-- Firebase and Game Logic -->
+  <script defer type="module">
+    // Import Firebase SDKs
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
-        // Check if user is logged in
-        const currentUser = localStorage.getItem('currentUser');
-        if (!currentUser) {
-            alert('You are not logged in. Redirecting to login page...');
-            window.location.href = 'login.html'; // Redirect to login if not logged in
-        }
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyC4bjg7lVwd8FU8MREaPhBsBENv5qmiYYM",
+      authDomain: "calendrier-de-l-avent-54e3a.firebaseapp.com",
+      projectId: "calendrier-de-l-avent-54e3a",
+      storageBucket: "calendrier-de-l-avent-54e3a.appspot.com",
+      messagingSenderId: "850639567855",
+      appId: "1:850639567855:web:0d799a1ecca005fcff141a",
+      measurementId: "G-PC1W7RYVEH"
+    };
 
-        // Retrieve the number of games played from local storage
-        let gameCount = parseInt(localStorage.getItem(`${currentUser}_game1_play_count`) || 0);
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-        // Check if the user has already played the game twice
-        if (gameCount >= 2) {
-            document.getElementById('message').innerText = 'You have already played this game too many times.';
-            document.getElementById('pressButton').disabled = true; // Disable the button
+    let userEmail = '';
+    let bestScore = 0;
+    let playCount = 0;
+    let clickCount = 0;
+    let timer = null;
+
+    // Elements
+    const startBtn = document.getElementById('start-btn');
+    const clickBtn = document.getElementById('click-btn');
+    const timerDisplay = document.getElementById('timer');
+    const scoreDisplay = document.getElementById('score');
+    const bestScoreDisplay = document.getElementById('best-score');
+
+    // Ensure user is logged in
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        userEmail = user.email;
+        document.getElementById('userStatus').innerText = `Logged in as ${userEmail}`;
+
+        // Retrieve user data from Firestore
+        const userDocRef = doc(db, 'users', userEmail);
+        const userDocSnap = await getDoc(userDocRef);
+
+        if (userDocSnap.exists()) {
+          const userData = userDocSnap.data();
+          bestScore = userData.bestScore || 0;
+          playCount = userData.playCount || 0;
+          bestScoreDisplay.innerText = `Best Score: ${bestScore}`;
         } else {
-            // Button click event to start the game
-            document.getElementById('pressButton').addEventListener('click', function() {
-                // Start the game only on first button press if not already playing
-                if (timeLeft === 10) { // If the game is not already running
-                    startGame();
-                }
-                // Increase score on button press
-                if (timeLeft > 0) {
-                    score++;
-                    document.getElementById('score').innerText = `Score: ${score}`;
-                }
-            });
+          // If no data exists, create a new record for the user
+          await setDoc(userDocRef, { bestScore: 0, playCount: 0 });
         }
+      } else {
+        window.location.href = 'login.html';  // Redirect if not logged in
+      }
+    });
 
-        function startGame() {
-            score = 0; // Reset score
-            timeLeft = 10; // Reset timer
-            document.getElementById('score').innerText = `Score: ${score}`;
-            document.getElementById('countdown').innerText = `Time Left: ${timeLeft}`;
-            document.getElementById('message').innerText = '';
+    // Start the game
+    startBtn.addEventListener('click', async () => {
+      // Increment play count and update Firestore
+      playCount += 1;
+      await updateDoc(doc(db, 'users', userEmail), { playCount });
 
-            // Start countdown
-            countdown = setInterval(() => {
-                if (timeLeft > 0) {
-                    timeLeft--;
-                    document.getElementById('countdown').innerText = `Time Left: ${timeLeft}`;
-                } else {
-                    endGame();
-                }
-            }, 1000); // Update every second
+      // Reset scores and enable the click button
+      clickCount = 0;
+      clickBtn.disabled = false;
+      scoreDisplay.innerText = `Current Score: 0`;
+
+      // Start the 10-second timer
+      let timeLeft = 10;
+      timerDisplay.innerText = `Time Left: ${timeLeft}s`;
+      timer = setInterval(() => {
+        timeLeft -= 1;
+        timerDisplay.innerText = `Time Left: ${timeLeft}s`;
+
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          clickBtn.disabled = true;
+          // Update best score if current score is higher
+          if (clickCount > bestScore) {
+            bestScore = clickCount;
+            bestScoreDisplay.innerText = `Best Score: ${bestScore}`;
+            await updateDoc(doc(db, 'users', userEmail), { bestScore });
+          }
         }
+      }, 1000);
+    });
 
-        function endGame() {
-            clearInterval(countdown);
-            gameCount++; // Increment game count
-            localStorage.setItem(`${currentUser}_game1_play_count`, gameCount); // Update games played
-
-            // Show message and record score
-            document.getElementById('message').innerText = `Time's up! Your score: ${score}.`;
-
-            recordScore(score);
-
-            // Disable the button and show game over message
-            document.getElementById('pressButton').disabled = true; // Disable the button
-            document.getElementById('message').innerText += ' Game over!';
-        }
-
-        function recordScore(finalScore) {
-            const user = localStorage.getItem('currentUser');
-            if (user) {
-                let highScore = localStorage.getItem(`${user}_game1_score`) || 0;
-                // Only update score if it's higher than the existing score and game count is less than 2
-                if (finalScore > highScore && gameCount < 2) {
-                    localStorage.setItem(`${user}_game1_score`, finalScore);
-                }
-            }
-        }
-    </script>
+    // Click button logic
+    clickBtn.addEventListener('click', () => {
+      clickCount += 1;
+      scoreDisplay.innerText = `Current Score: ${clickCount}`;
+    });
+  </script>
 
 </body>
 </html>
