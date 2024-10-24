@@ -1,138 +1,146 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Game 1 - Click Challenge</title>
-  <style>
-    /* Add your styles here */
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game 1 - Click Challenge</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
+        h1 {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        #userStatus {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.2em;
+        }
+        #gameArea {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 50px;
+        }
+        #start-btn, #click-btn {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 1.5em;
+            cursor: pointer;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+        }
+        #click-btn:disabled {
+            background-color: grey;
+            cursor: not-allowed;
+        }
+        #start-btn:hover, #click-btn:hover:not([disabled]) {
+            background-color: #0056b3;
+        }
+        #timer {
+            font-size: 2em;
+            margin: 20px;
+        }
+        #score {
+            font-size: 1.5em;
+            margin: 10px;
+        }
+    </style>
 </head>
 <body>
 
-  <h1>Click Challenge - Game 1</h1>
-  <div id="userStatus"></div>
+    <h1>Click Challenge - Game 1</h1>
+    <div id="userStatus"></div>
 
-  <div id="gameArea">
-    <button id="start-btn">Start Game</button>
-    <button id="click-btn" disabled>Click Me!</button>
-    <div id="timer">Time Left: 10s</div>
-    <div id="score">Current Score: 0</div>
-    <div id="best-score">Best Score: 0</div>
-  </div>
+    <div id="gameArea">
+        <button id="start-btn">Start Game</button>
+        <button id="click-btn" disabled>Click Me!</button>
+        <div id="timer">Time Left: 10s</div>
+        <div id="score">Current Score: 0</div>
+    </div>
 
-  <!-- Firebase and Game Logic -->
-  <script defer type="module">
-    // Import Firebase SDKs
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-    import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+    <!-- Firebase and Game Logic -->
+    <script defer type="module">
+        // Import Firebase SDKs
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
-    // Firebase configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyC4bjg7lVwd8FU8MREaPhBsBENv5qmiYYM",
-      authDomain: "calendrier-de-l-avent-54e3a.firebaseapp.com",
-      projectId: "calendrier-de-l-avent-54e3a",
-      storageBucket: "calendrier-de-l-avent-54e3a.appspot.com",
-      messagingSenderId: "850639567855",
-      appId: "1:850639567855:web:0d799a1ecca005fcff141a",
-      measurementId: "G-PC1W7RYVEH"
-    };
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyC4bjg7lVwd8FU8MREaPhBsBENv5qmiYYM",
+            authDomain: "calendrier-de-l-avent-54e3a.firebaseapp.com",
+            projectId: "calendrier-de-l-avent-54e3a",
+            storageBucket: "calendrier-de-l-avent-54e3a.appspot.com",
+            messagingSenderId: "850639567855",
+            appId: "1:850639567855:web:0d799a1ecca005fcff141a",
+            measurementId: "G-PC1W7RYVEH"
+        };
 
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
-    let userEmail = '';
-    let bestScore = 0;
-    let playCount = 0;
-    let clickCount = 0;
-    let timer = null;
+        let userEmail = '';
+        let clickCount = 0;
+        let timer = null;
 
-    // Elements
-    const startBtn = document.getElementById('start-btn');
-    const clickBtn = document.getElementById('click-btn');
-    const timerDisplay = document.getElementById('timer');
-    const scoreDisplay = document.getElementById('score');
-    const bestScoreDisplay = document.getElementById('best-score');
+        // Elements
+        const startBtn = document.getElementById('start-btn');
+        const clickBtn = document.getElementById('click-btn');
+        const timerDisplay = document.getElementById('timer');
+        const scoreDisplay = document.getElementById('score');
 
-    // Ensure user is logged in
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        userEmail = user.email;
-        document.getElementById('userStatus').innerText = `Logged in as: ${userEmail}`;
-        console.log(`User logged in: ${userEmail}`);
-
-        // Retrieve user data from Firestore
-        const userDocRef = doc(db, 'users', userEmail);
-        const userDocSnap = await getDoc(userDocRef);
-
-        if (userDocSnap.exists()) {
-          const userData = userDocSnap.data();
-          bestScore = userData.bestScore || 0;
-          playCount = userData.playCount || 0;
-          bestScoreDisplay.innerText = `Best Score: ${bestScore}`;
-          console.log(`Best score retrieved: ${bestScore}`);
-        } else {
-          // If no data exists, create a new record for the user
-          await setDoc(userDocRef, { bestScore: 0, playCount: 0 });
-          console.log(`New user record created for: ${userEmail}`);
-        }
-      } else {
-        window.location.href = 'login.html';  // Redirect if not logged in
-      }
-    });
-
-    // Start the game
-    startBtn.addEventListener('click', async () => {
-      try {
-        // Increment play count and update Firestore
-        playCount += 1;
-        await updateDoc(doc(db, 'users', userEmail), { playCount });
-
-        // Reset scores and enable the click button
-        clickCount = 0;
-        clickBtn.disabled = false;
-        scoreDisplay.innerText = `Current Score: 0`;
-
-        // Start the 10-second timer
-        let timeLeft = 10;
-        timerDisplay.innerText = `Time Left: ${timeLeft}s`;
-        timer = setInterval(() => {
-          timeLeft -= 1;
-          timerDisplay.innerText = `Time Left: ${timeLeft}s`;
-
-          if (timeLeft <= 0) {
-            clearInterval(timer);
-            clickBtn.disabled = true;
-
-            // Update best score if current score is higher
-            if (clickCount > bestScore) {
-              bestScore = clickCount;
-              bestScoreDisplay.innerText = `Best Score: ${bestScore}`;
-              
-              try {
-                await updateDoc(doc(db, 'users', userEmail), { bestScore });
-                console.log(`Best score updated: ${bestScore}`);
-              } catch (error) {
-                console.error("Error updating best score:", error);
-              }
+        // Ensure user is logged in
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                userEmail = user.email;
+                document.getElementById('userStatus').innerText = `Logged in as: ${userEmail}`;
+            } else {
+                window.location.href = 'login.html';  // Redirect if not logged in
             }
-          }
-        }, 1000);
-      } catch (error) {
-        console.error("Error updating play count:", error);
-      }
-    });
+        });
 
-    // Click button logic
-    clickBtn.addEventListener('click', () => {
-      clickCount += 1;
-      scoreDisplay.innerText = `Current Score: ${clickCount}`;
-      console.log(`Button clicked: Current Score ${clickCount}`);
-    });
-  </script>
+        // Start the game
+        startBtn.addEventListener('click', () => {
+            // Reset the score
+            clickCount = 0;
+            scoreDisplay.innerText = `Current Score: ${clickCount}`;
+
+            // Enable the click button
+            clickBtn.disabled = false;
+
+            // Start the 10-second timer
+            let timeLeft = 10;
+            timerDisplay.innerText = `Time Left: ${timeLeft}s`;
+            timer = setInterval(() => {
+                timeLeft -= 1;
+                timerDisplay.innerText = `Time Left: ${timeLeft}s`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    clickBtn.disabled = true;  // Disable the click button after time runs out
+                }
+            }, 1000);
+        });
+
+        // Click button logic
+        clickBtn.addEventListener('click', () => {
+            clickCount += 1;
+            scoreDisplay.innerText = `Current Score: ${clickCount}`;
+        });
+    </script>
 
 </body>
 </html>
