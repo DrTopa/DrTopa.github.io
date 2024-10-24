@@ -73,6 +73,13 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
+    // Redirect to homepage if user is already logged in
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        window.location.href = 'homepage.html';  // Redirect to homepage if already logged in
+      }
+    });
+
     document.getElementById('signup-btn').addEventListener('click', () => {
       document.getElementById('signup-form').style.display = 'block';
       document.getElementById('login-form').style.display = 'none';
@@ -109,14 +116,8 @@
           document.getElementById('message').innerText = `Error: ${error.message}`;
         });
     });
-
-    // Check if user is already logged in
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        window.location.href = 'homepage.html';  // Redirect to homepage if already logged in
-      }
-    });
   </script>
 
 </body>
 </html>
+
