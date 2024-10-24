@@ -57,19 +57,22 @@
   </div>
 
   <!-- Firebase Integration -->
-  <script defer type="module">
+    <script defer type="module">
+    // Import Firebase SDKs
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 
+    // Your Firebase configuration
     const firebaseConfig = {
-      apiKey: "your-api-key",
-      authDomain: "your-auth-domain",
-      projectId: "your-project-id",
-      storageBucket: "your-storage-bucket",
-      messagingSenderId: "your-messaging-sender-id",
-      appId: "your-app-id",
+      apiKey: "AIzaSyC4bjg7lVwd8FU8MREaPhBsBENv5qmiYYM",
+      authDomain: "calendrier-de-l-avent-54e3a.firebaseapp.com",
+      projectId: "calendrier-de-l-avent-54e3a",
+      storageBucket: "calendrier-de-l-avent-54e3a.appspot.com",
+      messagingSenderId: "850639567855",
+      appId: "1:850639567855:web:0d799a1ecca005fcff141a",
+      measurementId: "G-PC1W7RYVEH"
     };
-
+      
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
