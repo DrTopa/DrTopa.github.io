@@ -110,7 +110,7 @@
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         userEmail = user.email;
-        document.getElementById('userStatus').innerText = `Logged in as ${userEmail}`;
+        document.getElementById('userStatus').innerText = `Logged in as: ${userEmail}`;
 
         // Retrieve user data from Firestore
         const userDocRef = doc(db, 'users', userEmail);
@@ -170,4 +170,3 @@
 
 </body>
 </html>
-
