@@ -74,7 +74,7 @@
         // Import Firebase SDKs
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, setDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
         // Firebase configuration
         const firebaseConfig = {
@@ -89,7 +89,7 @@
         };
 
         // Initialize Firebase
-     const app = initializeApp(firebaseConfig);
+        const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
@@ -152,8 +152,10 @@
         // Save the score to Firestore
         async function saveScore(score) {
             try {
+                // Define collection reference for user scores
                 const userScoresRef = collection(db, 'users', userId, 'gameScores');
                 
+                // Add a new document with the score and play count
                 await addDoc(userScoresRef, {
                     score: score,
                     playCount: playCount,
@@ -169,3 +171,4 @@
 
 </body>
 </html>
+
