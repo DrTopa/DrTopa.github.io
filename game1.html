@@ -140,6 +140,25 @@
             clickCount += 1;
             scoreDisplay.innerText = `Current Score: ${clickCount}`;
         });
+
+        
+        // Save the score to Firestore
+        async function saveScore(score) {
+            try {
+                const userScoresRef = collection(db, 'users', userEmail, 'gameScores');
+                
+                // Add a new document with the score and play count
+                await addDoc(userScoresRef, {
+                    score: score,
+                    playCount: playCount,
+                    timestamp: new Date()  // optional, to keep track of when the score was recorded
+                });
+
+                console.log("Score saved successfully.");
+            } catch (error) {
+                console.error("Error saving score: ", error);
+            }
+        }
     </script>
 
 </body>
