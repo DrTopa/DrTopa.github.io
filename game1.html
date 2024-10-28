@@ -160,6 +160,22 @@
                 console.error("Error saving score: ", error);
             }
         }
+
+        // Test Firestore connection by retrieving user data
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    const userRef = doc(db, 'users', user.uid);
+    const docSnap = await getDoc(userRef);
+
+    if (docSnap.exists()) {
+      console.log("Document data:", docSnap.data());
+    } else {
+      console.log("No such document!");
+    }
+  } else {
+    console.log("User is not authenticated");
+  }
+});
     </script>
 
 </body>
