@@ -89,25 +89,34 @@
         };
 
         // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
+     const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        let userEmail = '';
+        let userId = '';
         let clickCount = 0;
+        let playCount = 0; // Initialize play count
         let timer = null;
 
-        // Elements
         const startBtn = document.getElementById('start-btn');
         const clickBtn = document.getElementById('click-btn');
         const timerDisplay = document.getElementById('timer');
         const scoreDisplay = document.getElementById('score');
 
         // Ensure user is logged in
-        onAuthStateChanged(auth, (user) => {
+        onAuthStateChanged(auth, async (user) => {
             if (user) {
-                userEmail = user.email;
-                document.getElementById('userStatus').innerText = `Logged in as: ${userEmail}`;
+                userId = user.uid;
+                document.getElementById('userStatus').innerText = `Logged in as: ${user.email}`;
+
+                // Check if user document exists, create it if it doesn't
+                const userRef = doc(db, 'users', userId);
+                const docSnap = await getDoc(userRef);
+
+                if (!docSnap.exists()) {
+                    await setDoc(userRef, { userId: userId, totalPlayCount: 0 });
+                    console.log("User document created.");
+                }
             } else {
                 window.location.href = 'login.html';  // Redirect if not logged in
             }
@@ -115,14 +124,11 @@
 
         // Start the game
         startBtn.addEventListener('click', () => {
-            // Reset the score
             clickCount = 0;
             scoreDisplay.innerText = `Current Score: ${clickCount}`;
-
-            // Enable the click button
+            playCount += 1; // Increment play count on game start
             clickBtn.disabled = false;
 
-            // Start the 10-second timer
             let timeLeft = 10;
             timerDisplay.innerText = `Time Left: ${timeLeft}s`;
             timer = setInterval(() => {
@@ -131,7 +137,8 @@
 
                 if (timeLeft <= 0) {
                     clearInterval(timer);
-                    clickBtn.disabled = true;  // Disable the click button after time runs out
+                    clickBtn.disabled = true;
+                    saveScore(clickCount);  // Save score at the end of the game
                 }
             }, 1000);
         });
@@ -142,13 +149,11 @@
             scoreDisplay.innerText = `Current Score: ${clickCount}`;
         });
 
-        
         // Save the score to Firestore
         async function saveScore(score) {
             try {
-                const userScoresRef = collection(db, 'users', userEmail, 'gameScores');
+                const userScoresRef = collection(db, 'users', userId, 'gameScores');
                 
-                // Add a new document with the score and play count
                 await addDoc(userScoresRef, {
                     score: score,
                     playCount: playCount,
@@ -160,22 +165,6 @@
                 console.error("Error saving score: ", error);
             }
         }
-
-        // Test Firestore connection by retrieving user data
-onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    const userRef = doc(db, 'users', user.uid);
-    const docSnap = await getDoc(userRef);
-
-    if (docSnap.exists()) {
-      console.log("Document data:", docSnap.data());
-    } else {
-      console.log("No such document!");
-    }
-  } else {
-    console.log("User is not authenticated");
-  }
-});
     </script>
 
 </body>
