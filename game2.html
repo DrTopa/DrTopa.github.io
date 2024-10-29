@@ -25,6 +25,19 @@
             right: 10px;
             font-size: 1.2em;
         }
+                
+        #explanation {
+            font-size: 1.2em;
+            margin: 20px 0;
+            padding: 10px;
+            color: #333;
+            max-width: 80%;
+            text-align: center;
+            line-height: 1.5;
+            border-left: 4px solid #007BFF;
+            background-color: #e0f2ff;
+            border-radius: 8px;
+        }
         #gameArea {
             display: flex;
             flex-direction: column;
@@ -67,7 +80,12 @@
 
     <h1>Quiz Challenge - Game 2</h1>
     <div id="userStatus"></div>
-
+    
+    <div id="explanation">
+        Good morning, fellows! I will explain the rules to you. This quiz has a few questions, each with multiple-choice answers. 
+        For each correct answer, you earn points. Good luck and have fun!
+    </div>
+    
     <div id="gameArea">
         <button id="start-btn">Start Game</button>
         <div id="timer"></div>
@@ -173,7 +191,7 @@
                 answer: "D"
             },
             {
-                question: "NNiveau 2nd (2010) A quel théorème peut-on associer cette phrase : Si p est un nombre premier et a est un entier qui n'est pas divisible par p alors a^(p-1) ≡ 1 (mod p) ",
+                question: "Niveau 2nd (2010) A quel théorème peut-on associer cette phrase : Si p est un nombre premier et a est un entier qui n'est pas divisible par p alors a^(p-1) ≡ 1 (mod p) ",
                 options: ["A) Bezout", "B) Fermat", "C) Baire", "D) Cauchy"],
                 answer: "B"
             },
