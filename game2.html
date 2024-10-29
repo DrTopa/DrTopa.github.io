@@ -227,15 +227,20 @@
             }
         }
 
-        async function endGame() {
-            inputField.disabled = true;
-            const userRef = doc(db, 'users', userId);
-            if (score > highestScore) {
-                highestScore = score;
-                await updateDoc(userRef, { highestScoreGame2: highestScore });
-            }
-            console.log("Game Over. Final Score:", score);
+
+         async function saveScore(score) {
+            try {
+                const gameData = { score: score, playCount: playCount, timestamp: new Date() };
+                await addDoc(collection(db, 'users', userId, 'Game2'), gameData);
+                inputField.disabled = true;
+                const userRef = doc(db, 'users', userId);
+                if (score > highestScore) {
+                    highestScore = score;
+                    await updateDoc(userRef, { highestScoreGame1: highestScore });
+                }
+                console.log("Game Over. Final Score:", score);
             alert(`The quiz is over! Your final score is: ${score}`);
+               
         }
     </script>
 </body>
