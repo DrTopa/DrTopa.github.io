@@ -15,22 +15,9 @@
             background-color: #f0f0f0;
             margin: 0;
         }
-        h1 {
-            font-size: 2em;
-            margin-bottom: 20px;
-        }
-        #userStatus {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 1.2em;
-        }
-        #gameArea {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 50px;
-        }
+        h1 { font-size: 2em; margin-bottom: 20px; }
+        #userStatus { position: absolute; top: 10px; right: 10px; font-size: 1.2em; }
+        #gameArea { display: flex; flex-direction: column; align-items: center; margin-top: 50px; }
         #start-btn, #click-btn {
             padding: 10px 20px;
             margin: 10px;
@@ -40,28 +27,15 @@
             color: white;
             border: none;
         }
-        #click-btn:disabled {
-            background-color: grey;
-            cursor: not-allowed;
-        }
-        #start-btn:hover, #click-btn:hover:not([disabled]) {
-            background-color: #0056b3;
-        }
-        #timer {
-            font-size: 2em;
-            margin: 20px;
-        }
-        #score {
-            font-size: 1.5em;
-            margin: 10px;
-        }
+        #click-btn:disabled { background-color: grey; cursor: not-allowed; }
+        #start-btn:hover, #click-btn:hover:not([disabled]) { background-color: #0056b3; }
+        #timer { font-size: 2em; margin: 20px; }
+        #score { font-size: 1.5em; margin: 10px; }
     </style>
 </head>
 <body>
-
     <h1>Click Challenge - Game 1</h1>
     <div id="userStatus"></div>
-
     <div id="gameArea">
         <button id="start-btn">Start Game</button>
         <button id="click-btn" disabled>Click Me!</button>
@@ -69,12 +43,12 @@
         <div id="score">Current Score: 0</div>
     </div>
 
-    <!-- Firebase and Game Logic -->
     <script defer type="module">
-        // Import Firebase SDKs
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+       
 
         // Firebase configuration
         const firebaseConfig = {
@@ -88,87 +62,87 @@
             measurementId: "G-PC1W7RYVEH"
         };
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
         let userId = '';
         let clickCount = 0;
-        let playCount = 0; // Initialize play count
-        let timer = null;
+        let playCount = 0;
+        let totalPlayCount = 0;
+        let highestScore = 0;
 
         const startBtn = document.getElementById('start-btn');
         const clickBtn = document.getElementById('click-btn');
         const timerDisplay = document.getElementById('timer');
         const scoreDisplay = document.getElementById('score');
 
-        // Ensure user is logged in
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 userId = user.uid;
                 document.getElementById('userStatus').innerText = `Logged in as: ${user.email}`;
 
-                // Check if user document exists, create it if it doesn't
                 const userRef = doc(db, 'users', userId);
                 const docSnap = await getDoc(userRef);
 
                 if (!docSnap.exists()) {
-                    await setDoc(userRef, { userId: userId, totalPlayCount: 0 });
+                    await setDoc(userRef, { userId: userId, totalPlayCount: 0, highestScoreGame1: 0 });
                     console.log("User document created.");
+                } else {
+                    const userData = docSnap.data();
+                    totalPlayCount = userData.totalPlayCount || 0;
+                    highestScore = userData.highestScoreGame1 || 0;
+                    playCount = totalPlayCount + 1;
                 }
             } else {
-                window.location.href = 'login.html';  // Redirect if not logged in
+                window.location.href = 'login.html';
             }
         });
 
-        // Start the game
-        startBtn.addEventListener('click', () => {
+        startBtn.addEventListener('click', async () => {
             clickCount = 0;
             scoreDisplay.innerText = `Current Score: ${clickCount}`;
-            playCount += 1; // Increment play count on game start
-            clickBtn.disabled = false;
+            playCount = totalPlayCount + 1;
 
+            clickBtn.disabled = false;
             let timeLeft = 10;
             timerDisplay.innerText = `Time Left: ${timeLeft}s`;
-            timer = setInterval(() => {
+            const timer = setInterval(() => {
                 timeLeft -= 1;
                 timerDisplay.innerText = `Time Left: ${timeLeft}s`;
-
                 if (timeLeft <= 0) {
                     clearInterval(timer);
                     clickBtn.disabled = true;
-                    saveScore(clickCount);  // Save score at the end of the game
+                    saveScore(clickCount);
                 }
             }, 1000);
+
+            await updateDoc(doc(db, 'users', userId), { totalPlayCount: playCount });
         });
 
-        // Click button logic
         clickBtn.addEventListener('click', () => {
             clickCount += 1;
             scoreDisplay.innerText = `Current Score: ${clickCount}`;
         });
 
-        // Save the score to Firestore
         async function saveScore(score) {
             try {
-                // Define collection reference for user scores
-                const userScoresRef = collection(db, 'users', userId, 'Game1');
-                
-                // Add a new document with the score and play count
-                await addDoc(userScoresRef, {
-                    score: score,
-                    playCount: playCount,
-                    timestamp: new Date()  // optional, to keep track of when the score was recorded
-                });
+                const gameData = { score: score, playCount: playCount, timestamp: new Date() };
+                await addDoc(collection(db, 'users', userId, 'Game1'), gameData);
 
+                const userRef = doc(db, 'users', userId);
+                if (score > highestScore) {
+                    highestScore = score;
+                    await updateDoc(userRef, { highestScoreGame1: highestScore });
+                }
                 console.log("Score saved successfully.");
             } catch (error) {
-                console.error("Error saving score: ", error);
+                console.error("Error saving score:", error);
             }
         }
     </script>
-
 </body>
 </html>
+
+
 
