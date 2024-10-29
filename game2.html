@@ -3,27 +3,166 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game 1</title>
+    <title>Game 2 - Quiz Challenge</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f7f7f7;
-            margin: 0;
-        }
-
-        h1 {
-            font-size: 3em;
-            color: #333;
-        }
+        body { font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; flex-direction: column; height: 100vh; background-color: #f0f0f0; margin: 0; }
+        h1 { font-size: 2em; margin-bottom: 20px; }
+        #userStatus { position: absolute; top: 10px; right: 10px; font-size: 1.2em; }
+        #gameArea { display: flex; flex-direction: column; align-items: center; margin-top: 50px; }
+        #start-btn { padding: 10px 20px; margin: 10px; font-size: 1.5em; cursor: pointer; background-color: #007BFF; color: white; border: none; }
+        #start-btn:hover { background-color: #0056b3; }
+        #question { font-size: 1.5em; margin: 20px; }
+        #options { font-size: 1.2em; margin: 10px; }
+        #timer, #score { font-size: 1.5em; margin: 10px; }
+        #input { padding: 10px; font-size: 1.2em; margin: 10px; width: 50px; }
     </style>
 </head>
 <body>
 
-    <h1>Welcome to Game 2!</h1>
+    <h1>Quiz Challenge - Game 2</h1>
+    <div id="userStatus"></div>
 
+    <div id="gameArea">
+        <button id="start-btn">Start Game</button>
+        <div id="timer"></div>
+        <div id="score"></div>
+        <div id="question"></div>
+        <div id="options"></div>
+        <input type="text" id="input" placeholder="A/B/C/D" maxlength="1" disabled>
+    </div>
+
+    <script defer type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+        const firebaseConfig = { /* Your Firebase Config */ };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let userId = '';
+        let score = 0;
+        let playCount = 0;
+        let totalPlayCount = 0;
+        let highestScore = 0;
+
+        const startBtn = document.getElementById('start-btn');
+        const timerDisplay = document.getElementById('timer');
+        const scoreDisplay = document.getElementById('score');
+        const questionDisplay = document.getElementById('question');
+        const optionsDisplay = document.getElementById('options');
+        const inputField = document.getElementById('input');
+
+        const questions = [
+            {
+                question: "8 * 7 equals = ?",
+                options: ["A) 54", "B) 45", "C) 56", "D) 87"],
+                answer: "C"
+            },
+            {
+                question: "Si je multiplie deux nombres pairs alors j'obtiens un nombre ..",
+                options: ["A) Pair", "B) Impair", "C) Quoicoubeix"],
+                answer: "A"
+            }
+        ];
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                userId = user.uid;
+                document.getElementById('userStatus').innerText = `Logged in as: ${user.email}`;
+
+                const userRef = doc(db, 'users', userId);
+                const docSnap = await getDoc(userRef);
+
+                if (!docSnap.exists()) {
+                    await setDoc(userRef, { userId: userId, totalPlayCount: 0, highestScoreGame2: 0 });
+                    console.log("User document created with initial values.");
+                } else {
+                    const userData = docSnap.data();
+                    totalPlayCount = userData.totalPlayCount || 0;
+                    highestScore = userData.highestScoreGame2 || 0;
+                    playCount = totalPlayCount + 1;
+                    console.log(`Loaded totalPlayCount: ${totalPlayCount}, highestScore: ${highestScore}`);
+                }
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
+        startBtn.addEventListener('click', async () => {
+            score = 0;
+            scoreDisplay.innerText = `Current Score: ${score}`;
+            inputField.value = '';
+            inputField.disabled = false;
+            timerDisplay.innerText = '';
+            optionsDisplay.innerHTML = '';
+
+            // Increment totalPlayCount and update Firestore
+            totalPlayCount += 1;
+            await updateDoc(doc(db, 'users', userId), { totalPlayCount: totalPlayCount });
+
+            let questionIndex = 0;
+            showQuestion(questionIndex);
+
+            const timerDuration = 15;
+            let timeLeft = timerDuration;
+
+            const timer = setInterval(() => {
+                timeLeft -= 1;
+                timerDisplay.innerText = `Time Left: ${timeLeft}s`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    inputField.disabled = true;
+                    checkAnswer(questionIndex, inputField.value.toUpperCase());
+                    questionIndex++;
+                    if (questionIndex < questions.length) {
+                        setTimeout(() => showQuestion(questionIndex), 1000);
+                    } else {
+                        endGame();
+                    }
+                }
+            }, 1000);
+        });
+
+        function showQuestion(index) {
+            const question = questions[index];
+            questionDisplay.innerText = question.question;
+            optionsDisplay.innerHTML = question.options.join('<br>');
+            timerDisplay.innerText = `Time Left: 15s`;
+            inputField.disabled = false;
+            inputField.focus();
+        }
+
+        inputField.addEventListener('keyup', (event) => {
+            if (event.key === 'Enter' && inputField.value) {
+                checkAnswer(Math.floor((questions.length - (parseInt(timerDisplay.innerText.split(' ')[2]) / 15)) - 1), inputField.value.toUpperCase());
+                inputField.value = '';
+            }
+        });
+
+        function checkAnswer(index, userAnswer) {
+            if (userAnswer === questions[index].answer) {
+                score += 5;
+                scoreDisplay.innerText = `Current Score: ${score}`;
+                console.log("Correct Answer!");
+            } else {
+                console.log("Incorrect Answer.");
+            }
+        }
+
+        async function endGame() {
+            inputField.disabled = true;
+            const userRef = doc(db, 'users', userId);
+            if (score > highestScore) {
+                highestScore = score;
+                await updateDoc(userRef, { highestScoreGame2: highestScore });
+            }
+            console.log("Game Over. Final Score:", score);
+            alert(`Game Over! Your final score is: ${score}`);
+        }
+    </script>
 </body>
 </html>
