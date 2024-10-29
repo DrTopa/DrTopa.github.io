@@ -126,7 +126,7 @@ const app = initializeApp(firebaseConfig);
                 await addDoc(collection(db, 'users', userId, 'Game1'), gameData);
 
                 const userRef = doc(db, 'users', userId);
-                if (score > highestScore) {
+                if (totalPlayCountGame1 <= 4 && score > highestScore) {
                     highestScore = score;
                     await updateDoc(userRef, { highestScoreGame1: highestScore });
                 }
