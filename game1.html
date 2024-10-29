@@ -5,16 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Game 1 - Click Challenge</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            height: 100vh;
-            background-color: #f0f0f0;
-            margin: 0;
-        }
+        body { font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; flex-direction: column; height: 100vh; background-color: #f0f0f0; margin: 0; }
         h1 { font-size: 2em; margin-bottom: 20px; }
         #userStatus { position: absolute; top: 10px; right: 10px; font-size: 1.2em; }
         #gameArea { display: flex; flex-direction: column; align-items: center; margin-top: 50px; }
@@ -47,7 +38,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
         import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
-
        
 
         // Firebase configuration
@@ -62,7 +52,7 @@
             measurementId: "G-PC1W7RYVEH"
         };
 
-        const app = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
@@ -86,13 +76,16 @@
                 const docSnap = await getDoc(userRef);
 
                 if (!docSnap.exists()) {
+                    // Create a new document for the user if it doesn't exist, with initial values
                     await setDoc(userRef, { userId: userId, totalPlayCount: 0, highestScoreGame1: 0 });
-                    console.log("User document created.");
+                    console.log("User document created with initial values.");
                 } else {
+                    // Load existing data
                     const userData = docSnap.data();
                     totalPlayCount = userData.totalPlayCount || 0;
                     highestScore = userData.highestScoreGame1 || 0;
                     playCount = totalPlayCount + 1;
+                    console.log(`Loaded totalPlayCount: ${totalPlayCount}, highestScore: ${highestScore}`);
                 }
             } else {
                 window.location.href = 'login.html';
@@ -102,7 +95,7 @@
         startBtn.addEventListener('click', async () => {
             clickCount = 0;
             scoreDisplay.innerText = `Current Score: ${clickCount}`;
-            playCount = totalPlayCount + 1;
+            playCount = totalPlayCount + 1; // Set play count based on totalPlayCount + 1
 
             clickBtn.disabled = false;
             let timeLeft = 10;
@@ -117,7 +110,9 @@
                 }
             }, 1000);
 
-            await updateDoc(doc(db, 'users', userId), { totalPlayCount: playCount });
+            // Increment totalPlayCount and update Firestore
+            totalPlayCount += 1;
+            await updateDoc(doc(db, 'users', userId), { totalPlayCount: totalPlayCount });
         });
 
         clickBtn.addEventListener('click', () => {
@@ -143,6 +138,3 @@
     </script>
 </body>
 </html>
-
-
-
