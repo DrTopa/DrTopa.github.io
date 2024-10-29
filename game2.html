@@ -80,9 +80,9 @@
     <script defer type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
-                // Firebase configuration
+        // Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyC4bjg7lVwd8FU8MREaPhBsBENv5qmiYYM",
             authDomain: "calendrier-de-l-avent-54e3a.firebaseapp.com",
@@ -91,9 +91,7 @@
             storageBucket: "calendrier-de-l-avent-54e3a.appspot.com",
             messagingSenderId: "850639567855",
             appId: "1:850639567855:web:0d799a1ecca005fcff141a",
-            measurementId: "G-PC1W7RYVEH"
-        };
-
+          
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
@@ -102,8 +100,8 @@
         let userId = '';
         let score = 0;
         let playCount = 0;
-        let totalPlayCount = 0;
-        let highestScore = 0;
+        let totalPlayCountGame2 = 0;  // Renamed variable
+        let highestScoreGame2 = 0;     // Renamed variable
 
         const startBtn = document.getElementById('start-btn');
         const timerDisplay = document.getElementById('timer');
@@ -134,14 +132,14 @@
                 const docSnap = await getDoc(userRef);
 
                 if (!docSnap.exists()) {
-                    await setDoc(userRef, { userId: userId, totalPlayCount: 0, highestScoreGame2: 0 });
+                    await setDoc(userRef, { userId: userId, totalPlayCountGame2: 0, highestScoreGame2: 0 }); // Initial values
                     console.log("User document created with initial values.");
                 } else {
                     const userData = docSnap.data();
-                    totalPlayCount = userData.totalPlayCount || 0;
-                    highestScore = userData.highestScoreGame2 || 0;
-                    playCount = totalPlayCount + 1;
-                    console.log(`Loaded totalPlayCount: ${totalPlayCount}, highestScore: ${highestScore}`);
+                    totalPlayCountGame2 = userData.totalPlayCountGame2 || 0; // Updated to fetch the new total play count
+                    highestScoreGame2 = userData.highestScoreGame2 || 0;     // Updated to fetch the new highest score
+                    playCount = totalPlayCountGame2 + 1;                     // Increment play count
+                    console.log(`Loaded totalPlayCountGame2: ${totalPlayCountGame2}, highestScoreGame2: ${highestScoreGame2}`);
                 }
             } else {
                 window.location.href = 'login.html';
@@ -156,9 +154,9 @@
             timerDisplay.innerText = '';
             optionsDisplay.innerHTML = '';
 
-            // Increment totalPlayCount and update Firestore
-            totalPlayCount += 1;
-            await updateDoc(doc(db, 'users', userId), { totalPlayCount: totalPlayCount });
+            // Increment totalPlayCountGame2 and update Firestore
+            totalPlayCountGame2 += 1;
+            await updateDoc(doc(db, 'users', userId), { totalPlayCountGame2: totalPlayCountGame2 });
 
             let questionIndex = 0;
             showQuestion(questionIndex);
@@ -227,16 +225,15 @@
             }
         }
 
-
         async function saveScore(score) {
             try {
                 const gameData = { score: score, playCount: playCount, timestamp: new Date() };
                 await addDoc(collection(db, 'users', userId, 'Game2'), gameData);
 
                 const userRef = doc(db, 'users', userId);
-                if (score > highestScore) {
-                    highestScore = score;
-                    await updateDoc(userRef, { highestScoreGame2: highestScore });
+                if (score > highestScoreGame2) {  // Updated variable name
+                    highestScoreGame2 = score;
+                    await updateDoc(userRef, { highestScoreGame2: highestScoreGame2 });
                 }
                 console.log("Score saved successfully.");
             } catch (error) {
@@ -253,3 +250,4 @@
     </script>
 </body>
 </html>
+
