@@ -153,7 +153,7 @@
         async function saveScore(score) {
             try {
                 // Define collection reference for user scores
-                const userScoresRef = collection(db, 'users', userId, 'gameScores');
+                const userScoresRef = collection(db, 'users', userId, 'Game1');
                 
                 // Add a new document with the score and play count
                 await addDoc(userScoresRef, {
