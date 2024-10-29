@@ -91,7 +91,8 @@
             storageBucket: "calendrier-de-l-avent-54e3a.appspot.com",
             messagingSenderId: "850639567855",
             appId: "1:850639567855:web:0d799a1ecca005fcff141a",
-          
+            measurementId: "G-PC1W7RYVEH"
+        };
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
@@ -100,8 +101,8 @@
         let userId = '';
         let score = 0;
         let playCount = 0;
-        let totalPlayCountGame2 = 0;  // Renamed variable
-        let highestScoreGame2 = 0;     // Renamed variable
+        let totalPlayCount = 0;
+        let highestScore = 0;
 
         const startBtn = document.getElementById('start-btn');
         const timerDisplay = document.getElementById('timer');
@@ -132,14 +133,14 @@
                 const docSnap = await getDoc(userRef);
 
                 if (!docSnap.exists()) {
-                    await setDoc(userRef, { userId: userId, totalPlayCountGame2: 0, highestScoreGame2: 0 }); // Initial values
+                    await setDoc(userRef, { userId: userId, totalPlayCount: 0, highestScoreGame2: 0 });
                     console.log("User document created with initial values.");
                 } else {
                     const userData = docSnap.data();
-                    totalPlayCountGame2 = userData.totalPlayCountGame2 || 0; // Updated to fetch the new total play count
-                    highestScoreGame2 = userData.highestScoreGame2 || 0;     // Updated to fetch the new highest score
-                    playCount = totalPlayCountGame2 + 1;                     // Increment play count
-                    console.log(`Loaded totalPlayCountGame2: ${totalPlayCountGame2}, highestScoreGame2: ${highestScoreGame2}`);
+                    totalPlayCount = userData.totalPlayCount || 0;
+                    highestScore = userData.highestScoreGame2 || 0;
+                    playCount = totalPlayCount + 1;
+                    console.log(`Loaded totalPlayCount: ${totalPlayCount}, highestScore: ${highestScore}`);
                 }
             } else {
                 window.location.href = 'login.html';
@@ -154,9 +155,9 @@
             timerDisplay.innerText = '';
             optionsDisplay.innerHTML = '';
 
-            // Increment totalPlayCountGame2 and update Firestore
-            totalPlayCountGame2 += 1;
-            await updateDoc(doc(db, 'users', userId), { totalPlayCountGame2: totalPlayCountGame2 });
+            // Increment totalPlayCount and update Firestore
+            totalPlayCount += 1;
+            await updateDoc(doc(db, 'users', userId), { totalPlayCount: totalPlayCount });
 
             let questionIndex = 0;
             showQuestion(questionIndex);
@@ -231,9 +232,9 @@
                 await addDoc(collection(db, 'users', userId, 'Game2'), gameData);
 
                 const userRef = doc(db, 'users', userId);
-                if (score > highestScoreGame2) {  // Updated variable name
-                    highestScoreGame2 = score;
-                    await updateDoc(userRef, { highestScoreGame2: highestScoreGame2 });
+                if (score > highestScore) {
+                    highestScore = score;
+                    await updateDoc(userRef, { highestScoreGame2: highestScore });
                 }
                 console.log("Score saved successfully.");
             } catch (error) {
@@ -250,4 +251,5 @@
     </script>
 </body>
 </html>
+
 
