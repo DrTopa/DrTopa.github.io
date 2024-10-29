@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game 1 - Click Challenge</title>
+    <title>Bebe Romain Snooze - Game 1</title>
     <style>
         /* General body styling */
         body {
@@ -112,20 +112,24 @@
     </style>
 </head>
 <body>
-    <h1>🎄 Click Challenge - Game 1 🎄</h1>
+    <h1>🎄 Bebe Romain Snooze - Game 1 🎄</h1>
     
     <!-- Game instructions -->
     <div id="instructions">
-        <p>Welcome to the Click Challenge! Try to click the button as many times as you can within 10 seconds. Your high score will be recorded if it's among your top scores for this game!</p>
-        <p>Click 'Start Game' to begin, then press 'Click Me!' repeatedly until time runs out.</p>
+        <p>Décembre est enfin là, et cela ne peut signifier qu’une chose : l’atelier du Père Noël Adrien, que tout le monde appelle Topapa, est en effervescence. Fidèle à sa réputation, Topapa s’enfile une grande tasse de café, se ressert une deuxième fois "parce qu’il va falloir s’y mettre sérieusement", puis s'élance dans l’atelier pour réveiller ses lutins. Ces derniers, un peu endormis et encore en pyjama, s’étirent maladroitement alors que Topapa secoue une vieille ceinture de cuir devant eux.</p>
+        <p>« Allez, allez ! Au boulot, petits fainéants ! » dit-il d’une voix joviale.</p>
+        <p>Soudain, un cri fluet se fait entendre, semblable à un miaulement hésitant : « Graoumpf… » Les bébés Romain, encore enroulés dans leurs couvertures, ouvrent un œil en fronçant leur sourcil, perturbés dans leur douce sieste. Tout endormis, ils tentent d’appuyer en vain sur le bouton Snooze de leur réveil, espérant grappiller quelques minutes de sommeil supplémentaires. Mais leurs petites mains glissent et ratent à chaque tentative, provoquant des petits bruits de frustration.</p>
+        <p>Topapa, amusé, décide d'intervenir pour motiver ses petits dormeurs : « Allez, allez, les nains ! Décembre ne va pas attendre que vous vous réveilliez ! »</p>
+        <p>Explication jeu : Vous avez 4 essais pour améliorer votre score. Appuyer sur le bouton Snooze le plus de fois possibles en 10 secondes. Après 4 essais, vous pourrez toujours jouer à ce jeu passionnant.</p>
+        <p>Possible sur Smartphone comme sur ordinateur. Mais je ne sais pas s’il y a un mode qui est mieux qu’un autre.</p>
     </div>
 
     <div id="userStatus"></div>
     <div id="gameArea">
         <button id="start-btn">Start Game</button>
-        <button id="click-btn" disabled>Click Me!</button>
-        <div id="timer">Time Left: 10s</div>
-        <div id="score">Current Score: 0</div>
+        <button id="click-btn" disabled>Snooze!</button>
+        <div id="timer">Temps restant: 10s</div>
+        <div id="score">Score actuel: 0</div>
     </div>
 
     <!-- Christmas Tree and Santa Images -->
@@ -167,7 +171,7 @@
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 userId = user.uid;
-                document.getElementById('userStatus').innerText = `Logged in as: ${user.email}`;
+                document.getElementById('userStatus').innerText = `Bienvenue : ${user.email}`;
 
                 const userRef = doc(db, 'users', userId);
                 const docSnap = await getDoc(userRef);
@@ -187,15 +191,15 @@
 
         startBtn.addEventListener('click', async () => {
             clickCount = 0;
-            scoreDisplay.innerText = `Current Score: ${clickCount}`;
+            scoreDisplay.innerText = `Score actuel: ${clickCount}`;
             playCount = totalPlayCountGame1 + 1;
 
             clickBtn.disabled = false;
             let timeLeft = 10;
-            timerDisplay.innerText = `Time Left: ${timeLeft}s`;
+            timerDisplay.innerText = `Temps restant: ${timeLeft}s`;
             const timer = setInterval(() => {
                 timeLeft -= 1;
-                timerDisplay.innerText = `Time Left: ${timeLeft}s`;
+                timerDisplay.innerText = `Temps restant: ${timeLeft}s`;
                 if (timeLeft <= 0) {
                     clearInterval(timer);
                     clickBtn.disabled = true;
@@ -209,7 +213,7 @@
 
         clickBtn.addEventListener('click', () => {
             clickCount += 1;
-            scoreDisplay.innerText = `Current Score: ${clickCount}`;
+            scoreDisplay.innerText = `Score actuel: ${clickCount}`;
         });
 
         async function saveScore(score) {
