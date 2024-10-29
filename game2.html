@@ -113,14 +113,109 @@
 
         const questions = [
             {
-                question: "8 * 7 equals = ?",
+                question: "Niveau 3e (2024) : Si je multiplie deux nombres pairs alors j'obtiens un nombre ..",
+                options: ["A) Pair", "B) Impair", "C) Complexe", "D) Quoicoubeix"],
+                answer: "A"
+            },
+            {
+                question: "Niveau 3e (2024) : 8 * 7 = ?",
                 options: ["A) 54", "B) 45", "C) 56", "D) 87"],
                 answer: "C"
             },
             {
-                question: "Si je multiplie deux nombres pairs alors j'obtiens un nombre ..",
-                options: ["A) Pair", "B) Impair", "C) Quoicoubeix"],
+                question: "Niveau 3e (2024) : Quel nombre est plus petit que 17 ?",
+                options: ["A) 1881/99", "B) 7²/2", "C) 18", "D) 16"],
+                answer: "D"
+            },
+            {
+                question: "Niveau 2nd (2024) : A combien est égal la racine de 9 ?",
+                options: ["A) 3", "B) -3", "C) 3 et -3", "D) Gnia Gnia, tu sais pas faire la forme racine en HTML"],
                 answer: "A"
+            },
+            {
+                question: "Niveau 2nd (2024) A quel théorème peut-on associer cette phrase : Dans tout triangle rectangle, le carré de la longueur de l'hypoténuse est égal à la somme des carrés des longueurs des deux autres côtés.",
+                options: ["A) Thalès", "B) Pythagore", "C) Venn-Pearson", "D) A.Topalian"],
+                answer: "B"
+            },
+            {
+                question: "Niveau 2nd (2024) A quel théorème peut-on associer cette phrase : Si deux droites sont parallèles et coupées par deux sécantes, alors les rapports des segments déterminés sur ces sécantes sont égaux.",
+                options: ["A) Thalès", "B) Pythagore", "C) Venn-Pearson", "D) A.Topalian"],
+                answer: "A"
+            },
+            {
+                question: "Niveau 1er (2024) : Quelle est la formule d'une volume d'une sphère",
+                options: ["A) πr² ", "B) (4πr^3)/3", "C) (2πr^3)/3", "D) (4πr^2)"],
+                answer: "B"
+            },
+            {
+                question: "Niveau Terminale (2024) : Si sin (60°) = X, quelle est la valeur de X ",
+                options: ["A) 0.5", "B) (3^0.5)/3", "C) (2^0.5)/2", "D) (3^0.5)*0.5"],
+                answer: "D"
+            },
+            {
+                question: "Niveau Terminale (2024) : Paul a 8 pommes, Alfred en mange 2. Combien Alfred en a t-il mangé? ",
+                options: ["A) 2", "B) 4", "C) 6", "D) 8"],
+                answer: "A"
+            },
+            {
+                question: "Niveau Terminale (2024) : Quelle est la bonne orthographe de cette inégalité (en français) ?",
+                options: ["A) Bienaimé-Tchebychev", "B) Bienaymé-Tchebychev", "C) Bienaymé-Tchebitchev", "D) Bienaimé-Tchebitchev"],
+                answer: "B"
+            },
+            {    
+                question: "Niveau 3e (2010) : Quelle est la formule de la somme des n premiers entiers ?",
+                options: ["A) n*(n+1) /2 ", "B) n*(n-1) /2", "C) n²/2", "D)  n(n-1)"],
+                answer: "A"
+            },
+            {
+                question: "Niveau 3e (2010): Quel est le résultat de log (ab) ?",
+                options: ["A) log (a) - log (b)", "B) log (a) * log (b)", "C) log (a+b) ", "D) log (a) + log (b)"],
+                answer: "D"
+            },
+            {
+                question: "NNiveau 2nd (2010) A quel théorème peut-on associer cette phrase : Si p est un nombre premier et a est un entier qui n'est pas divisible par p alors a^(p-1) ≡ 1 (mod p) ",
+                options: ["A) Bezout", "B) Fermat", "C) Baire", "D) Cauchy"],
+                answer: "B"
+            },
+            {
+                question: "Niveau 2nd (2010) A quel théorème peut-on associer cette phrase : Si a et b deux entiers, il existe des entiers x et y tels que ax+by=PGCD(a,b)",
+                options: ["A) Bezout", "B) Fermat", "C) Baire", "D) Cauchy"],
+                answer: "A"
+            },
+            {
+                question: "Niveau 2nd (2010) Si une fonction est continue sur un intervalle fermé et dérivable sur l'intervalle ouvert, et qu'elle prend la même valeur aux extrémités, alors il existe un point où la dérivée est nulle.,
+                options: ["A) Rolle", "B) Taylor", "C) Baire", "D) Gauss"],
+                answer: "A"
+            },
+            {
+                question: "Niveau 1ere (2010) : Quel est le rang maximale d'une matrice 2 * 3",
+                options: ["A) 1", "B) 2", "C) 3", "D) 4"],
+                answer: "B"
+            },
+            {
+                question: "Niveau 1ere (2010) : Application bijective qui préserve la structure, et dont la réciproque préserve aussi la structure entre deux ensembles structurés",
+                options: ["A) isomorphisme", "B) Endomorphisme", "C) Automorphisme", "D) Ker(Im) euuuuhhhh"],
+                answer: "A"
+            },
+            {
+                question: "Niveau 1ere (2010) : Somme des angles d'un polygone à n côtés",
+                options: ["A) (n-2)*90", "B) (n-2)*180", "C) n*90", "D) n*180"],
+                answer: "B"
+            },
+            {
+                question: "Niveau 1ere (2010) : Quel est le produit scalaire des vecteurs u ( 2,3) et v = (4, -1)",
+                options: ["A) 10", "B) 14", "C) 5", "D) 11"],
+                answer: "C"
+            },
+            {
+                question: "Niveau Terminale (2010) : Paul a 8 pommes, Alfred en mange 2. Quelle est la masse du soleil en kg?",
+                options: ["A) 10^25", "B) 10^27", "C) 10^30", "D) 10^32"],
+                answer: "C"
+            },
+            {
+                question: "Niveau Terminale (2010) Quelle découverte mathématique majeure sera démontrée en 2024 ? ",
+                options: ["A) La théorie de Yang-Mills", "B) Le P problème et le NP problème", "C) La conjecture de Hodge"? "D)La correspondance de Langlands"],
+                answer: "D"
             }
         ];
 
