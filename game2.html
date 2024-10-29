@@ -101,7 +101,7 @@
         let userId = '';
         let score = 0;
         let playCount = 0;
-        let totalPlayCount = 0;
+        let totalPlayCountGame2 = 0;
         let highestScore = 0;
 
         const startBtn = document.getElementById('start-btn');
@@ -133,14 +133,14 @@
                 const docSnap = await getDoc(userRef);
 
                 if (!docSnap.exists()) {
-                    await setDoc(userRef, { userId: userId, totalPlayCount: 0, highestScoreGame2: 0 });
+                    await setDoc(userRef, { userId: userId, totalPlayCountGame2: 0, highestScoreGame2: 0 });
                     console.log("User document created with initial values.");
                 } else {
                     const userData = docSnap.data();
-                    totalPlayCount = userData.totalPlayCount || 0;
+                    totalPlayCountGame2 = userData.totalPlayCountGame2 || 0;
                     highestScore = userData.highestScoreGame2 || 0;
-                    playCount = totalPlayCount + 1;
-                    console.log(`Loaded totalPlayCount: ${totalPlayCount}, highestScore: ${highestScore}`);
+                    playCount = totalPlayCountGame2 + 1;
+                    console.log(`Loaded totalPlayCountGame2: ${totalPlayCountGame2}, highestScore: ${highestScore}`);
                 }
             } else {
                 window.location.href = 'login.html';
@@ -156,8 +156,8 @@
             optionsDisplay.innerHTML = '';
 
             // Increment totalPlayCount and update Firestore
-            totalPlayCount += 1;
-            await updateDoc(doc(db, 'users', userId), { totalPlayCount: totalPlayCount });
+            totalPlayCountGame2 += 1;
+            await updateDoc(doc(db, 'users', userId), { totalPlayCountGame2: totalPlayCountGame2 });
 
             let questionIndex = 0;
             showQuestion(questionIndex);
