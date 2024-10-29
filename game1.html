@@ -36,12 +36,25 @@
             color: #a23636;
         }
 
+        /* Instructions section */
+        #instructions {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            text-align: center;
+            max-width: 600px;
+            font-size: 1.2em;
+            color: #333;
+        }
+
         /* Centered game area */
         #gameArea {
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-top: 50px;
+            margin-top: 20px;
             background: rgba(255, 255, 255, 0.8);
             border: 2px solid #b71c1c;
             border-radius: 12px;
@@ -99,25 +112,37 @@
     </style>
 </head>
 <body>
-    <h1>🎄 Click Challenge - Game 1 🎄</h1>
+    <h1>🎄 Jeu 1 - Snooze comme Bébé Romain 🎄</h1>
+    
+    <!-- Game instructions -->
+    <div id="instructions">
+        <p>Décembre est enfin là, et cela ne peut signifier qu’une chose : l’atelier du Père Noël Adrien, que tout le monde appelle Topapa, est en effervescence. Fidèle à sa réputation, Topapa s’enfile une grande tasse de café, se ressert une deuxième fois "parce qu’il va falloir s’y mettre sérieusement", puis s'élance dans l’atelier pour réveiller ses lutins. Ces derniers, un peu endormis et encore en pyjama, s’étirent maladroitement alors que Topapa secoue une vieille ceinture de cuir devant eux.
+« Allez, allez ! Au boulot, petits fainéants ! » dit-il d’une voix joviale
+Soudain, un cri fluet se fait entendre, semblable à un miaulement hésitant : « Graoumpf… »
+Les bébés Romain, encore enroulés dans leurs couvertures, ouvrent un œil en fronçant leur sourcil, perturbés dans leur douce sieste. Tout endormis, ils tentent d’appuyer en vain sur le bouton Snooze de leur réveil, espérant grappiller quelques minutes de sommeil supplémentaires. Mais leurs petites mains glissent et ratent à chaque tentative, provoquant des petits bruits de frustration.
+Topapa, amusé, décide d'intervenir pour motiver ses petits dormeurs : « Allez, allez, les nains ! Décembre ne va pas attendre que vous vous réveilliez ! »
+</p>
+        <p>Explication jeu : Vous avez 4 essais pour améliorer votre score. Appuyer sur le bouton Snooze le plus de fois possibles en 10 secondes. Après 4 essais, vous pourrez toujours jouer à ce jeu passionnant. 
+Possible sur Smartphone comme sur ordinateur. Mais je ne sais pas s’il y a un mode qui est mieux qu’un autre. 
+</p>
+    </div>
+
     <div id="userStatus"></div>
     <div id="gameArea">
         <button id="start-btn">Start Game</button>
-        <button id="click-btn" disabled>Click Me!</button>
-        <div id="timer">Time Left: 10s</div>
-        <div id="score">Current Score: 0</div>
+        <button id="click-btn" disabled>Snooze!</button>
+        <div id="timer">Temps restant: 10s</div>
+        <div id="score">Score actuel: 0</div>
     </div>
 
     <!-- Christmas Tree and Santa Images -->
-    <img id="tree" class="decoration" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Christmas_tree_illustration.svg/200px-Christmas_tree_illustration.svg.png" alt="Christmas Tree">
-    <img id="santa" class="decoration" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Santa_Claus_Icon.svg/200px-Santa_Claus_Icon.svg.png" alt="Santa Claus">
+    <img id="tree" class="decoration" src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Christmas_tree_illustration.svg" alt="Christmas Tree">
+    <img id="santa" class="decoration" src="https://upload.wikimedia.org/wikipedia/commons/3/3a/Santa_Claus_Icon.svg" alt="Santa Claus">
 
-   
     <script defer type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
         import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
-       
 
         // Firebase configuration
         const firebaseConfig = {
@@ -131,7 +156,7 @@
             measurementId: "G-PC1W7RYVEH"
         };
 
-const app = initializeApp(firebaseConfig);
+        const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
@@ -149,22 +174,18 @@ const app = initializeApp(firebaseConfig);
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 userId = user.uid;
-                document.getElementById('userStatus').innerText = `Logged in as: ${user.email}`;
+                document.getElementById('userStatus').innerText = `Bienvenue: ${user.email}`;
 
                 const userRef = doc(db, 'users', userId);
                 const docSnap = await getDoc(userRef);
 
                 if (!docSnap.exists()) {
-                    // Create a new document for the user if it doesn't exist, with initial values
                     await setDoc(userRef, { userId: userId, totalPlayCountGame1: 0, highestScoreGame1: 0 });
-                    console.log("User document created with initial values.");
                 } else {
-                    // Load existing data
                     const userData = docSnap.data();
                     totalPlayCountGame1 = userData.totalPlayCountGame1 || 0;
                     highestScore = userData.highestScoreGame1 || 0;
                     playCount = totalPlayCountGame1 + 1;
-                    console.log(`Loaded totalPlayCountGame1: ${totalPlayCountGame1}, highestScore: ${highestScore}`);
                 }
             } else {
                 window.location.href = 'login.html';
@@ -173,15 +194,15 @@ const app = initializeApp(firebaseConfig);
 
         startBtn.addEventListener('click', async () => {
             clickCount = 0;
-            scoreDisplay.innerText = `Current Score: ${clickCount}`;
-            playCount = totalPlayCountGame1 + 1; // Set play count based on totalPlayCountGame1 + 1
+            scoreDisplay.innerText = `Score actuel: ${clickCount}`;
+            playCount = totalPlayCountGame1 + 1;
 
             clickBtn.disabled = false;
             let timeLeft = 10;
-            timerDisplay.innerText = `Time Left: ${timeLeft}s`;
+            timerDisplay.innerText = `Temps restant: ${timeLeft}s`;
             const timer = setInterval(() => {
                 timeLeft -= 1;
-                timerDisplay.innerText = `Time Left: ${timeLeft}s`;
+                timerDisplay.innerText = `Temps restant: ${timeLeft}s`;
                 if (timeLeft <= 0) {
                     clearInterval(timer);
                     clickBtn.disabled = true;
@@ -189,14 +210,13 @@ const app = initializeApp(firebaseConfig);
                 }
             }, 1000);
 
-            // Increment totalPlayCountGame1 and update Firestore
             totalPlayCountGame1 += 1;
             await updateDoc(doc(db, 'users', userId), { totalPlayCountGame1: totalPlayCountGame1 });
         });
 
         clickBtn.addEventListener('click', () => {
             clickCount += 1;
-            scoreDisplay.innerText = `Current Score: ${clickCount}`;
+            scoreDisplay.innerText = `Score actuel: ${clickCount}`;
         });
 
         async function saveScore(score) {
@@ -209,7 +229,6 @@ const app = initializeApp(firebaseConfig);
                     highestScore = score;
                     await updateDoc(userRef, { highestScoreGame1: highestScore });
                 }
-                console.log("Score saved successfully.");
             } catch (error) {
                 console.error("Error saving score:", error);
             }
