@@ -59,7 +59,7 @@ const app = initializeApp(firebaseConfig);
         let userId = '';
         let clickCount = 0;
         let playCount = 0;
-        let totalPlayCount = 0;
+        let totalPlayCountGame1 = 0;
         let highestScore = 0;
 
         const startBtn = document.getElementById('start-btn');
@@ -77,15 +77,15 @@ const app = initializeApp(firebaseConfig);
 
                 if (!docSnap.exists()) {
                     // Create a new document for the user if it doesn't exist, with initial values
-                    await setDoc(userRef, { userId: userId, totalPlayCount: 0, highestScoreGame1: 0 });
+                    await setDoc(userRef, { userId: userId, totalPlayCountGame1: 0, highestScoreGame1: 0 });
                     console.log("User document created with initial values.");
                 } else {
                     // Load existing data
                     const userData = docSnap.data();
-                    totalPlayCount = userData.totalPlayCount || 0;
+                    totalPlayCountGame1 = userData.totalPlayCountGame1 || 0;
                     highestScore = userData.highestScoreGame1 || 0;
-                    playCount = totalPlayCount + 1;
-                    console.log(`Loaded totalPlayCount: ${totalPlayCount}, highestScore: ${highestScore}`);
+                    playCount = totalPlayCountGame1 + 1;
+                    console.log(`Loaded totalPlayCountGame1: ${totalPlayCountGame1}, highestScore: ${highestScore}`);
                 }
             } else {
                 window.location.href = 'login.html';
@@ -95,7 +95,7 @@ const app = initializeApp(firebaseConfig);
         startBtn.addEventListener('click', async () => {
             clickCount = 0;
             scoreDisplay.innerText = `Current Score: ${clickCount}`;
-            playCount = totalPlayCount + 1; // Set play count based on totalPlayCount + 1
+            playCount = totalPlayCountGame1 + 1; // Set play count based on totalPlayCountGame1 + 1
 
             clickBtn.disabled = false;
             let timeLeft = 10;
@@ -110,9 +110,9 @@ const app = initializeApp(firebaseConfig);
                 }
             }, 1000);
 
-            // Increment totalPlayCount and update Firestore
-            totalPlayCount += 1;
-            await updateDoc(doc(db, 'users', userId), { totalPlayCount: totalPlayCount });
+            // Increment totalPlayCountGame1 and update Firestore
+            totalPlayCountGame1 += 1;
+            await updateDoc(doc(db, 'users', userId), { totalPlayCountGame1: totalPlayCountGame1 });
         });
 
         clickBtn.addEventListener('click', () => {
