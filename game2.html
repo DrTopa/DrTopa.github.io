@@ -3,33 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Christmas Quiz Challenge - Game 2</title>
+    <title>Game 2 - Quiz Challenge</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             flex-direction: column;
             height: 100vh;
-            background-color: #ffebcd; /* Light beige background */
+            background-color: #f0f0f0;
             margin: 0;
-            background-image: url('https://www.transparenttextures.com/patterns/snow.png');
-            background-size: cover;
-            color: #4a4a4a; /* Darker text for contrast */
+            overflow: hidden; /* Prevents scrollbars from appearing */
+            position: relative; /* Needed for positioning snowflakes */
         }
+
         h1 {
-            font-size: 2.5em;
+            font-size: 2em;
             margin-bottom: 20px;
-            color: #c0392b; /* Christmas red */
         }
+
         #userStatus {
             position: absolute;
             top: 10px;
             right: 10px;
             font-size: 1.2em;
-            color: #2c3e50; /* Dark blue */
         }
+
         #explanation {
             font-size: 1.2em;
             margin: 20px 0;
@@ -38,71 +38,71 @@
             max-width: 80%;
             text-align: center;
             line-height: 1.5;
-            border-left: 4px solid #27ae60; /* Christmas green */
-            background-color: #e0ffe0; /* Light green background */
+            border-left: 4px solid #007BFF;
+            background-color: #e0f2ff;
             border-radius: 8px;
         }
+
         #gameArea {
             display: flex;
             flex-direction: column;
             align-items: center;
             margin-top: 50px;
-            border: 2px solid #c0392b; /* Christmas red border */
-            border-radius: 12px;
-            padding: 20px;
-            background-color: white; /* White background for the game area */
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 1; /* Ensure game area is above snowflakes */
         }
+
         #start-btn {
             padding: 10px 20px;
             margin: 10px;
             font-size: 1.5em;
             cursor: pointer;
-            background-color: #c0392b; /* Christmas red */
+            background-color: #007BFF;
             color: white;
             border: none;
-            border-radius: 5px;
         }
+
         #start-btn:hover {
-            background-color: #e74c3c; /* Lighter red on hover */
+            background-color: #0056b3;
         }
+
         #question {
             font-size: 1.5em;
             margin: 20px;
         }
+
         #options {
             font-size: 1.2em;
             margin: 10px;
         }
+
         #timer, #score {
             font-size: 1.5em;
             margin: 10px;
         }
+
         #input {
             padding: 10px;
             font-size: 1.2em;
             margin: 10px;
             width: 50px;
-            border-radius: 5px;
-            border: 1px solid #ccc; /* Light grey border */
         }
-        /* Snowfall Animation */
+
+        /* Snowflake CSS */
         .snowflake {
             position: absolute;
+            top: -10px;
             color: white;
             font-size: 1em;
-            pointer-events: none;
-            animation: snow 10s linear infinite;
+            opacity: 0.8;
+            pointer-events: none; /* Prevents interaction with snowflakes */
         }
-        @keyframes snow {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(100vh); }
-        }
+
     </style>
 </head>
 <body>
 
-    <h1>🎄 Christmas Quiz Challenge - Game 2 🎄</h1>
+    <h1>Quiz Challenge - Game 2</h1>
     <div id="userStatus"></div>
     
     <div id="explanation">
@@ -111,7 +111,7 @@
     </div>
     
     <div id="gameArea">
-        <button id="start-btn">🎅 Start Game 🎅</button>
+        <button id="start-btn">Start Game</button>
         <div id="timer"></div>
         <div id="score"></div>
         <div id="question"></div>
@@ -122,7 +122,7 @@
     <script defer type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
         // Firebase configuration
         const firebaseConfig = {
@@ -142,6 +142,7 @@
 
         let userId = '';
         let score = 0;
+        let playCount = 0;
         let totalPlayCountGame2 = 0;
         let highestScore = 0;
 
@@ -190,132 +191,159 @@
             },
             {
                 question: "Niveau Terminale (2024) : Si sin (60°) = X, quelle est la valeur de X ",
-                options: ["A) √3/2", "B) 1/2", "C) √2", "D) 0"],
+                options: ["A) 0.5", "B) (3^0.5)/3", "C) (2^0.5)/2", "D) (3^0.5)*0.5"],
+                answer: "D"
+            },
+            {
+                question: "Niveau Terminale (2024) : Paul a 8 pommes, Alfred en mange 2. Combien Alfred en a t-il mangé? ",
+                options: ["A) 2", "B) 4", "C) 6", "D) 8"],
                 answer: "A"
             },
             {
-                question: "Niveau Terminale (2024) : Quelle est la formule de la surface d'une sphère",
-                options: ["A) 4πr²", "B) 2πr", "C) 4πr^3", "D) πr²"],
-                answer: "A"
+                question: "Niveau Terminale (2024) : Quelle est la bonne orthographe de cette inégalité (en français) ?",
+                options: ["A) Bienaimé-Tchebychev", "B) Bienaymé-Tchebychev", "C) Bienaimé-Tchbeichev", "D) Bienaimé-Tchebychev"],
+                answer: "B"
             }
         ];
 
         let currentQuestionIndex = 0;
         let timer;
-        let timeRemaining = 30; // seconds
+        let timeLimit = 30; // 30 seconds per question
 
-        onAuthStateChanged(auth, async (user) => {
+        // Function to update user status
+        onAuthStateChanged(auth, (user) => {
             if (user) {
                 userId = user.uid;
-                document.getElementById('userStatus').textContent = `Logged in as: ${user.email}`;
-                await loadHighestScore();
+                document.getElementById('userStatus').textContent = `Bienvenue, ${user.email}`;
+                checkUserStats();
             } else {
-                document.getElementById('userStatus').textContent = 'Not logged in.';
+                document.getElementById('userStatus').textContent = 'Vous n\'êtes pas connecté.';
             }
         });
 
-        startBtn.addEventListener('click', startGame);
-
-        async function loadHighestScore() {
-            const docRef = doc(db, "players", userId);
-            const docSnap = await getDoc(docRef);
-            if (docSnap.exists()) {
-                highestScore = docSnap.data().highestScoreGame2 || 0;
-                scoreDisplay.textContent = `Your highest score is ${highestScore}.`;
-            }
-        }
-
-        function startGame() {
+        // Function to start the game
+        startBtn.addEventListener('click', () => {
             score = 0;
+            playCount++;
             currentQuestionIndex = 0;
-            totalPlayCountGame2++;
+            scoreDisplay.textContent = `Score: ${score}`;
             inputField.value = '';
             inputField.disabled = false;
-            scoreDisplay.textContent = `Score: ${score}`;
             startBtn.disabled = true;
-            nextQuestion();
+            startTimer();
+            showQuestion();
+        });
+
+        // Function to start timer
+        function startTimer() {
+            timerDisplay.textContent = `Temps restant: ${timeLimit} secondes`;
+            timer = setInterval(() => {
+                timeLimit--;
+                timerDisplay.textContent = `Temps restant: ${timeLimit} secondes`;
+                if (timeLimit <= 0) {
+                    clearInterval(timer);
+                    alert('Temps écoulé !');
+                    endGame();
+                }
+            }, 1000);
         }
 
-        function nextQuestion() {
+        // Function to show current question
+        function showQuestion() {
+            const currentQuestion = questions[currentQuestionIndex];
+            questionDisplay.textContent = currentQuestion.question;
+            optionsDisplay.innerHTML = '';
+            currentQuestion.options.forEach(option => {
+                const button = document.createElement('button');
+                button.textContent = option;
+                button.addEventListener('click', () => checkAnswer(option.charAt(0)));
+                optionsDisplay.appendChild(button);
+            });
+        }
+
+        // Function to check answer
+        function checkAnswer(selectedOption) {
+            const currentQuestion = questions[currentQuestionIndex];
+            if (selectedOption === currentQuestion.answer) {
+                score++;
+                scoreDisplay.textContent = `Score: ${score}`;
+            }
+            currentQuestionIndex++;
             if (currentQuestionIndex < questions.length) {
-                const currentQuestion = questions[currentQuestionIndex];
-                questionDisplay.textContent = currentQuestion.question;
-                optionsDisplay.innerHTML = currentQuestion.options.map((option) => `<div>${option}</div>`).join('');
-                timeRemaining = 30;
-                startTimer();
+                timeLimit = 30; // Reset timer
+                showQuestion();
             } else {
                 endGame();
             }
         }
 
-        function startTimer() {
-            timerDisplay.textContent = `Time Remaining: ${timeRemaining}`;
-            timer = setInterval(() => {
-                timeRemaining--;
-                timerDisplay.textContent = `Time Remaining: ${timeRemaining}`;
-                if (timeRemaining <= 0) {
-                    clearInterval(timer);
-                    inputField.disabled = true;
-                    nextQuestion();
-                }
-            }, 1000);
-        }
-
-        inputField.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                checkAnswer(inputField.value.toUpperCase());
-            }
-        });
-
-        function checkAnswer(selectedOption) {
-            clearInterval(timer);
-            inputField.disabled = true;
-
-            const currentQuestion = questions[currentQuestionIndex];
-            if (selectedOption === currentQuestion.answer) {
-                score++;
-            }
-            currentQuestionIndex++;
-            scoreDisplay.textContent = `Score: ${score}`;
-            nextQuestion();
-        }
-
+        // Function to end game
         function endGame() {
-            inputField.disabled = true;
-            startBtn.disabled = false;
-            if (score > highestScore) {
-                highestScore = score;
-                updateScoreInDB();
-            }
-            scoreDisplay.textContent += ` Your final score is ${score}.`;
-            questionDisplay.textContent = 'Game Over! 🎉';
-            optionsDisplay.innerHTML = '';
+            clearInterval(timer);
+            alert(`Jeu terminé ! Votre score est: ${score}`);
+            saveUserStats();
+            resetGame();
         }
 
-        async function updateScoreInDB() {
-            const docRef = doc(db, "players", userId);
+        // Function to reset game
+        function resetGame() {
+            startBtn.disabled = false;
+            inputField.disabled = true;
+            questionDisplay.textContent = '';
+            optionsDisplay.innerHTML = '';
+            timerDisplay.textContent = '';
+        }
+
+        // Function to check user statistics
+        async function checkUserStats() {
+            const docRef = doc(db, 'users', userId);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                totalPlayCountGame2 = docSnap.data().totalPlayCountGame2 || 0;
+                highestScore = docSnap.data().highestScore || 0;
+            }
+        }
+
+        // Function to save user statistics
+        async function saveUserStats() {
+            const docRef = doc(db, 'users', userId);
             await updateDoc(docRef, {
-                highestScoreGame2: highestScore,
-                totalPlayCountGame2: totalPlayCountGame2
+                totalPlayCountGame2: totalPlayCountGame2 + playCount,
+                highestScore: Math.max(highestScore, score)
             });
         }
-    </script>
 
-    <!-- Snowflakes -->
-    <script>
-        const snowflakeCount = 50;
+        // Snowflake generation
+        const snowflakeCount = 100; // Number of snowflakes
+        const snowflakeContainer = document.createElement('div');
+        document.body.appendChild(snowflakeContainer);
+
         for (let i = 0; i < snowflakeCount; i++) {
             const snowflake = document.createElement('div');
             snowflake.classList.add('snowflake');
-            snowflake.textContent = '❄️';
-            snowflake.style.left = Math.random() * 100 + 'vw';
-            snowflake.style.animationDuration = Math.random() * 3 + 2 + 's'; // random duration between 2s and 5s
-            snowflake.style.fontSize = Math.random() * 1 + 0.5 + 'em'; // random size between 0.5em and 1.5em
-            document.body.appendChild(snowflake);
+            snowflake.textContent = '❄️'; // Unicode snowflake character
+            snowflake.style.left = Math.random() * window.innerWidth + 'px';
+            snowflake.style.fontSize = Math.random() * 20 + 10 + 'px'; // Random size
+            snowflakeContainer.appendChild(snowflake);
+
+            // Animate snowflakes
+            animateSnowflake(snowflake);
+        }
+
+        function animateSnowflake(snowflake) {
+            const fallDuration = Math.random() * 5 + 5; // Random fall duration
+            const leftPosition = parseFloat(snowflake.style.left);
+            const endPosition = leftPosition + (Math.random() * 100 - 50); // Random drift
+
+            snowflake.animate([
+                { transform: `translateY(0)` },
+                { transform: `translateY(${window.innerHeight + 100}px)`, left: `${endPosition}px` }
+            ], {
+                duration: fallDuration * 1000,
+                iterations: Infinity,
+                easing: 'linear'
+            });
         }
     </script>
 </body>
 </html>
-
-
-
