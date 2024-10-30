@@ -1,1 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quizz comparatif des maths 2010 vs 2024 - Game 2</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
+        h1 {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        #userStatus {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.2em;
+        }
+                
+        #explanation {
+            font-size: 1.2em;
+            margin: 20px 0;
+            padding: 10px;
+            color: #333;
+            max-width: 80%;
+            text-align: center;
+            line-height: 1.5;
+            border-left: 4px solid #007BFF;
+            background-color: #e0f2ff;
+            border-radius: 8px;
+        }
+        #gameArea {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 50px;
+        }
+        #start-btn {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 1.5em;
+            cursor: pointer;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+        }
+        #start-btn:hover {
+            background-color: #0056b3;
+        }
+        #question {
+            font-size: 1.5em;
+            margin: 20px;
+        }
+        #options {
+            font-size: 1.2em;
+            margin: 10px;
+        }
+        #timer, #score {
+            font-size: 1.5em;
+            margin: 10px;
+        }
+        #input {
+            padding: 10px;
+            font-size: 1.2em;
+            margin: 10px;
+            width: 50px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Quiz Challenge - Game 2</h1>
+    <div id="userStatus"></div>
+    
+    <div id="explanation">
+        Good morning, fellows! I will explain the rules to you. This quiz has a few questions, each with multiple-choice answers. 
+        For each correct answer, you earn points. Good luck and have fun!
+    </div>
+    
+    <div id="gameArea">
+        <button id="start-btn">Start Game</button>
+        <div id="timer"></div>
+        <div id="score"></div>
+        <div id="question"></div>
+        <div id="options"></div>
+        <input type="text" id="input" placeholder="A/B/C/D" maxlength="1" disabled>
+    </div>
+
+    <script defer type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyC4bjg7lVwd8FU8MREaPhBsBENv5qmiYYM",
+            authDomain: "calendrier-de-l-avent-54e3a.firebaseapp.com",
+            databaseURL: "https://calendrier-de-l-avent-54e3a-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "calendrier-de-l-avent-54e3a",
+            storageBucket: "calendrier-de-l-avent-54e3a.appspot.com",
+            messagingSenderId: "850639567855",
+            appId: "1:850639567855:web:0d799a1ecca005fcff141a",
+            measurementId: "G-PC1W7RYVEH"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let userId = '';
+        let score = 0;
+        let playCount = 0;
+        let totalPlayCountGame2 = 0;
+        let highestScore = 0;
+
+        const startBtn = document.getElementById('start-btn');
+        const timerDisplay = document.getElementById('timer');
+        const scoreDisplay = document.getElementById('score');
+        const questionDisplay = document.getElementById('question');
+        const optionsDisplay = document.getElementById('options');
+        const inputField = document.getElementById('input');
+
+        const questions = [
+            // New questions for Game 2 (2010 vs 2024)
+            {
+                question: "Niveau 3e (2024) : Si je multiplie deux nombres pairs alors j'obtiens un nombre ..",
+                options: ["A) Pair", "B) Impair", "C) Complexe", "D) Quoicoubeix"],
+                answer: "A"
+            },
+            {
+                question: "Niveau 3e (2024) : 8 * 7 = ?",
+                options: ["A) 54", "B) 45", "C) 56", "D) 87"],
+                answer: "C"
+            },
+            {
+                question: "Niveau 3e (2024) : Quel nombre est plus petit que 17 ?",
+                options: ["A) 1881/99", "B) 7²/2", "C) 18", "D) 16"],
+                answer: "D"
+            },
+            {
+                question: "Niveau 2nd (2024) : A combien est égal la racine de 9 ?",
+                options: ["A) 3", "B) -3", "C) 3 et -3", "D) Gnia Gnia, tu sais pas faire la forme racine en HTML"],
+                answer: "A"
+            },
+            {
+                question: "Niveau 2nd (2024) : A quel théorème peut-on associer cette phrase : Dans tout triangle rectangle, le carré de la longueur de l'hypoténuse est égal à la somme des carrés des longueurs des deux autres côtés.",
+                options: ["A) Thalès", "B) Pythagore", "C) Venn-Pearson", "D) A.Topalian"],
+                answer: "B"
+            },
+            {
+                question: "Niveau 2nd (2024) : A quel théorème peut-on associer cette phrase : Si deux droites sont parallèles et coupées par deux sécantes, alors les rapports des segments déterminés sur ces sécantes sont égaux.",
+                options: ["A) Thalès", "B) Pythagore", "C) Venn-Pearson", "D) A.Topalian"],
+                answer: "A"
+            },
+            {
+                question: "Niveau 1er (2024) : Quelle est la formule d'une volume d'une sphère",
+                options: ["A) πr² ", "B) (4πr^3)/3", "C) (2πr^3)/3", "D) (4πr^2)"],
+                answer: "B"
+            },
+            {
+                question: "Niveau Terminale (2024) : Si sin (60°) = X, quelle est la valeur de X ",
+                options: ["A) 0.5", "B) (3^0.5)/3", "C) (2^0.5)/2", "D) (3^0.5)*0.5"],
+                answer: "D"
+            },
+            {
+                question: "Niveau Terminale (2024) : Paul a 8 pommes, Alfred en mange 2. Combien Alfred en a t-il mangé? ",
+                options: ["A) 2", "B) 4", "C) 6", "D) 8"],
+                answer: "A"
+            },
+            {
+                question: "Niveau Terminale (2024) : Quelle est la bonne orthographe de cette inégalité (en français) ?",
+                options: ["A) Bienaimé-Tchebychev", "B) Bienaymé-Tchebychev", "C) Bienaymé-Tchebitchev", "D) Bienaimé-Tchebitchev"],
+                answer: "B"
+            },
+            {    
+                question: "Niveau 3e (2010) : Quelle est la somme de 5 et 3 ?",
+                options: ["A) 8", "B) 6", "C) 7", "D) 9"],
+                answer: "A"
+            },
+            {    
+                question: "Niveau 3e (2010) : Quelle est la différence entre 10 et 4 ?",
+                options: ["A) 4", "B) 6", "C) 5", "D) 7"],
+                answer: "B"
+            },
+            {    
+                question: "Niveau 3e (2010) : Si j'ai 4 pommes et que j'en donne 2, combien m'en reste-t-il ?",
+                options: ["A) 1", "B) 2", "C) 0", "D) 4"],
+                answer: "B"
+            },
+            {    
+                question: "Niveau 3e (2010) : Quel est le produit de 6 et 7 ?",
+                options: ["A) 36", "B) 42", "C) 48", "D) 56"],
+                answer: "B"
+            },
+            {    
+                question: "Niveau 3e (2010) : Quelle est la valeur de 9 - 3 ?",
+                options: ["A) 3", "B) 5", "C) 6", "D) 7"],
+                answer: "C"
+            },
+            {    
+                question: "Niveau 3e (2010) : Quel est le résultat de 8 + 6 ?",
+                options: ["A) 14", "B) 16", "C) 12", "D) 10"],
+                answer: "A"
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let timer;
+        
+        // Display user information
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                userId = user.uid;
+                document.getElementById('userStatus').textContent = `Bienvenue ${user.email}`;
+                loadPlayCount();
+                loadHighestScore();
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
+        async function loadPlayCount() {
+            const docRef = doc(db, "players", userId);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                totalPlayCountGame2 = docSnap.data().game2PlayCount || 0;
+                document.getElementById('score').textContent = `You have played this game ${totalPlayCountGame2} times.`;
+            } else {
+                document.getElementById('score').textContent = 'Welcome to the game!';
+            }
+        }
+
+        async function loadHighestScore() {
+            const docRef = doc(db, "players", userId);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                highestScore = docSnap.data().highestScoreGame2 || 0;
+                document.getElementById('score').textContent += ` Your highest score is ${highestScore}.`;
+            }
+        }
+
+        function startGame() {
+            score = 0;
+            playCount++;
+            currentQuestionIndex = 0;
+            inputField.value = '';
+            inputField.disabled = false;
+            startBtn.style.display = 'none';
+            questionDisplay.style.display = 'block';
+            optionsDisplay.style.display = 'block';
+            loadQuestion();
+            startTimer();
+        }
+
+        function loadQuestion() {
+            if (currentQuestionIndex < questions.length) {
+                const currentQuestion = questions[currentQuestionIndex];
+                questionDisplay.textContent = currentQuestion.question;
+                optionsDisplay.innerHTML = '';
+                currentQuestion.options.forEach(option => {
+                    const btn = document.createElement('button');
+                    btn.textContent = option;
+                    btn.onclick = () => checkAnswer(option.charAt(0));
+                    optionsDisplay.appendChild(btn);
+                });
+            } else {
+                endGame();
+            }
+        }
+
+        function checkAnswer(selected) {
+            const correctAnswer = questions[currentQuestionIndex].answer;
+            if (selected === correctAnswer) {
+                score++;
+            }
+            currentQuestionIndex++;
+            loadQuestion();
+        }
+
+        function endGame() {
+            clearInterval(timer);
+            inputField.disabled = true;
+            document.getElementById('score').textContent = `Final Score: ${score}`;
+            document.getElementById('timer').textContent = '';
+            startBtn.style.display = 'block';
+            totalPlayCountGame2++;
+            updatePlayerStats();
+        }
+
+        function startTimer() {
+            let timeLeft = 60;
+            timerDisplay.textContent = `Time left: ${timeLeft}s`;
+            timer = setInterval(() => {
+                timeLeft--;
+                timerDisplay.textContent = `Time left: ${timeLeft}s`;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    endGame();
+                }
+            }, 1000);
+        }
+
+        async function updatePlayerStats() {
+            const playerRef = doc(db, "players", userId);
+            await updateDoc(playerRef, {
+                game2PlayCount: totalPlayCountGame2,
+                highestScoreGame2: Math.max(highestScore, score)
+            });
+        }
+
+        startBtn.addEventListener('click', startGame);
+    </script>
+</body>
+</html>
 
