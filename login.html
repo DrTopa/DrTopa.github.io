@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login - Advent Calendar Games</title>
+  <title>Connexion - Calendrier de l'Avent 2024</title>
   <style>
     /* Overall Page Styling */
     body {
@@ -79,28 +79,28 @@
 </head>
 <body>
 
-  <h1>🎄 Advent Calendar Games - Login 🎄</h1>
+  <h1>🎄 Calendrier de l'Avent 2024 - Connexion 🎄</h1>
 
   <!-- Signup Button -->
-  <button id="signup-btn">🎅 Create Account</button>
+  <button id="signup-btn">🎅 Créer un compte</button>
   <!-- Login Button -->
-  <button id="login-btn">🔔 Log In</button>
+  <button id="login-btn">🔔 Connexion</button>
 
   <!-- Signup Form -->
   <div id="signup-form">
-    <h2>Create Account</h2>
+    <h2>Créer un compte</h2>
     <input class="form-input" type="email" id="signup-email" placeholder="Email" required>
-    <input class="form-input" type="password" id="signup-password" placeholder="Password" required>
-    <button id="create-account-btn">Create Account</button>
+    <input class="form-input" type="password" id="signup-password" placeholder="Mot de passe" required>
+    <button id="create-account-btn">Créer un compte</button>
     <div id="message"></div>
   </div>
 
   <!-- Login Form -->
   <div id="login-form">
-    <h2>Login</h2>
+    <h2>Connexion</h2>
     <input class="form-input" type="email" id="login-email" placeholder="Email" required>
-    <input class="form-input" type="password" id="login-password" placeholder="Password" required>
-    <button id="login-account-btn">Log In</button>
+    <input class="form-input" type="password" id="login-password" placeholder="Mot de passe" required>
+    <button id="login-account-btn">Connexion</button>
     <div id="message"></div>
   </div>
 
@@ -142,10 +142,10 @@
 
         createUserWithEmailAndPassword(auth, email, password)
           .then(userCredential => {
-            document.getElementById('message').innerText = 'Account created successfully!';
+            document.getElementById('message').innerText = 'Compte créé avec succès !';
           })
           .catch(error => {
-            document.getElementById('message').innerText = `Error: ${error.message}`;
+            document.getElementById('message').innerText = `Erreur : ${error.message}`;
           });
       });
 
@@ -155,17 +155,17 @@
 
         signInWithEmailAndPassword(auth, email, password)
           .then(userCredential => {
-            document.getElementById('message').innerText = 'Logged in successfully!';
+            document.getElementById('message').innerText = 'Connecté avec succès !';
             window.location.href = 'homepage.html';
           })
           .catch(error => {
-            document.getElementById('message').innerText = `Error: ${error.message}`;
+            document.getElementById('message').innerText = `Erreur : ${error.message}`;
           });
       });
 
       onAuthStateChanged(auth, (user) => {
         if (user) {
-          document.getElementById('message').innerText = `Welcome, ${user.email}`;
+          document.getElementById('message').innerText = `Bienvenue, ${user.email}`;
         }
       });
     });
