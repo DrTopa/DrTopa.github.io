@@ -9,22 +9,23 @@
         body {
             font-family: 'Segoe UI', Tahoma, sans-serif;
             display: flex;
-            justify-content: start;
+            justify-content: start; /* Adjusted to make title more visible */
             align-items: center;
             flex-direction: column;
-            padding-top: 20px;
             height: 100vh;
             background-color: #ffebcd;
             background-image: url('https://www.transparenttextures.com/patterns/snow.png');
             margin: 0;
+            padding-top: 20px; /* Add padding to shift content down */
         }
 
         h1 {
             font-size: 2.5em;
-            margin-bottom: 20px;
+            margin-bottom: 10px; /* Reduced margin */
             color: #d32f2f;
             font-family: 'Comic Sans MS', cursive;
             text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+            text-align: center;
         }
 
         #userStatus {
@@ -99,31 +100,30 @@
             position: absolute;
             bottom: 0;
         }
-
     </style>
 </head>
 <body>
-    <h1>🎄 Remplis la gamelle de RaseToiLaMoustache - Jeu 3 🎄</h1>
+    <h1>🎄 Remplissez la gamelle de RaseToiLaMoustache - Jeu 3 🎄</h1>
 
     <div id="userStatus"></div>
     <div id="instructions">
-        <p>Maintenez le bouton pour remplir le récipient! Essayez de correspondre au pourcentage de remplissage cible. Chaque manche, la forme change!</p>
+        <p>Maintenez le bouton pour remplir le récipient ! Essayez d’atteindre le pourcentage cible de remplissage. À chaque manche, la forme change !</p>
     </div>
 
     <div id="gameArea">
-        <button id="start-btn">Démarrer le Jeu</button>
+        <button id="start-btn">Commencer le Jeu</button>
         <button id="fill-btn" disabled>Maintenir pour Remplir</button>
-        <div id="target-percentage">Objectif: 0%</div>
+        <div id="target-percentage">Cible : 0%</div>
         <div id="round-info">Manche 1 sur 5</div>
         <div id="score">Score : 100</div>
-        <div id="totalPlayCountDisplay">Total des parties: 0</div>
+        <div id="totalPlayCountDisplay">Total des Parties : 0</div>
 
         <div id="container">
             <div id="fill"></div>
         </div>
 
-        <!-- Affichage du pourcentage de remplissage après chaque manche -->
-        <div id="roundFillDisplay">Remplissage Dernière Manche: 0%</div>
+        <!-- Display the fill percentage after each round ends -->
+        <div id="roundFillDisplay">Remplissage Dernière Manche : 0%</div>
     </div>
 
     <script defer type="module">
@@ -154,7 +154,6 @@
         let targetFill = 0;
         let currentFill = 0;
         let fillInterval;
-        let shapeType = 'rectangle';
 
         const startBtn = document.getElementById('start-btn');
         const fillBtn = document.getElementById('fill-btn');
@@ -164,12 +163,12 @@
         const fillElement = document.getElementById('fill');
         const totalPlayCountDisplay = document.getElementById('totalPlayCountDisplay');
         const container = document.getElementById('container');
-        const roundFillDisplay = document.getElementById('roundFillDisplay'); // New display for last round's fill percentage
-
+        const roundFillDisplay = document.getElementById('roundFillDisplay');
+        
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 userId = user.uid;
-                document.getElementById('userStatus').innerText = `Bienvenue: ${user.email}`;
+                document.getElementById('userStatus').innerText = `Bienvenue : ${user.email}`;
 
                 const userRef = doc(db, 'users', userId);
                 const docSnap = await getDoc(userRef);
@@ -180,7 +179,7 @@
                     const userData = docSnap.data();
                     totalPlayCountGame3 = userData.totalPlayCountGame3 || 0;
                     highestScoreGame3 = userData.highestScoreGame3 || 0;
-                    totalPlayCountDisplay.innerText = `Total des parties: ${totalPlayCountGame3}`;
+                    totalPlayCountDisplay.innerText = `Total des Parties : ${totalPlayCountGame3}`;
                 }
             } else {
                 window.location.href = 'login.html';
@@ -195,14 +194,14 @@
             round = 1;
             score = 100;
             totalPlayCountGame3++;
-            totalPlayCountDisplay.innerText = `Total des parties: ${totalPlayCountGame3}`;
+            totalPlayCountDisplay.innerText = `Total des Parties : ${totalPlayCountGame3}`;
             updateContainerShape();
             resetFill();
             updateTarget();
             startBtn.disabled = true;
             fillBtn.disabled = false;
             updateFirebasePlayCount();
-            roundFillDisplay.innerText = 'Remplissage Dernière Manche: 0%';
+            roundFillDisplay.innerText = 'Remplissage Dernière Manche : 0%';
         }
 
         async function updateFirebasePlayCount() {
@@ -211,7 +210,7 @@
 
         function updateTarget() {
             targetFill = Math.floor(Math.random() * 61) + 30;
-            targetDisplay.innerText = `Objectif: ${targetFill}%`;
+            targetDisplay.innerText = `Cible : ${targetFill}%`;
             roundInfo.innerText = `Manche ${round} sur 5`;
         }
 
@@ -221,71 +220,107 @@
         }
 
         function startFilling() {
-            if (!fillInterval) {
-                fillInterval = setInterval(() => {
-                    currentFill += 1; // Increment by 1% for this example
-                    let effectiveFill;
-
-                    if (shapeType === 'rectangle') {
-                        effectiveFill = currentFill; // Directly proportional
-                    } else if (shapeType === 'triangle') {
-                        effectiveFill = Math.sqrt(currentFill / 100) * 100; // Quadratic scaling for triangle
-                    } 
-
-                    fillElement.style.height = `${currentFill}%`;
-
-                    if (effectiveFill >= targetFill) {
-                        stopFilling();
-                    }
-                }, 100); // Adjust the interval speed if needed
-            }
+            fillInterval = setInterval(() => {
+                if (currentFill < 100) {
+                    currentFill++;
+                    fillElement.style.height = `${calculateFillPercentage(currentFill)}%`;
+                }
+            }, 50);
         }
 
         function stopFilling() {
             clearInterval(fillInterval);
-            fillInterval = null;
-            const finalFillPercent = shapeType === 'triangle' ? Math.sqrt(currentFill / 100) * 100 : currentFill;
+            calculateScore();
+        }
 
-            checkScore(finalFillPercent);
+        function calculateScore() {
+            const difference = Math.abs(currentFill - targetFill);
+            const roundPenalty = difference;
+            score -= roundPenalty;
+            scoreDisplay.innerText = `Score : ${score}`;
+            
+            roundFillDisplay.innerText = `Remplissage Dernière Manche : ${currentFill}%`;
 
             if (round < 5) {
                 round++;
-                updateContainerShape();
                 resetFill();
+                updateContainerShape();
                 updateTarget();
             } else {
-                endGame();
+                fillBtn.disabled = true;
+                saveScore(score);
+                startBtn.disabled = false;
             }
-        }
-
-        function checkScore(finalFillPercent) {
-            const difference = Math.abs(finalFillPercent - targetFill);
-            score -= difference;
-            scoreDisplay.innerText = `Score : ${Math.max(0, score)}`;
-            roundFillDisplay.innerText = `Remplissage Dernière Manche: ${finalFillPercent.toFixed(1)}%`;
-        }
-
-        function endGame() {
-            fillBtn.disabled = true;
-            startBtn.disabled = false;
-            if (score > highestScoreGame3) {
-                highestScoreGame3 = score;
-                updateHighestScore();
-            }
-        }
-
-        async function updateHighestScore() {
-            await updateDoc(doc(db, 'users', userId), { highestScoreGame3: highestScoreGame3 });
         }
 
         function updateContainerShape() {
-            const shapes = ['rectangle', 'triangle'];
-            shapeType = shapes[Math.floor(Math.random() * shapes.length)];
+            switch (round) {
+                case 2:
+                    container.style.clipPath = 'polygon(0 100%, 50% 0, 100% 100%)'; // Triangle shape with angles 60-60-60
+                    break;
+                case 3:
+                    container.style.clipPath = 'polygon(0 100%, 50% 0, 100% 100%)'; // Triangle shape with angles 45-45-90
+                    break;
+                case 4:
+                    container.style.clipPath = 'polygon(0 100%, 50% 0, 100% 100%)'; // Triangle shape with angles 30-60-90
+                    break;
+                case 5:
+                    container.style.clipPath = 'polygon(0 100%, 50% 0, 100% 100%)'; // Triangle shape with angles 30-30-120
+                    break;
+                default:
+                    container.style.clipPath = 'polygon(0 0, 100% 0, 100% 100%, 0% 100%)'; // Default shape
+                    break;
+            }
+        }
 
-            if (shapeType === 'rectangle') {
-                container.style.clipPath = 'polygon(0 0, 100% 0, 100% 100%, 0% 100%)';
-            } else if (shapeType === 'triangle') {
-                container.style.clipPath = 'polygon(50% 0, 0% 100%, 100% 100%)';
+        function calculateFillPercentage(fillHeight) {
+            // Assume base is 100 and height of the triangle changes based on round
+            let base, height;
+            switch (round) {
+                case 2: // 60-60-60 triangle
+                    base = 100;
+                    height = 100 * Math.sqrt(3) / 2; // Height of equilateral triangle
+                    break;
+                case 3: // 45-45-90 triangle
+                    base = 100;
+                    height = 100 / Math.sqrt(2); // Height of 45-45-90 triangle
+                    break;
+                case 4: // 30-60-90 triangle
+                    base = 100;
+                    height = 100; // Height of 30-60-90 triangle
+                    break;
+                case 5: // 30-30-120 triangle
+                    base = 100;
+                    height = 100 * Math.sqrt(3) / 2; // Height of equilateral triangle
+                    break;
+                default:
+                    return 0; // In case of the first round (square)
+            }
+
+            // Calculate area of the triangle
+            const totalArea = (base * height) / 2;
+
+            // Calculate the area of the small triangle that corresponds to the current fill height
+            const smallHeight = (fillHeight / 100) * height; // Corresponding height of filled area
+            const smallArea = (base * smallHeight) / (2 * height); // Calculate the small triangle area using ratios
+
+            // Calculate the filling percentage
+            const fillPercentage = 100 * (1 - (smallArea / totalArea));
+            return fillPercentage;
+        }
+
+        async function saveScore(finalScore) {
+            try {
+                const gameData = { score: finalScore, round: round, timestamp: new Date() };
+                await addDoc(collection(db, 'users', userId, 'Game3'), gameData);
+
+                const userRef = doc(db, 'users', userId);
+                if (totalPlayCountGame1 <= 3 && finalScore > highestScoreGame3) {
+                    highestScoreGame3 = finalScore;
+                    await updateDoc(userRef, { highestScoreGame3 });
+                }
+            } catch (error) {
+                console.error("Erreur lors de la sauvegarde du score :", error);
             }
         }
     </script>
