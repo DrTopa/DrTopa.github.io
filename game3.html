@@ -172,6 +172,7 @@
                     const userData = docSnap.data();
                     totalPlayCountGame3 = userData.totalPlayCountGame3 || 0;
                     highestScoreGame3 = userData.highestScoreGame3 || 0;
+                    playCount = totalPlayCountGame3 + 1;
                 }
             } else {
                 window.location.href = 'login.html';
@@ -185,7 +186,8 @@
         function startGame() {
             round = 1;
             score = 100;
-            totalPlayCountGame3++;
+            totalPlayCountGame3+=1;
+            await updateDoc(doc(db, 'users', userId), { totalPlayCountGame3: totalPlayCountGame3 });
             updateTarget();
             startBtn.disabled = true;
             fillBtn.disabled = false;
@@ -226,6 +228,7 @@
                 fillBtn.disabled = true;
                 saveScore(score);
                 startBtn.disabled = false;
+                currentFill = 0;
             }
         }
 
@@ -234,7 +237,7 @@
                 const gameData = { score: finalScore, playCount: totalPlayCountGame3, timestamp: new Date() };
                 await addDoc(collection(db, 'users', userId, 'Game3'), gameData);
 
-                if (totalPlayCountGame3 <= 3 && finalScore > highestScoreGame3) {
+                if (totalPlayCountGame3 < 3 && finalScore > highestScoreGame3) {
                     highestScoreGame3 = finalScore;
                     await updateDoc(doc(db, 'users', userId), { highestScoreGame3 });
                 }
