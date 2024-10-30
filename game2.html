@@ -30,19 +30,17 @@
             font-size: 1.2em;
             color: #2c3e50; /* Dark blue */
         }
-        /* Instructions section */
-        #instructions {
-            background: rgba(255, 255, 255, 0.8);
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-            margin-bottom: 20px;
-            text-align: center;
-            max-width: 1000px;
+        #explanation {
             font-size: 1.2em;
+            margin: 20px 0;
+            padding: 10px;
             color: #333;
-            overflow-y: auto;  /* Added for scrolling if needed */
-            max-height: 300px; /* Set a maximum height */
+            max-width: 80%;
+            text-align: center;
+            line-height: 1.5;
+            border-left: 4px solid #27ae60; /* Christmas green */
+            background-color: #e0ffe0; /* Light green background */
+            border-radius: 8px;
         }
         #gameArea {
             display: flex;
@@ -107,14 +105,9 @@
     <h1>🎄 Christmas Quiz Challenge - Game 2 🎄</h1>
     <div id="userStatus"></div>
     
-    <!-- Game instructions -->
-    <div id="instructions">
-        <p>Décembre est enfin là, et cela ne peut signifier qu’une chose : l’atelier du Père Noël Adrien, que tout le monde appelle Topapa, est en effervescence. Fidèle à sa réputation, Topapa s’enfile une grande tasse de café. "Elle a meilleur goût quand c'est l'autre Dudley qui me la prépare" se dit-il et puis il s'élance dans l’atelier pour réveiller ses lutins. Ces derniers, encore en pyjama, s’étirent maladroitement alors que Topapa secoue une vieille ceinture de cuir devant eux.</p>
-        <p>« Allez, allez ! Au boulot, petits fainéants ! » dit-il d’une voix joviale.</p>
-        <p>Soudain, un cri fluet se fait entendre : « Graoumpf… » Les bébés Romain, encore enroulés dans leurs couvertures, ouvrent un œil en fronçant leur gros sourcil, perturbés dans leur douce sieste. Tout endormis, ils tentent d’appuyer en vain sur le bouton Snooze de leur réveil, espérant grappiller quelques minutes de sommeil supplémentaires. Mais leurs petites mains glissent et ratent à chaque tentative, provoquant des petits bruits de frustration.</p>
-        <p>Topapa, amusé, décide d'intervenir pour motiver ses petits nains : « Allez, allez, les nains ! On enfile les chaussures de sécurité. Décembre ne va pas attendre que vous vous réveilliez ! »</p>
-        <p>Explication jeu : Vous avez 4 essais pour améliorer votre score. Après avoir lancé le jeu, appuyer sur le bouton Snooze le plus de fois possibles en 10 secondes. Après 4 essais, vous pourrez toujours jouer à ce jeu passionnant.</p>
-        <p>Possible sur Smartphone comme sur ordinateur. Peut-être un mode est-il mieux qu’un autre.</p>
+    <div id="explanation">
+        Good morning, fellows! I will explain the rules to you. This quiz has a few questions, each with multiple-choice answers. 
+        For each correct answer, you earn points. Good luck and have fun!
     </div>
     
     <div id="gameArea">
@@ -129,7 +122,7 @@
     <script defer type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
         // Firebase configuration
         const firebaseConfig = {
@@ -149,7 +142,6 @@
 
         let userId = '';
         let score = 0;
-        let playCount = 0;
         let totalPlayCountGame2 = 0;
         let highestScore = 0;
 
@@ -293,7 +285,7 @@
             startBtn.disabled = false;
             if (score > highestScore) {
                 highestScore = score;
-                await updateScoreInDB();
+                updateScoreInDB();
             }
             scoreDisplay.textContent += ` Your final score is ${score}.`;
             questionDisplay.textContent = 'Game Over! 🎉';
@@ -308,7 +300,22 @@
             });
         }
     </script>
+
+    <!-- Snowflakes -->
+    <script>
+        const snowflakeCount = 50;
+        for (let i = 0; i < snowflakeCount; i++) {
+            const snowflake = document.createElement('div');
+            snowflake.classList.add('snowflake');
+            snowflake.textContent = '❄️';
+            snowflake.style.left = Math.random() * 100 + 'vw';
+            snowflake.style.animationDuration = Math.random() * 3 + 2 + 's'; // random duration between 2s and 5s
+            snowflake.style.fontSize = Math.random() * 1 + 0.5 + 'em'; // random size between 0.5em and 1.5em
+            document.body.appendChild(snowflake);
+        }
+    </script>
 </body>
 </html>
+
 
 
