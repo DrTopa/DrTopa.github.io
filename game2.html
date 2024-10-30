@@ -81,6 +81,26 @@
             margin: 10px;
             width: 50px;
         }
+      
+        /* Snowflake styles */
+        .snowflake {
+            position: absolute;
+            top: -10px;
+            color: white;
+            font-size: 1em; /* Adjust the size of the snowflakes */
+            pointer-events: none;
+            opacity: 0.8;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(0);
+            }
+            100% {
+                transform: translateY(100vh);
+            }
+        }
     </style>
 </head>
 <body>
@@ -141,6 +161,23 @@
         const questionDisplay = document.getElementById('question');
         const optionsDisplay = document.getElementById('options');
         const inputField = document.getElementById('input');
+
+        
+            // Create falling snowflakes
+        function createSnowflakes() {
+            const snowflakeCount = 100; // Number of snowflakes to create
+            for (let i = 0; i < snowflakeCount; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.className = 'snowflake';
+                snowflake.innerText = '❄️'; // Snowflake character
+                snowflake.style.left = Math.random() * 100 + 'vw'; // Random horizontal position
+                snowflake.style.animationDuration = Math.random() * 3 + 2 + 's'; // Random fall speed
+                snowflake.style.opacity = Math.random(); // Random opacity
+                document.body.appendChild(snowflake);
+            }
+        }
+
+        createSnowflakes(); // Call the function to create snowflakes
 
         const questions = [
             {
@@ -253,7 +290,7 @@
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 userId = user.uid;
-                document.getElementById('userStatus').innerText = `Logged in as: ${user.email}`;
+                document.getElementById('userStatus').innerText = `Welcome: ${user.email}`;
 
                 const userRef = doc(db, 'users', userId);
                 const docSnap = await getDoc(userRef);
@@ -293,11 +330,11 @@
 
             function startTimer() {
                 timeLeft = timerDuration;
-                timerDisplay.innerText = `Time Left: ${timeLeft}s`;
+                timerDisplay.innerText = `Temps restant: ${timeLeft}s`;
 
                 const timer = setInterval(() => {
                     timeLeft -= 1;
-                    timerDisplay.innerText = `Time Left: ${timeLeft}s`;
+                    timerDisplay.innerText = `Temps restant: ${timeLeft}s`;
 
                     if (timeLeft <= 0) {
                         clearInterval(timer);
@@ -337,7 +374,7 @@
             const question = questions[index];
             questionDisplay.innerText = question.question;
             optionsDisplay.innerHTML = question.options.join('<br>');
-            timerDisplay.innerText = `Time Left: 15s`;
+            timerDisplay.innerText = `Temps restant : 15s`;
             inputField.disabled = false;
             inputField.focus();
         }
@@ -345,7 +382,7 @@
         function checkAnswer(index, userAnswer) {
             if (userAnswer === questions[index].answer) {
                 score += 5;
-                scoreDisplay.innerText = `Current Score: ${score}`;
+                scoreDisplay.innerText = `Score actuel: ${score}`;
                 console.log("Correct Answer!");
             } else if (userAnswer !== '') {
                 console.log("Incorrect Answer.");
