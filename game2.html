@@ -30,17 +30,19 @@
             font-size: 1.2em;
             color: #2c3e50; /* Dark blue */
         }
-        #explanation {
-            font-size: 1.2em;
-            margin: 20px 0;
-            padding: 10px;
-            color: #333;
-            max-width: 80%;
+        /* Instructions section */
+        #instructions {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
             text-align: center;
-            line-height: 1.5;
-            border-left: 4px solid #27ae60; /* Christmas green */
-            background-color: #e0ffe0; /* Light green background */
-            border-radius: 8px;
+            max-width: 1000px;
+            font-size: 1.2em;
+            color: #333;
+            overflow-y: auto;  /* Added for scrolling if needed */
+            max-height: 300px; /* Set a maximum height */
         }
         #gameArea {
             display: flex;
@@ -105,9 +107,14 @@
     <h1>🎄 Christmas Quiz Challenge - Game 2 🎄</h1>
     <div id="userStatus"></div>
     
-    <div id="explanation">
-        Good morning, fellows! I will explain the rules to you. This quiz has a few questions, each with multiple-choice answers. 
-        For each correct answer, you earn points. Good luck and have fun!
+    <!-- Game instructions -->
+    <div id="instructions">
+        <p>Décembre est enfin là, et cela ne peut signifier qu’une chose : l’atelier du Père Noël Adrien, que tout le monde appelle Topapa, est en effervescence. Fidèle à sa réputation, Topapa s’enfile une grande tasse de café. "Elle a meilleur goût quand c'est l'autre Dudley qui me la prépare" se dit-il et puis il s'élance dans l’atelier pour réveiller ses lutins. Ces derniers, encore en pyjama, s’étirent maladroitement alors que Topapa secoue une vieille ceinture de cuir devant eux.</p>
+        <p>« Allez, allez ! Au boulot, petits fainéants ! » dit-il d’une voix joviale.</p>
+        <p>Soudain, un cri fluet se fait entendre : « Graoumpf… » Les bébés Romain, encore enroulés dans leurs couvertures, ouvrent un œil en fronçant leur gros sourcil, perturbés dans leur douce sieste. Tout endormis, ils tentent d’appuyer en vain sur le bouton Snooze de leur réveil, espérant grappiller quelques minutes de sommeil supplémentaires. Mais leurs petites mains glissent et ratent à chaque tentative, provoquant des petits bruits de frustration.</p>
+        <p>Topapa, amusé, décide d'intervenir pour motiver ses petits nains : « Allez, allez, les nains ! On enfile les chaussures de sécurité. Décembre ne va pas attendre que vous vous réveilliez ! »</p>
+        <p>Explication jeu : Vous avez 4 essais pour améliorer votre score. Après avoir lancé le jeu, appuyer sur le bouton Snooze le plus de fois possibles en 10 secondes. Après 4 essais, vous pourrez toujours jouer à ce jeu passionnant.</p>
+        <p>Possible sur Smartphone comme sur ordinateur. Peut-être un mode est-il mieux qu’un autre.</p>
     </div>
     
     <div id="gameArea">
