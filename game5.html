@@ -253,62 +253,57 @@
             }
         }
 
-        function updateContainerShape() {
-            switch (round) {
-                case 2:
-                    container.style.clipPath = 'polygon(0 100%, 50% 0, 100% 100%)'; // Triangle shape with angles 60-60-60
-                    break;
-                case 3:
-                    container.style.clipPath = 'polygon(0 100%, 50% 0, 100% 100%)'; // Triangle shape with angles 45-45-90
-                    break;
-                case 4:
-                    container.style.clipPath = 'polygon(0 100%, 50% 0, 100% 100%)'; // Triangle shape with angles 30-60-90
-                    break;
-                case 5:
-                    container.style.clipPath = 'polygon(0 100%, 50% 0, 100% 100%)'; // Triangle shape with angles 30-30-120
-                    break;
-                default:
-                    container.style.clipPath = 'polygon(0 0, 100% 0, 100% 100%, 0% 100%)'; // Default shape
-                    break;
-            }
-        }
+function updateContainerShape() {
+    switch (round) {
+        case 2:
+            container.style.clipPath = 'polygon(0% 100%, 50% 0%, 100% 100%)'; // Random triangle shape
+            break;
+        case 3:
+            container.style.clipPath = 'polygon(0% 0%, 50% 100%, 100% 0%)'; // Different random triangle shape
+            break;
+        case 4:
+            container.style.clipPath = 'polygon(10% 90%, 50% 0%, 90% 90%)'; // Another arbitrary triangle
+            break;
+        case 5:
+            container.style.clipPath = 'polygon(10% 90%, 50% 10%, 90% 90%)'; // Another arbitrary triangle
+            break;
+        default:
+            container.style.clipPath = 'polygon(0 0, 100% 0, 100% 100%, 0% 100%)'; // Default square shape
+            break;
+    }
+}
 
-        function calculateFillPercentage(fillHeight) {
-            // Assume base is 100 and height of the triangle changes based on round
-            let base, height;
-            switch (round) {
-                case 2: // 60-60-60 triangle
-                    base = 100;
-                    height = 100 * Math.sqrt(3) / 2; // Height of equilateral triangle
-                    break;
-                case 3: // 45-45-90 triangle
-                    base = 100;
-                    height = 100 / Math.sqrt(2); // Height of 45-45-90 triangle
-                    break;
-                case 4: // 30-60-90 triangle
-                    base = 100;
-                    height = 100; // Height of 30-60-90 triangle
-                    break;
-                case 5: // 30-30-120 triangle
-                    base = 100;
-                    height = 100 * Math.sqrt(3) / 2; // Height of equilateral triangle
-                    break;
-                default:
-                    return 0; // In case of the first round (square)
-            }
+        
+function calculateFillPercentage(fillHeight) {
+    let base, height;
+    switch (round) {
+        case 2: // 60-60-60 triangle
+            base = 50;
+            height = 100 * Math.sqrt(3) / 2; // Height of equilateral triangle
+            break;
+        case 3: // 45-45-90 triangle
+            base = 110;
+            height = 80 / Math.sqrt(2); // Height of 45-45-90 triangle
+            break;
+        case 4: // 30-60-90 triangle
+            base = 70;
+            height = 130; // Height of 30-60-90 triangle
+            break;
+        case 5: // 30-30-120 triangle
+            base = 40;
+            height = 70 * Math.sqrt(3) / 2; // Height of equilateral triangle
+            break;
+        default:
+            return 0; // In case of the first round (square)
+    }
 
-            // Calculate area of the triangle
-            const totalArea = (base * height) / 2;
+    const totalArea = (base * height) / 2;
+    const smallHeight = (fillHeight / 100) * height; // Corresponding height of filled area
+    const smallArea = (base * smallHeight) / (2 * height); // Calculate the small triangle area using ratios
 
-            // Calculate the area of the small triangle that corresponds to the current fill height
-            const smallHeight = (fillHeight / 100) * height; // Corresponding height of filled area
-            const smallArea = (base * smallHeight) / (2 * height); // Calculate the small triangle area using ratios
-
-            // Calculate the filling percentage
-            const fillPercentage = 100 * (1 - (smallArea / totalArea));
-            return fillPercentage;
-        }
-
+    const fillPercentage = 100 * (1 - (smallArea / totalArea));
+    return fillPercentage;
+}
         async function saveScore(finalScore) {
             try {
                 const gameData = { score: finalScore, round: round, timestamp: new Date() };
