@@ -75,7 +75,7 @@
             cursor: not-allowed;
         }
 
-        #target-percentage, #score, #round-info {
+        #target-percentage, #score, #round-info, #totalPlayCountDisplay {
             font-size: 1.8em;
             margin: 15px;
             color: #1565c0;
@@ -85,11 +85,10 @@
             width: 100px;
             height: 100px;
             margin-top: 20px;
-            border: 2px solid #333;
-            border-radius: 10px;
             position: relative;
             overflow: hidden;
             background-color: #eee;
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%); /* Default square shape */
         }
 
         #fill {
@@ -107,7 +106,7 @@
 
     <div id="userStatus"></div>
     <div id="instructions">
-        <p>Hold the button to fill the container! Try to match the target fill percentage. You'll get a new target and shape each round!</p>
+        <p>Hold the button to fill the container! Try to match the target fill percentage. Each round, the shape will change!</p>
     </div>
 
     <div id="gameArea">
@@ -116,6 +115,7 @@
         <div id="target-percentage">Target: 0%</div>
         <div id="round-info">Round 1 of 5</div>
         <div id="score">Score: 100</div>
+        <div id="totalPlayCountDisplay">Total Plays: 0</div>
 
         <div id="container">
             <div id="fill"></div>
@@ -128,14 +128,12 @@
         import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
         const firebaseConfig = {
-            apiKey: "AIzaSyC4bjg7lVwd8FU8MREaPhBsBENv5qmiYYM",
-            authDomain: "calendrier-de-l-avent-54e3a.firebaseapp.com",
-            databaseURL: "https://calendrier-de-l-avent-54e3a-default-rtdb.europe-west1.firebasedatabase.app",
-            projectId: "calendrier-de-l-avent-54e3a",
-            storageBucket: "calendrier-de-l-avent-54e3a.appspot.com",
-            messagingSenderId: "850639567855",
-            appId: "1:850639567855:web:0d799a1ecca005fcff141a",
-            measurementId: "G-PC1W7RYVEH"
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID",
         };
 
         const app = initializeApp(firebaseConfig);
@@ -157,6 +155,8 @@
         const scoreDisplay = document.getElementById('score');
         const roundInfo = document.getElementById('round-info');
         const fillElement = document.getElementById('fill');
+        const totalPlayCountDisplay = document.getElementById('totalPlayCountDisplay');
+        const container = document.getElementById('container');
         
         onAuthStateChanged(auth, async (user) => {
             if (user) {
@@ -172,7 +172,7 @@
                     const userData = docSnap.data();
                     totalPlayCountGame3 = userData.totalPlayCountGame3 || 0;
                     highestScoreGame3 = userData.highestScoreGame3 || 0;
-                    playCount = totalPlayCountGame3 + 1;
+                    totalPlayCountDisplay.innerText = `Total Plays: ${totalPlayCountGame3}`;
                 }
             } else {
                 window.location.href = 'login.html';
@@ -180,23 +180,34 @@
         });
 
         startBtn.addEventListener('click', startGame);
-        await updateDoc(doc(db, 'users', userId), { totalPlayCountGame3: totalPlayCountGame3 });
         fillBtn.addEventListener('mousedown', startFilling);
         fillBtn.addEventListener('mouseup', stopFilling);
 
         function startGame() {
             round = 1;
             score = 100;
-            totalPlayCountGame3+=1;
+            totalPlayCountGame3++;
+            totalPlayCountDisplay.innerText = `Total Plays: ${totalPlayCountGame3}`;
+            updateContainerShape();
+            resetFill();
             updateTarget();
             startBtn.disabled = true;
             fillBtn.disabled = false;
+            updateFirebasePlayCount();
+        }
+
+        async function updateFirebasePlayCount() {
+            await updateDoc(doc(db, 'users', userId), { totalPlayCountGame3 });
         }
 
         function updateTarget() {
             targetFill = Math.floor(Math.random() * 61) + 30;
             targetDisplay.innerText = `Target: ${targetFill}%`;
             roundInfo.innerText = `Round ${round} of 5`;
+        }
+
+        function resetFill() {
+            currentFill = 0;
             fillElement.style.height = '0%';
         }
 
@@ -222,24 +233,45 @@
 
             if (round < 5) {
                 round++;
-                currentFill = 0;
+                resetFill();
+                updateContainerShape();
                 updateTarget();
             } else {
                 fillBtn.disabled = true;
                 saveScore(score);
                 startBtn.disabled = false;
-                currentFill = 0;
+            }
+        }
+
+        function updateContainerShape() {
+            switch (round) {
+                case 2:
+                    container.style.clipPath = 'ellipse(50% 30% at 50% 70%)'; // Bowl shape
+                    break;
+                case 3:
+                    container.style.clipPath = 'path("M50,90 Q100,50 50,10 Q0,50 50,90")'; // Heart shape
+                    break;
+                case 4:
+                    container.style.clipPath = 'polygon(50% 0%, 65% 15%, 70% 100%, 30% 100%, 35% 15%)'; // Vase shape
+                    break;
+                case 5:
+                    container.style.clipPath = 'ellipse(40% 80% at 50% 50%)'; // Moon shape
+                    break;
+                default:
+                    container.style.clipPath = 'polygon(0 0, 100% 0, 100% 100%, 0% 100%)'; // Default shape
+                    break;
             }
         }
 
         async function saveScore(finalScore) {
             try {
-                const gameData = { score: finalScore, playCount: totalPlayCountGame3, timestamp: new Date() };
+                const gameData = { score: finalScore, round: round, timestamp: new Date() };
                 await addDoc(collection(db, 'users', userId, 'Game3'), gameData);
 
-                if (totalPlayCountGame3 < 3 && finalScore > highestScoreGame3) {
+                const userRef = doc(db, 'users', userId);
+                if (finalScore > highestScoreGame3) {
                     highestScoreGame3 = finalScore;
-                    await updateDoc(doc(db, 'users', userId), { highestScoreGame3: highestScore3 });
+                    await updateDoc(userRef, { highestScoreGame3 });
                 }
             } catch (error) {
                 console.error("Error saving score:", error);
