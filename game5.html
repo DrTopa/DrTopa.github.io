@@ -3,96 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game 2 - Quiz Challenge</title>
+    <title>Bebe Romain Snooze - Game 3</title>
     <style>
+        /* General body styling */
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             flex-direction: column;
             height: 100vh;
-            background-color: #f0f0f0;
+            background-color: #ffebcd;
+            background-image: url('https://www.transparenttextures.com/patterns/snow.png');
             margin: 0;
         }
+
         h1 {
-            font-size: 2em;
+            font-size: 2.5em;
             margin-bottom: 20px;
+            color: #d32f2f;
+            font-family: 'Comic Sans MS', cursive;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
         }
+
         #userStatus {
             position: absolute;
             top: 10px;
             right: 10px;
             font-size: 1.2em;
+            color: #a23636;
         }
-                
-        #explanation {
-            font-size: 1.2em;
-            margin: 20px 0;
-            padding: 10px;
-            color: #333;
-            max-width: 80%;
+
+        #instructions {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
             text-align: center;
-            line-height: 1.5;
-            border-left: 4px solid #007BFF;
-            background-color: #e0f2ff;
-            border-radius: 8px;
+            max-width: 800px;
+            font-size: 1.2em;
+            color: #333;
         }
+
         #gameArea {
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-top: 50px;
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 2px solid #b71c1c;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
         }
-        #start-btn {
+
+        #start-btn, #fill-btn {
             padding: 10px 20px;
             margin: 10px;
             font-size: 1.5em;
             cursor: pointer;
-            background-color: #007BFF;
+            background-color: #388e3c;
             color: white;
             border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
         }
-        #start-btn:hover {
-            background-color: #0056b3;
+
+        #fill-btn:disabled {
+            background-color: #757575;
+            cursor: not-allowed;
         }
-        #question {
-            font-size: 1.5em;
-            margin: 20px;
+
+        #target-percentage, #score, #round-info, #totalPlayCountDisplay {
+            font-size: 1.8em;
+            margin: 15px;
+            color: #1565c0;
         }
-        #options {
-            font-size: 1.2em;
-            margin: 10px;
+
+        #container {
+            width: 100px;
+            height: 100px;
+            margin-top: 20px;
+            position: relative;
+            overflow: hidden;
+            background-color: #eee;
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%); /* Default square shape */
         }
-        #timer, #score {
-            font-size: 1.5em;
-            margin: 10px;
+
+        #fill {
+            background-color: #2196F3;
+            width: 100%;
+            height: 0%;
+            position: absolute;
+            bottom: 0;
         }
-        #input {
-            padding: 10px;
-            font-size: 1.2em;
-            margin: 10px;
-            width: 50px;
-        }
+
     </style>
 </head>
 <body>
+    <h1>🎄 Bebe Romain Snooze - Game 3 🎄</h1>
 
-    <h1>Quiz Challenge - Game 2</h1>
     <div id="userStatus"></div>
-    
-    <div id="explanation">
-        Good morning, fellows! I will explain the rules to you. This quiz has a few questions, each with multiple-choice answers. 
-        For each correct answer, you earn points. Good luck and have fun!
+    <div id="instructions">
+        <p>Hold the button to fill the container! Try to match the target fill percentage. Each round, the shape will change!</p>
     </div>
-    
+
     <div id="gameArea">
         <button id="start-btn">Start Game</button>
-        <div id="timer"></div>
-        <div id="score"></div>
-        <div id="question"></div>
-        <div id="options"></div>
-        <input type="text" id="input" placeholder="A/B/C/D" maxlength="1" disabled>
+        <button id="fill-btn" disabled>Hold to Fill</button>
+        <div id="target-percentage">Target: 0%</div>
+        <div id="round-info">Round 1 of 5</div>
+        <div id="score">Score: 100</div>
+        <div id="totalPlayCountDisplay">Total Plays: 0</div>
+
+        <div id="container">
+            <div id="fill"></div>
+        </div>
     </div>
 
     <script defer type="module">
@@ -100,7 +127,6 @@
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
         import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
-        // Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyC4bjg7lVwd8FU8MREaPhBsBENv5qmiYYM",
             authDomain: "calendrier-de-l-avent-54e3a.firebaseapp.com",
@@ -117,252 +143,143 @@
         const db = getFirestore(app);
 
         let userId = '';
-        let score = 0;
-        let playCount = 0;
-        let totalPlayCountGame2 = 0;
-        let highestScore = 0;
+        let totalPlayCountGame3 = 0;
+        let highestScoreGame3 = 0;
+        let round = 1;
+        let score = 100;
+        let targetFill = 0;
+        let currentFill = 0;
+        let fillInterval;
 
         const startBtn = document.getElementById('start-btn');
-        const timerDisplay = document.getElementById('timer');
+        const fillBtn = document.getElementById('fill-btn');
+        const targetDisplay = document.getElementById('target-percentage');
         const scoreDisplay = document.getElementById('score');
-        const questionDisplay = document.getElementById('question');
-        const optionsDisplay = document.getElementById('options');
-        const inputField = document.getElementById('input');
-
-        const questions = [
-            {
-                question: "Niveau 3e (2024) : Si je multiplie deux nombres pairs alors j'obtiens un nombre ..",
-                options: ["A) Pair", "B) Impair", "C) Complexe", "D) Quoicoubeix"],
-                answer: "A"
-            },
-            {
-                question: "Niveau 3e (2024) : 8 * 7 = ?",
-                options: ["A) 54", "B) 45", "C) 56", "D) 87"],
-                answer: "C"
-            },
-            {
-                question: "Niveau 3e (2024) : Quel nombre est plus petit que 17 ?",
-                options: ["A) 1881/99", "B) 7²/2", "C) 18", "D) 16"],
-                answer: "D"
-            },
-            {
-                question: "Niveau 2nd (2024) : A combien est égal la racine de 9 ?",
-                options: ["A) 3", "B) -3", "C) 3 et -3", "D) Gnia Gnia, tu sais pas faire la forme racine en HTML"],
-                answer: "A"
-            },
-            {
-                question: "Niveau 2nd (2024) A quel théorème peut-on associer cette phrase : Dans tout triangle rectangle, le carré de la longueur de l'hypoténuse est égal à la somme des carrés des longueurs des deux autres côtés.",
-                options: ["A) Thalès", "B) Pythagore", "C) Venn-Pearson", "D) A.Topalian"],
-                answer: "B"
-            },
-            {
-                question: "Niveau 2nd (2024) A quel théorème peut-on associer cette phrase : Si deux droites sont parallèles et coupées par deux sécantes, alors les rapports des segments déterminés sur ces sécantes sont égaux.",
-                options: ["A) Thalès", "B) Pythagore", "C) Venn-Pearson", "D) A.Topalian"],
-                answer: "A"
-            },
-            {
-                question: "Niveau 1er (2024) : Quelle est la formule d'une volume d'une sphère",
-                options: ["A) πr² ", "B) (4πr^3)/3", "C) (2πr^3)/3", "D) (4πr^2)"],
-                answer: "B"
-            },
-            {
-                question: "Niveau Terminale (2024) : Si sin (60°) = X, quelle est la valeur de X ",
-                options: ["A) 0.5", "B) (3^0.5)/3", "C) (2^0.5)/2", "D) (3^0.5)*0.5"],
-                answer: "D"
-            },
-            {
-                question: "Niveau Terminale (2024) : Paul a 8 pommes, Alfred en mange 2. Combien Alfred en a t-il mangé? ",
-                options: ["A) 2", "B) 4", "C) 6", "D) 8"],
-                answer: "A"
-            },
-            {
-                question: "Niveau Terminale (2024) : Quelle est la bonne orthographe de cette inégalité (en français) ?",
-                options: ["A) Bienaimé-Tchebychev", "B) Bienaymé-Tchebychev", "C) Bienaymé-Tchebitchev", "D) Bienaimé-Tchebitchev"],
-                answer: "B"
-            },
-            {    
-                question: "Niveau 3e (2010) : Quelle est la formule de la somme des n premiers entiers ?",
-                options: ["A) n*(n+1) /2 ", "B) n*(n-1) /2", "C) n²/2", "D)  n(n-1)"],
-                answer: "A"
-            },
-            {
-                question: "Niveau 3e (2010): Quel est le résultat de log (ab) ?",
-                options: ["A) log (a) - log (b)", "B) log (a) * log (b)", "C) log (a+b) ", "D) log (a) + log (b)"],
-                answer: "D"
-            },
-            {
-                question: "Niveau 2nd (2010) A quel théorème peut-on associer cette phrase : Si p est un nombre premier et a est un entier qui n'est pas divisible par p alors a^(p-1) ≡ 1 (mod p) ",
-                options: ["A) Bezout", "B) Fermat", "C) Baire", "D) Cauchy"],
-                answer: "B"
-            },
-            {
-                question: "Niveau 2nd (2010) A quel théorème peut-on associer cette phrase : Si a et b deux entiers, il existe des entiers x et y tels que ax+by=PGCD(a,b)",
-                options: ["A) Bezout", "B) Fermat", "C) Baire", "D) Cauchy"],
-                answer: "A"
-            },
-            {
-                question: "Niveau 2nd (2010) Si une fonction est continue sur un intervalle fermé et dérivable sur l'intervalle ouvert, et qu'elle prend la même valeur aux extrémités, alors il existe un point où la dérivée est nulle.",
-                options: ["A) Rolle", "B) Taylor", "C) Baire", "D) Gauss"],
-                answer: "A"
-            },
-            {
-                question: "Niveau 1ere (2010) : Quel est le rang maximale d'une matrice 2 * 3",
-                options: ["A) 1", "B) 2", "C) 3", "D) 4"],
-                answer: "B"
-            },
-            {
-                question: "Niveau 1ere (2010) : Application bijective qui préserve la structure, et dont la réciproque préserve aussi la structure entre deux ensembles structurés",
-                options: ["A) isomorphisme", "B) Endomorphisme", "C) Automorphisme", "D) Ker(Im) euuuuhhhh"],
-                answer: "A"
-            },
-            {
-                question: "Niveau 1ere (2010) : Somme des angles d'un polygone à n côtés",
-                options: ["A) (n-2)*90", "B) (n-2)*180", "C) n*90", "D) n*180"],
-                answer: "B"
-            },
-            {
-                question: "Niveau 1ere (2010) : Quel est le produit scalaire des vecteurs u ( 2,3) et v = (4, -1)",
-                options: ["A) 10", "B) 14", "C) 5", "D) 11"],
-                answer: "C"
-            },
-            {
-                question: "Niveau Terminale (2010) : Paul a 8 pommes, Alfred en mange 2. Quelle est la masse du soleil en kg?",
-                options: ["A) 10^25", "B) 10^27", "C) 10^30", "D) 10^32"],
-                answer: "C"
-            },
-            {
-                question: "Niveau Terminale (2010) Quelle découverte mathématique majeure sera démontrée en 2024 ? ",
-                options: ["A) La théorie de Yang-Mills", "B) Le P problème et le NP problème", "C) La conjecture de Hodge", "D)La correspondance de Langlands"],
-                answer: "D"
-            }
-        ];
-
+        const roundInfo = document.getElementById('round-info');
+        const fillElement = document.getElementById('fill');
+        const totalPlayCountDisplay = document.getElementById('totalPlayCountDisplay');
+        const container = document.getElementById('container');
+        
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 userId = user.uid;
-                document.getElementById('userStatus').innerText = `Logged in as: ${user.email}`;
+                document.getElementById('userStatus').innerText = `Welcome: ${user.email}`;
 
                 const userRef = doc(db, 'users', userId);
                 const docSnap = await getDoc(userRef);
 
                 if (!docSnap.exists()) {
-                    await setDoc(userRef, { userId: userId, totalPlayCountGame2: 0, highestScoreGame2: 0 });
-                    console.log("User document created with initial values.");
+                    await setDoc(userRef, { userId: userId, totalPlayCountGame3: 0, highestScoreGame3: 0 });
                 } else {
                     const userData = docSnap.data();
-                    totalPlayCountGame2 = userData.totalPlayCountGame2 || 0;
-                    highestScore = userData.highestScoreGame2 || 0;
-                    playCount = totalPlayCountGame2 + 1;
-                    console.log(`Loaded totalPlayCountGame2: ${totalPlayCountGame2}, highestScore: ${highestScore}`);
+                    totalPlayCountGame3 = userData.totalPlayCountGame3 || 0;
+                    highestScoreGame3 = userData.highestScoreGame3 || 0;
+                    totalPlayCountDisplay.innerText = `Total Plays: ${totalPlayCountGame3}`;
                 }
             } else {
                 window.location.href = 'login.html';
             }
         });
 
-        startBtn.addEventListener('click', async () => {
-            score = 0;
-            scoreDisplay.innerText = `Current Score: ${score}`;
-            inputField.value = '';
-            inputField.disabled = false;
-            timerDisplay.innerText = '';
-            optionsDisplay.innerHTML = '';
+        startBtn.addEventListener('click', startGame);
+        fillBtn.addEventListener('mousedown', startFilling);
+        fillBtn.addEventListener('mouseup', stopFilling);
 
-            // Increment totalPlayCount and update Firestore
-            totalPlayCountGame2 += 1;
-            await updateDoc(doc(db, 'users', userId), { totalPlayCountGame2: totalPlayCountGame2 });
+        function startGame() {
+            round = 1;
+            score = 100;
+            totalPlayCountGame3++;
+            totalPlayCountDisplay.innerText = `Total Plays: ${totalPlayCountGame3}`;
+            updateContainerShape();
+            resetFill();
+            updateTarget();
+            startBtn.disabled = true;
+            fillBtn.disabled = false;
+            updateFirebasePlayCount();
+        }
 
-            let questionIndex = 0;
-            showQuestion(questionIndex);
+        async function updateFirebasePlayCount() {
+            await updateDoc(doc(db, 'users', userId), { totalPlayCountGame3 });
+        }
 
-            const timerDuration = 15;
-            let timeLeft;
+        function updateTarget() {
+            targetFill = Math.floor(Math.random() * 61) + 30;
+            targetDisplay.innerText = `Target: ${targetFill}%`;
+            roundInfo.innerText = `Round ${round} of 5`;
+        }
 
-            function startTimer() {
-                timeLeft = timerDuration;
-                timerDisplay.innerText = `Time Left: ${timeLeft}s`;
+        function resetFill() {
+            currentFill = 0;
+            fillElement.style.height = '0%';
+        }
 
-                const timer = setInterval(() => {
-                    timeLeft -= 1;
-                    timerDisplay.innerText = `Time Left: ${timeLeft}s`;
-
-                    if (timeLeft <= 0) {
-                        clearInterval(timer);
-                        inputField.disabled = true; // Disable input after time runs out
-                        checkAnswer(questionIndex, ''); // Check answer as incorrect if time is up
-                        questionIndex++;
-                        if (questionIndex < questions.length) {
-                            showQuestion(questionIndex);
-                        } else {
-                            endGame();
-                        }
-                    }
-                }, 1000);
-                return timer; // Return timer reference for clearing if needed
-            }
-
-            let timer = startTimer(); // Start the timer for the first question
-
-            inputField.addEventListener('keyup', (event) => {
-                if (event.key === 'Enter' && inputField.value) {
-                    clearInterval(timer); // Clear the current timer
-                    checkAnswer(questionIndex, inputField.value.toUpperCase());
-                    questionIndex++;
-                    inputField.value = '';
-
-                    if (questionIndex < questions.length) {
-                        showQuestion(questionIndex);
-                        timer = startTimer(); // Start the timer for the next question
-                    } else {
-                        endGame();
-                    }
+        function startFilling() {
+            fillInterval = setInterval(() => {
+                if (currentFill < 100) {
+                    currentFill++;
+                    fillElement.style.height = `${currentFill}%`;
                 }
-            });
-        });
-
-        function showQuestion(index) {
-            const question = questions[index];
-            questionDisplay.innerText = question.question;
-            optionsDisplay.innerHTML = question.options.join('<br>');
-            timerDisplay.innerText = `Time Left: 15s`;
-            inputField.disabled = false;
-            inputField.focus();
+            }, 50);
         }
 
-        function checkAnswer(index, userAnswer) {
-            if (userAnswer === questions[index].answer) {
-                score += 5;
-                scoreDisplay.innerText = `Current Score: ${score}`;
-                console.log("Correct Answer!");
-            } else if (userAnswer !== '') {
-                console.log("Incorrect Answer.");
+        function stopFilling() {
+            clearInterval(fillInterval);
+            calculateScore();
+        }
+
+        function calculateScore() {
+            const difference = Math.abs(currentFill - targetFill);
+            const roundPenalty = difference;
+            score -= roundPenalty;
+            scoreDisplay.innerText = `Score: ${score}`;
+
+            if (round < 5) {
+                round++;
+                resetFill();
+                updateContainerShape();
+                updateTarget();
+            } else {
+                fillBtn.disabled = true;
+                saveScore(score);
+                startBtn.disabled = false;
             }
         }
 
-        async function saveScore(score) {
+        function updateContainerShape() {
+            switch (round) {
+                case 2:
+                    container.style.clipPath = 'ellipse(50% 30% at 50% 70%)'; // Bowl shape
+                    break;
+                case 3:
+                    container.style.clipPath = 'path("M50,90 Q100,50 50,10 Q0,50 50,90")'; // Heart shape
+                    break;
+                case 4:
+                    container.style.clipPath = 'polygon(50% 0%, 65% 15%, 70% 100%, 30% 100%, 35% 15%)'; // Vase shape
+                    break;
+                case 5:
+                    container.style.clipPath = 'ellipse(40% 80% at 50% 50%)'; // Moon shape
+                    break;
+                default:
+                    container.style.clipPath = 'polygon(0 0, 100% 0, 100% 100%, 0% 100%)'; // Default shape
+                    break;
+            }
+        }
+
+        async function saveScore(finalScore) {
             try {
-                const gameData = { score: score, playCount: playCount, timestamp: new Date() };
-                await addDoc(collection(db, 'users', userId, 'Game2'), gameData);
+                const gameData = { score: finalScore, round: round, timestamp: new Date() };
+                await addDoc(collection(db, 'users', userId, 'Game3'), gameData);
 
                 const userRef = doc(db, 'users', userId);
-                if (score > highestScore) {
-                    highestScore = score;
-                    await updateDoc(userRef, { highestScoreGame2: highestScore });
+                if (finalScore > highestScoreGame3) {
+                    highestScoreGame3 = finalScore;
+                    await updateDoc(userRef, { highestScoreGame3 });
                 }
-                console.log("Score saved successfully.");
             } catch (error) {
                 console.error("Error saving score:", error);
             }
         }
-
-        async function endGame() {
-            inputField.disabled = true;
-            await saveScore(score); // Save the score at the end of the game
-            console.log("Game Over. Final Score:", score);
-            alert(`The quiz is over! Your final score is: ${score}`);
-        }
     </script>
 </body>
 </html>
-
 
