@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bebe Romain Snooze - Game 3</title>
+    <style>
+        /* General body styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #ffebcd;
+            background-image: url('https://www.transparenttextures.com/patterns/snow.png');
+            margin: 0;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #d32f2f;
+            font-family: 'Comic Sans MS', cursive;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        #userStatus {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.2em;
+            color: #a23636;
+        }
+
+        #instructions {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            text-align: center;
+            max-width: 800px;
+            font-size: 1.2em;
+            color: #333;
+        }
+
+        #gameArea {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 2px solid #b71c1c;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        #start-btn, #fill-btn {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 1.5em;
+            cursor: pointer;
+            background-color: #388e3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        #fill-btn:disabled {
+            background-color: #757575;
+            cursor: not-allowed;
+        }
+
+        #target-percentage, #score, #round-info {
+            font-size: 1.8em;
+            margin: 15px;
+            color: #1565c0;
+        }
+
+        #container {
+            width: 100px;
+            height: 100px;
+            margin-top: 20px;
+            border: 2px solid #333;
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+            background-color: #eee;
+        }
+
+        #fill {
+            background-color: #2196F3;
+            width: 100%;
+            height: 0%;
+            position: absolute;
+            bottom: 0;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>🎄 Bebe Romain Snooze - Game 3 🎄</h1>
+
+    <div id="userStatus"></div>
+    <div id="instructions">
+        <p>Hold the button to fill the container! Try to match the target fill percentage. You'll get a new target and shape each round!</p>
+    </div>
+
+    <div id="gameArea">
+        <button id="start-btn">Start Game</button>
+        <button id="fill-btn" disabled>Hold to Fill</button>
+        <div id="target-percentage">Target: 0%</div>
+        <div id="round-info">Round 1 of 5</div>
+        <div id="score">Score: 100</div>
+
+        <div id="container">
+            <div id="fill"></div>
+        </div>
+    </div>
+
+    <script defer type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID",
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let userId = '';
+        let totalPlayCountGame3 = 0;
+        let highestScoreGame3 = 0;
+        let round = 1;
+        let score = 100;
+        let targetFill = 0;
+        let currentFill = 0;
+        let fillInterval;
+
+        const startBtn = document.getElementById('start-btn');
+        const fillBtn = document.getElementById('fill-btn');
+        const targetDisplay = document.getElementById('target-percentage');
+        const scoreDisplay = document.getElementById('score');
+        const roundInfo = document.getElementById('round-info');
+        const fillElement = document.getElementById('fill');
+        
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                userId = user.uid;
+                document.getElementById('userStatus').innerText = `Welcome: ${user.email}`;
+
+                const userRef = doc(db, 'users', userId);
+                const docSnap = await getDoc(userRef);
+
+                if (!docSnap.exists()) {
+                    await setDoc(userRef, { userId: userId, totalPlayCountGame3: 0, highestScoreGame3: 0 });
+                } else {
+                    const userData = docSnap.data();
+                    totalPlayCountGame3 = userData.totalPlayCountGame3 || 0;
+                    highestScoreGame3 = userData.highestScoreGame3 || 0;
+                }
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
+        startBtn.addEventListener('click', startGame);
+        fillBtn.addEventListener('mousedown', startFilling);
+        fillBtn.addEventListener('mouseup', stopFilling);
+
+        function startGame() {
+            round = 1;
+            score = 100;
+            totalPlayCountGame3++;
+            updateTarget();
+            startBtn.disabled = true;
+            fillBtn.disabled = false;
+        }
+
+        function updateTarget() {
+            targetFill = Math.floor(Math.random() * 61) + 30;
+            targetDisplay.innerText = `Target: ${targetFill}%`;
+            roundInfo.innerText = `Round ${round} of 5`;
+            fillElement.style.height = '0%';
+        }
+
+        function startFilling() {
+            fillInterval = setInterval(() => {
+                if (currentFill < 100) {
+                    currentFill++;
+                    fillElement.style.height = `${currentFill}%`;
+                }
+            }, 50);
+        }
+
+        function stopFilling() {
+            clearInterval(fillInterval);
+            calculateScore();
+        }
+
+        function calculateScore() {
+            const difference = Math.abs(currentFill - targetFill);
+            const roundPenalty = difference;
+            score -= roundPenalty;
+            scoreDisplay.innerText = `Score: ${score}`;
+
+            if (round < 5) {
+                round++;
+                currentFill = 0;
+                updateTarget();
+            } else {
+                fillBtn.disabled = true;
+                saveScore(score);
+                startBtn.disabled = false;
+            }
+        }
+
+        async function saveScore(finalScore) {
+            try {
+                const gameData = { score: finalScore, playCount: totalPlayCountGame3, timestamp: new Date() };
+                await addDoc(collection(db, 'users', userId, 'Game3'), gameData);
+
+                if (totalPlayCountGame3 <= 3 && finalScore > highestScoreGame3) {
+                    highestScoreGame3 = finalScore;
+                    await updateDoc(doc(db, 'users', userId), { highestScoreGame3 });
+                }
+            } catch (error) {
+                console.error("Error saving score:", error);
+            }
+        }
+    </script>
+</body>
+</html>
