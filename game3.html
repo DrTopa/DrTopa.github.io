@@ -1,33 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bebe Romain Snooze - Game 1</title>
+    <title>Bebe Romain Snooze - Jeu 3</title>
     <style>
         /* General body styling */
         body {
             font-family: 'Segoe UI', Tahoma, sans-serif;
             display: flex;
-            justify-content: center;
+            justify-content: start; /* Adjusted to make title more visible */
             align-items: center;
             flex-direction: column;
             height: 100vh;
             background-color: #ffebcd;
             background-image: url('https://www.transparenttextures.com/patterns/snow.png');
             margin: 0;
+            padding-top: 20px; /* Add padding to shift content down */
         }
 
-        /* Christmas themed title */
         h1 {
             font-size: 2.5em;
-            margin-bottom: 20px;
+            margin-bottom: 10px; /* Reduced margin */
             color: #d32f2f;
             font-family: 'Comic Sans MS', cursive;
             text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+            text-align: center;
         }
 
-        /* User status */
         #userStatus {
             position: absolute;
             top: 10px;
@@ -36,7 +36,6 @@
             color: #a23636;
         }
 
-        /* Instructions section */
         #instructions {
             background: rgba(255, 255, 255, 0.8);
             padding: 15px;
@@ -44,14 +43,11 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
             margin-bottom: 20px;
             text-align: center;
-            max-width: 1000px;
+            max-width: 800px;
             font-size: 1.2em;
             color: #333;
-            overflow-y: auto;  /* Added for scrolling if needed */
-            max-height: 300px; /* Set a maximum height */
         }
 
-        /* Centered game area */
         #gameArea {
             display: flex;
             flex-direction: column;
@@ -64,8 +60,7 @@
             box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
         }
 
-        /* Button styles */
-        #start-btn, #click-btn {
+        #start-btn, #fill-btn {
             padding: 10px 20px;
             margin: 10px;
             font-size: 1.5em;
@@ -77,74 +72,65 @@
             transition: background-color 0.3s;
         }
 
-        #click-btn:disabled {
+        #fill-btn:disabled {
             background-color: #757575;
             cursor: not-allowed;
         }
 
-        #start-btn:hover, #click-btn:hover:not([disabled]) {
-            background-color: #2e7d32;
-        }
-
-        /* Timer and score styling */
-        #timer, #score {
+        #target-percentage, #score, #round-info, #totalPlayCountDisplay {
             font-size: 1.8em;
             margin: 15px;
             color: #1565c0;
         }
 
-        /* Christmas Tree and Santa decoration */
-        .decoration {
+        #container {
+            width: 100px;
+            height: 100px;
+            margin-top: 20px;
+            position: relative;
+            overflow: hidden;
+            background-color: #eee;
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%); /* Default square shape */
+        }
+
+        #fill {
+            background-color: #2196F3;
+            width: 100%;
+            height: 0%;
             position: absolute;
-        }
-
-        #tree {
-            bottom: 20px;
-            left: 10px;
-            height: 200px;
-            width: auto;
-        }
-
-        #santa {
-            bottom: 20px;
-            right: 10px;
-            height: 200px;
-            width: auto;
+            bottom: 0;
         }
     </style>
 </head>
 <body>
-    <h1>🎄 Bebe Romain Snooze - Game 1 🎄</h1>
-    
-    <!-- Game instructions -->
-    <div id="instructions">
-        <p>Décembre est enfin là, et cela ne peut signifier qu’une chose : l’atelier du Père Noël Adrien, que tout le monde appelle Topapa, est en effervescence. Fidèle à sa réputation, Topapa s’enfile une grande tasse de café. "Elle a meilleur goût quand c'est l'autre Dudley qui me la prépare" se dit-il et puis il s'élance dans l’atelier pour réveiller ses lutins. Ces derniers, encore en pyjama, s’étirent maladroitement alors que Topapa secoue une vieille ceinture de cuir devant eux.</p>
-        <p>« Allez, allez ! Au boulot, petits fainéants ! » dit-il d’une voix joviale.</p>
-        <p>Soudain, un cri fluet se fait entendre : « Graoumpf… » Les bébés Romain, encore enroulés dans leurs couvertures, ouvrent un œil en fronçant leur gros sourcil, perturbés dans leur douce sieste. Tout endormis, ils tentent d’appuyer en vain sur le bouton Snooze de leur réveil, espérant grappiller quelques minutes de sommeil supplémentaires. Mais leurs petites mains glissent et ratent à chaque tentative, provoquant des petits bruits de frustration.</p>
-        <p>Topapa, amusé, décide d'intervenir pour motiver ses petits nains : « Allez, allez, les nains ! On enfile les chaussures de sécurité. Décembre ne va pas attendre que vous vous réveilliez ! »</p>
-        <p>Explication jeu : Vous avez 4 essais pour améliorer votre score. Après avoir lancé le jeu, appuyer sur le bouton Snooze le plus de fois possibles en 10 secondes. Après 4 essais, vous pourrez toujours jouer à ce jeu passionnant.</p>
-        <p>Possible sur Smartphone comme sur ordinateur. Peut-être un mode est-il mieux qu’un autre.</p>
-    </div>
+    <h1>🎄 Remplissez la gamelle de RaseToiLaMoustache - Jeu 3 🎄</h1>
 
     <div id="userStatus"></div>
-    <div id="gameArea">
-        <button id="start-btn">Start Game</button>
-        <button id="click-btn" disabled>Snooze!</button>
-        <div id="timer">Temps restant: 10s</div>
-        <div id="score">Score actuel: 0</div>
+    <div id="instructions">
+        <p>Maintenez le bouton pour remplir le récipient ! Essayez d’atteindre le pourcentage cible de remplissage. À chaque manche, la forme change !</p>
     </div>
 
-    <!-- Christmas Tree and Santa Images -->
-    <img id="tree" class="decoration" src="https://upload.wikimedia.org/wikipedia/commons/d/d1/Xmas_tree.svg" alt="Christmas Tree">
-    <img id="santa" class="decoration" src="https://upload.wikimedia.org/wikipedia/commons/3/34/Santa_Drawing_%28cropped%29.jpg" alt="Santa Claus">
+    <div id="gameArea">
+        <button id="start-btn">Commencer le Jeu</button>
+        <button id="fill-btn" disabled>Maintenir pour Remplir</button>
+        <div id="target-percentage">Cible : 0%</div>
+        <div id="round-info">Manche 1 sur 5</div>
+        <div id="score">Score : 100</div>
+        <div id="totalPlayCountDisplay">Total des Parties : 0</div>
 
+        <div id="container">
+            <div id="fill"></div>
+        </div>
+
+        <!-- Display the fill percentage after each round ends -->
+        <div id="roundFillDisplay">Remplissage Dernière Manche : 0%</div>
+    </div>
 
     <script defer type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
         import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
-        // Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyC4bjg7lVwd8FU8MREaPhBsBENv5qmiYYM",
             authDomain: "calendrier-de-l-avent-54e3a.firebaseapp.com",
@@ -161,78 +147,147 @@
         const db = getFirestore(app);
 
         let userId = '';
-        let clickCount = 0;
-        let playCount = 0;
-        let totalPlayCountGame1 = 0;
-        let highestScore = 0;
+        let totalPlayCountGame3 = 0;
+        let highestScoreGame3 = 0;
+        let round = 1;
+        let score = 100;
+        let targetFill = 0;
+        let currentFill = 0;
+        let fillInterval;
 
         const startBtn = document.getElementById('start-btn');
-        const clickBtn = document.getElementById('click-btn');
-        const timerDisplay = document.getElementById('timer');
+        const fillBtn = document.getElementById('fill-btn');
+        const targetDisplay = document.getElementById('target-percentage');
         const scoreDisplay = document.getElementById('score');
-
+        const roundInfo = document.getElementById('round-info');
+        const fillElement = document.getElementById('fill');
+        const totalPlayCountDisplay = document.getElementById('totalPlayCountDisplay');
+        const container = document.getElementById('container');
+        const roundFillDisplay = document.getElementById('roundFillDisplay');
+        
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 userId = user.uid;
-                document.getElementById('userStatus').innerText = Bienvenue : ${user.email};
+                document.getElementById('userStatus').innerText = `Bienvenue : ${user.email}`;
 
                 const userRef = doc(db, 'users', userId);
                 const docSnap = await getDoc(userRef);
 
                 if (!docSnap.exists()) {
-                    await setDoc(userRef, { userId: userId, totalPlayCountGame1: 0, highestScoreGame1: 0 });
+                    await setDoc(userRef, { userId: userId, totalPlayCountGame3: 0, highestScoreGame3: 0 });
                 } else {
                     const userData = docSnap.data();
-                    totalPlayCountGame1 = userData.totalPlayCountGame1 || 0;
-                    highestScore = userData.highestScoreGame1 || 0;
-                    playCount = totalPlayCountGame1 + 1;
+                    totalPlayCountGame3 = userData.totalPlayCountGame3 || 0;
+                    highestScoreGame3 = userData.highestScoreGame3 || 0;
+                    totalPlayCountDisplay.innerText = `Total des Parties : ${totalPlayCountGame3}`;
                 }
             } else {
                 window.location.href = 'login.html';
             }
         });
 
-        startBtn.addEventListener('click', async () => {
-            clickCount = 0;
-            scoreDisplay.innerText = Score actuel: ${clickCount};
-            playCount = totalPlayCountGame1 + 1;
+        startBtn.addEventListener('click', startGame);
+        fillBtn.addEventListener('mousedown', startFilling);
+        fillBtn.addEventListener('mouseup', stopFilling);
 
-            clickBtn.disabled = false;
-            let timeLeft = 10;
-            timerDisplay.innerText = Temps restant: ${timeLeft}s;
-            const timer = setInterval(() => {
-                timeLeft -= 1;
-                timerDisplay.innerText = Temps restant: ${timeLeft}s;
-                if (timeLeft <= 0) {
-                    clearInterval(timer);
-                    clickBtn.disabled = true;
-                    saveScore(clickCount);
+        function startGame() {
+            round = 1;
+            score = 100;
+            totalPlayCountGame3++;
+            totalPlayCountDisplay.innerText = `Total des Parties : ${totalPlayCountGame3}`;
+            updateContainerShape();
+            resetFill();
+            updateTarget();
+            startBtn.disabled = true;
+            fillBtn.disabled = false;
+            updateFirebasePlayCount();
+            roundFillDisplay.innerText = 'Remplissage Dernière Manche : 0%';
+        }
+
+        async function updateFirebasePlayCount() {
+            await updateDoc(doc(db, 'users', userId), { totalPlayCountGame3 });
+        }
+
+        function updateTarget() {
+            targetFill = Math.floor(Math.random() * 61) + 30;
+            targetDisplay.innerText = `Cible : ${targetFill}%`;
+            roundInfo.innerText = `Manche ${round} sur 5`;
+        }
+
+        function resetFill() {
+            currentFill = 0;
+            fillElement.style.height = '0%';
+        }
+
+        function startFilling() {
+            fillInterval = setInterval(() => {
+                if (currentFill < 100) {
+                    currentFill++;
+                    fillElement.style.height = `${currentFill}%`;
                 }
-            }, 1000);
+            }, 50);
+        }
 
-            totalPlayCountGame1 += 1;
-            await updateDoc(doc(db, 'users', userId), { totalPlayCountGame1: totalPlayCountGame1 });
-        });
+        function stopFilling() {
+            clearInterval(fillInterval);
+            calculateScore();
+        }
 
-        clickBtn.addEventListener('click', () => {
-            clickCount += 1;
-            scoreDisplay.innerText = Score actuel: ${clickCount};
-        });
+        function calculateScore() {
+            const difference = Math.abs(currentFill - targetFill);
+            const roundPenalty = difference;
+            score -= roundPenalty;
+            scoreDisplay.innerText = `Score : ${score}`;
+            
+            roundFillDisplay.innerText = `Remplissage Dernière Manche : ${currentFill}%`;
 
-        async function saveScore(score) {
+            if (round < 5) {
+                round++;
+                resetFill();
+                updateContainerShape();
+                updateTarget();
+            } else {
+                fillBtn.disabled = true;
+                saveScore(score);
+                startBtn.disabled = false;
+            }
+        }
+
+        function updateContainerShape() {
+            switch (round) {
+                case 2:
+                    container.style.clipPath = 'polygon(50% 0%, 0% 100%, 100% 100%)'; // Triangle shape
+                    break;
+                case 3:
+                    container.style.clipPath = 'path("M50,90 Q100,50 50,10 Q0,50 50,90")'; // Heart shape
+                    break;
+                case 4:
+                    container.style.clipPath = 'polygon(50% 0%, 65% 15%, 70% 100%, 30% 100%, 35% 15%)'; // Vase shape
+                    break;
+                case 5:
+                    container.style.clipPath = 'ellipse(40% 80% at 50% 50%)'; // Moon shape
+                    break;
+                default:
+                    container.style.clipPath = 'polygon(0 0, 100% 0, 100% 100%, 0% 100%)'; // Default shape
+                    break;
+            }
+        }
+
+        async function saveScore(finalScore) {
             try {
-                const gameData = { score: score, playCount: playCount, timestamp: new Date() };
-                await addDoc(collection(db, 'users', userId, 'Game1'), gameData);
+                const gameData = { score: finalScore, round: round, timestamp: new Date() };
+                await addDoc(collection(db, 'users', userId, 'Game3'), gameData);
 
                 const userRef = doc(db, 'users', userId);
-                if (totalPlayCountGame1 <= 4 && score > highestScore) {
-                    highestScore = score;
-                    await updateDoc(userRef, { highestScoreGame1: highestScore });
+                if (totalPlayCountGame1 <= 3 && finalScore > highestScoreGame3) {
+                    highestScoreGame3 = finalScore;
+                    await updateDoc(userRef, { highestScoreGame3 });
                 }
             } catch (error) {
-                console.error("Error saving score:", error);
+                console.error("Erreur lors de la sauvegarde du score :", error);
             }
         }
     </script>
 </body>
 </html>
+
