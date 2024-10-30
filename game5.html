@@ -5,12 +5,104 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bebe Romain Snooze - Game 3</title>
     <style>
-        /* Styling setup here is unchanged */
-        /* Styling remains as previously defined */
+        /* General body styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #ffebcd;
+            background-image: url('https://www.transparenttextures.com/patterns/snow.png');
+            margin: 0;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #d32f2f;
+            font-family: 'Comic Sans MS', cursive;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        #userStatus {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.2em;
+            color: #a23636;
+        }
+
+        #instructions {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            text-align: center;
+            max-width: 800px;
+            font-size: 1.2em;
+            color: #333;
+        }
+
+        #gameArea {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 2px solid #b71c1c;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        #start-btn, #fill-btn {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 1.5em;
+            cursor: pointer;
+            background-color: #388e3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        #fill-btn:disabled {
+            background-color: #757575;
+            cursor: not-allowed;
+        }
+
+        #target-percentage, #score, #round-info, #totalPlayCountDisplay {
+            font-size: 1.8em;
+            margin: 15px;
+            color: #1565c0;
+        }
+
+        #container {
+            width: 100px;
+            height: 100px;
+            margin-top: 20px;
+            position: relative;
+            overflow: hidden;
+            background-color: #eee;
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%); /* Default square shape */
+        }
+
+        #fill {
+            background-color: #2196F3;
+            width: 100%;
+            height: 0%;
+            position: absolute;
+            bottom: 0;
+        }
+
     </style>
 </head>
 <body>
-    <h1>🎄 Bebe Romain Snooze - Game 3 🎄</h1>
+    <h1>🎄 Remplis la gamelle de RaseToiLaMoustache- Game 3 🎄</h1>
 
     <div id="userStatus"></div>
     <div id="instructions">
@@ -39,12 +131,14 @@
         import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID",
+            apiKey: "AIzaSyC4bjg7lVwd8FU8MREaPhBsBENv5qmiYYM",
+            authDomain: "calendrier-de-l-avent-54e3a.firebaseapp.com",
+            databaseURL: "https://calendrier-de-l-avent-54e3a-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "calendrier-de-l-avent-54e3a",
+            storageBucket: "calendrier-de-l-avent-54e3a.appspot.com",
+            messagingSenderId: "850639567855",
+            appId: "1:850639567855:web:0d799a1ecca005fcff141a",
+            measurementId: "G-PC1W7RYVEH"
         };
 
         const app = initializeApp(firebaseConfig);
