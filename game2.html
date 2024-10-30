@@ -3,29 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quizz comparatif des maths 2010 vs 2024 - Game 2</title>
+    <title>Christmas Quiz Challenge - Game 2</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             flex-direction: column;
             height: 100vh;
-            background-color: #f0f0f0;
+            background-color: #ffebcd; /* Light beige background */
             margin: 0;
+            background-image: url('https://www.transparenttextures.com/patterns/snow.png');
+            background-size: cover;
+            color: #4a4a4a; /* Darker text for contrast */
         }
         h1 {
-            font-size: 2em;
+            font-size: 2.5em;
             margin-bottom: 20px;
+            color: #c0392b; /* Christmas red */
         }
         #userStatus {
             position: absolute;
             top: 10px;
             right: 10px;
             font-size: 1.2em;
+            color: #2c3e50; /* Dark blue */
         }
-                
         #explanation {
             font-size: 1.2em;
             margin: 20px 0;
@@ -34,8 +38,8 @@
             max-width: 80%;
             text-align: center;
             line-height: 1.5;
-            border-left: 4px solid #007BFF;
-            background-color: #e0f2ff;
+            border-left: 4px solid #27ae60; /* Christmas green */
+            background-color: #e0ffe0; /* Light green background */
             border-radius: 8px;
         }
         #gameArea {
@@ -43,18 +47,24 @@
             flex-direction: column;
             align-items: center;
             margin-top: 50px;
+            border: 2px solid #c0392b; /* Christmas red border */
+            border-radius: 12px;
+            padding: 20px;
+            background-color: white; /* White background for the game area */
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
         }
         #start-btn {
             padding: 10px 20px;
             margin: 10px;
             font-size: 1.5em;
             cursor: pointer;
-            background-color: #007BFF;
+            background-color: #c0392b; /* Christmas red */
             color: white;
             border: none;
+            border-radius: 5px;
         }
         #start-btn:hover {
-            background-color: #0056b3;
+            background-color: #e74c3c; /* Lighter red on hover */
         }
         #question {
             font-size: 1.5em;
@@ -73,12 +83,26 @@
             font-size: 1.2em;
             margin: 10px;
             width: 50px;
+            border-radius: 5px;
+            border: 1px solid #ccc; /* Light grey border */
+        }
+        /* Snowfall Animation */
+        .snowflake {
+            position: absolute;
+            color: white;
+            font-size: 1em;
+            pointer-events: none;
+            animation: snow 10s linear infinite;
+        }
+        @keyframes snow {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(100vh); }
         }
     </style>
 </head>
 <body>
 
-    <h1>Quiz Challenge - Game 2</h1>
+    <h1>🎄 Christmas Quiz Challenge - Game 2 🎄</h1>
     <div id="userStatus"></div>
     
     <div id="explanation">
@@ -87,7 +111,7 @@
     </div>
     
     <div id="gameArea">
-        <button id="start-btn">Start Game</button>
+        <button id="start-btn">🎅 Start Game 🎅</button>
         <div id="timer"></div>
         <div id="score"></div>
         <div id="question"></div>
@@ -130,7 +154,6 @@
         const inputField = document.getElementById('input');
 
         const questions = [
-            // New questions for Game 2 (2010 vs 2024)
             {
                 question: "Niveau 3e (2024) : Si je multiplie deux nombres pairs alors j'obtiens un nombre ..",
                 options: ["A) Pair", "B) Impair", "C) Complexe", "D) Quoicoubeix"],
@@ -152,12 +175,12 @@
                 answer: "A"
             },
             {
-                question: "Niveau 2nd (2024) : A quel théorème peut-on associer cette phrase : Dans tout triangle rectangle, le carré de la longueur de l'hypoténuse est égal à la somme des carrés des longueurs des deux autres côtés.",
+                question: "Niveau 2nd (2024) A quel théorème peut-on associer cette phrase : Dans tout triangle rectangle, le carré de la longueur de l'hypoténuse est égal à la somme des carrés des longueurs des deux autres côtés.",
                 options: ["A) Thalès", "B) Pythagore", "C) Venn-Pearson", "D) A.Topalian"],
                 answer: "B"
             },
             {
-                question: "Niveau 2nd (2024) : A quel théorème peut-on associer cette phrase : Si deux droites sont parallèles et coupées par deux sécantes, alors les rapports des segments déterminés sur ces sécantes sont égaux.",
+                question: "Niveau 2nd (2024) A quel théorème peut-on associer cette phrase : Si deux droites sont parallèles et coupées par deux sécantes, alors les rapports des segments déterminés sur ces sécantes sont égaux.",
                 options: ["A) Thalès", "B) Pythagore", "C) Venn-Pearson", "D) A.Topalian"],
                 answer: "A"
             },
@@ -168,149 +191,117 @@
             },
             {
                 question: "Niveau Terminale (2024) : Si sin (60°) = X, quelle est la valeur de X ",
-                options: ["A) 0.5", "B) (3^0.5)/3", "C) (2^0.5)/2", "D) (3^0.5)*0.5"],
-                answer: "D"
-            },
-            {
-                question: "Niveau Terminale (2024) : Paul a 8 pommes, Alfred en mange 2. Combien Alfred en a t-il mangé? ",
-                options: ["A) 2", "B) 4", "C) 6", "D) 8"],
+                options: ["A) √3/2", "B) 1/2", "C) √2", "D) 0"],
                 answer: "A"
             },
             {
-                question: "Niveau Terminale (2024) : Quelle est la bonne orthographe de cette inégalité (en français) ?",
-                options: ["A) Bienaimé-Tchebychev", "B) Bienaymé-Tchebychev", "C) Bienaymé-Tchebitchev", "D) Bienaimé-Tchebitchev"],
-                answer: "B"
-            },
-            {    
-                question: "Niveau 3e (2010) : Quelle est la somme de 5 et 3 ?",
-                options: ["A) 8", "B) 6", "C) 7", "D) 9"],
-                answer: "A"
-            },
-            {    
-                question: "Niveau 3e (2010) : Quelle est la différence entre 10 et 4 ?",
-                options: ["A) 4", "B) 6", "C) 5", "D) 7"],
-                answer: "B"
-            },
-            {    
-                question: "Niveau 3e (2010) : Si j'ai 4 pommes et que j'en donne 2, combien m'en reste-t-il ?",
-                options: ["A) 1", "B) 2", "C) 0", "D) 4"],
-                answer: "B"
-            },
-            {    
-                question: "Niveau 3e (2010) : Quel est le produit de 6 et 7 ?",
-                options: ["A) 36", "B) 42", "C) 48", "D) 56"],
-                answer: "B"
-            },
-            {    
-                question: "Niveau 3e (2010) : Quelle est la valeur de 9 - 3 ?",
-                options: ["A) 3", "B) 5", "C) 6", "D) 7"],
-                answer: "C"
-            },
-            {    
-                question: "Niveau 3e (2010) : Quel est le résultat de 8 + 6 ?",
-                options: ["A) 14", "B) 16", "C) 12", "D) 10"],
+                question: "Niveau Terminale (2024) : Quelle est la formule de la surface d'une sphère",
+                options: ["A) 4πr²", "B) 2πr", "C) 4πr^3", "D) πr²"],
                 answer: "A"
             }
         ];
 
         let currentQuestionIndex = 0;
         let timer;
-        
-        // Display user information
-        onAuthStateChanged(auth, (user) => {
+        let timeRemaining = 30; // seconds
+
+        onAuthStateChanged(auth, async (user) => {
             if (user) {
                 userId = user.uid;
-                document.getElementById('userStatus').textContent = `Bienvenue ${user.email}`;
-                loadPlayCount();
-                loadHighestScore();
+                document.getElementById('userStatus').textContent = `Logged in as: ${user.email}`;
+                await loadHighestScore();
             } else {
-                window.location.href = 'login.html';
+                document.getElementById('userStatus').textContent = 'Not logged in.';
             }
         });
 
-        async function loadPlayCount() {
+        startBtn.addEventListener('click', startGame);
+
+        async function loadHighestScore() {
             const docRef = doc(db, "players", userId);
             const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
-                totalPlayCountGame2 = docSnap.data().game2PlayCount || 0;
-                document.getElementById('score').textContent = `You have played this game ${totalPlayCountGame2} times.`;
-            } else {
-                document.getElementById('score').textContent = 'Welcome to the game!';
+                highestScore = docSnap.data().highestScoreGame2 || 0;
+                scoreDisplay.textContent = `Your highest score is ${highestScore}.`;
             }
         }
 
-        
         function startGame() {
             score = 0;
-            playCount++;
             currentQuestionIndex = 0;
+            totalPlayCountGame2++;
             inputField.value = '';
             inputField.disabled = false;
-            startBtn.style.display = 'none';
-            questionDisplay.style.display = 'block';
-            optionsDisplay.style.display = 'block';
-            loadQuestion();
-            startTimer();
+            scoreDisplay.textContent = `Score: ${score}`;
+            startBtn.disabled = true;
+            nextQuestion();
         }
 
-        function loadQuestion() {
+        function nextQuestion() {
             if (currentQuestionIndex < questions.length) {
                 const currentQuestion = questions[currentQuestionIndex];
                 questionDisplay.textContent = currentQuestion.question;
-                optionsDisplay.innerHTML = '';
-                currentQuestion.options.forEach(option => {
-                    const btn = document.createElement('button');
-                    btn.textContent = option;
-                    btn.onclick = () => checkAnswer(option.charAt(0));
-                    optionsDisplay.appendChild(btn);
-                });
+                optionsDisplay.innerHTML = currentQuestion.options.map((option) => `<div>${option}</div>`).join('');
+                timeRemaining = 30;
+                startTimer();
             } else {
                 endGame();
             }
         }
 
-        function checkAnswer(selected) {
-            const correctAnswer = questions[currentQuestionIndex].answer;
-            if (selected === correctAnswer) {
-                score++;
-            }
-            currentQuestionIndex++;
-            loadQuestion();
-        }
-
-        function endGame() {
-            clearInterval(timer);
-            inputField.disabled = true;
-            document.getElementById('score').textContent = `Final Score: ${score}`;
-            document.getElementById('timer').textContent = '';
-            startBtn.style.display = 'block';
-            totalPlayCountGame2++;
-            updatePlayerStats();
-        }
-
         function startTimer() {
-            let timeLeft = 60;
-            timerDisplay.textContent = `Time left: ${timeLeft}s`;
+            timerDisplay.textContent = `Time Remaining: ${timeRemaining}`;
             timer = setInterval(() => {
-                timeLeft--;
-                timerDisplay.textContent = `Time left: ${timeLeft}s`;
-                if (timeLeft <= 0) {
+                timeRemaining--;
+                timerDisplay.textContent = `Time Remaining: ${timeRemaining}`;
+                if (timeRemaining <= 0) {
                     clearInterval(timer);
-                    endGame();
+                    inputField.disabled = true;
+                    nextQuestion();
                 }
             }, 1000);
         }
 
-        async function updatePlayerStats() {
-            const playerRef = doc(db, "players", userId);
-            await updateDoc(playerRef, {
-                game2PlayCount: totalPlayCountGame2,
-                highestScoreGame2: Math.max(highestScore, score)
-            });
+        inputField.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                checkAnswer(inputField.value.toUpperCase());
+            }
+        });
+
+        function checkAnswer(selectedOption) {
+            clearInterval(timer);
+            inputField.disabled = true;
+
+            const currentQuestion = questions[currentQuestionIndex];
+            if (selectedOption === currentQuestion.answer) {
+                score++;
+            }
+            currentQuestionIndex++;
+            scoreDisplay.textContent = `Score: ${score}`;
+            nextQuestion();
         }
 
-        startBtn.addEventListener('click', startGame);
+        function endGame() {
+            inputField.disabled = true;
+            startBtn.disabled = false;
+            if (score > highestScore) {
+                highestScore = score;
+                await updateScoreInDB();
+            }
+            scoreDisplay.textContent += ` Your final score is ${score}.`;
+            questionDisplay.textContent = 'Game Over! 🎉';
+            optionsDisplay.innerHTML = '';
+        }
+
+        async function updateScoreInDB() {
+            const docRef = doc(db, "players", userId);
+            await updateDoc(docRef, {
+                highestScoreGame2: highestScore,
+                totalPlayCountGame2: totalPlayCountGame2
+            });
+        }
     </script>
 </body>
 </html>
+
 
