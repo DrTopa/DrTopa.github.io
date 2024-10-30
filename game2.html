@@ -239,15 +239,7 @@
             }
         }
 
-        async function loadHighestScore() {
-            const docRef = doc(db, "players", userId);
-            const docSnap = await getDoc(docRef);
-            if (docSnap.exists()) {
-                highestScore = docSnap.data().highestScoreGame2 || 0;
-                document.getElementById('score').textContent += ` Your highest score is ${highestScore}.`;
-            }
-        }
-
+        
         function startGame() {
             score = 0;
             playCount++;
