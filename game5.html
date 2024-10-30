@@ -223,7 +223,7 @@
             fillInterval = setInterval(() => {
                 if (currentFill < 100) {
                     currentFill++;
-                    fillElement.style.height = `${calculateFillPercentage(currentFill)}%`;
+                    fillElement.style.height = `${currentFill}%`;
                 }
             }, 50);
         }
