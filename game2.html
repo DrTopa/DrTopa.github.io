@@ -3,55 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game 2 - Quiz Challenge</title>
+    <title>Quizz Maths - Comparatif 2010 vs 2024 - Game 2 </title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             flex-direction: column;
             height: 100vh;
             background-color: #f0f0f0;
+            background-image: url('https://www.transparenttextures.com/patterns/snow.png');
             margin: 0;
-            overflow: hidden; /* Prevents scrollbars from appearing */
-            position: relative; /* Needed for positioning snowflakes */
         }
-
+        /* Christmas themed title */
         h1 {
-            font-size: 2em;
+            font-size: 2.5em;
             margin-bottom: 20px;
+            color: #d32f2f;
+            font-family: 'Comic Sans MS', cursive;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
         }
-
         #userStatus {
             position: absolute;
             top: 10px;
             right: 10px;
             font-size: 1.2em;
         }
-
-        #explanation {
-            font-size: 1.2em;
-            margin: 20px 0;
-            padding: 10px;
-            color: #333;
-            max-width: 80%;
+                
+        /* Instructions section */
+        #instructions {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
             text-align: center;
-            line-height: 1.5;
-            border-left: 4px solid #007BFF;
-            background-color: #e0f2ff;
-            border-radius: 8px;
+            max-width: 1000px;
+            font-size: 1.2em;
+            color: #333;
+            overflow-y: auto;  /* Added for scrolling if needed */
+            max-height: 300px; /* Set a maximum height */
         }
-
         #gameArea {
             display: flex;
             flex-direction: column;
             align-items: center;
             margin-top: 50px;
-            position: relative;
-            z-index: 1; /* Ensure game area is above snowflakes */
         }
-
         #start-btn {
             padding: 10px 20px;
             margin: 10px;
@@ -61,53 +60,42 @@
             color: white;
             border: none;
         }
-
         #start-btn:hover {
             background-color: #0056b3;
         }
-
         #question {
             font-size: 1.5em;
             margin: 20px;
         }
-
         #options {
             font-size: 1.2em;
             margin: 10px;
         }
-
         #timer, #score {
             font-size: 1.5em;
             margin: 10px;
         }
-
         #input {
             padding: 10px;
             font-size: 1.2em;
             margin: 10px;
             width: 50px;
         }
-
-        /* Snowflake CSS */
-        .snowflake {
-            position: absolute;
-            top: -10px;
-            color: white;
-            font-size: 1em;
-            opacity: 0.8;
-            pointer-events: none; /* Prevents interaction with snowflakes */
-        }
-
     </style>
 </head>
 <body>
 
-    <h1>Quiz Challenge - Game 2</h1>
+    <h1>Q🎄 Quizz Maths - Comparatif 2010 vs 2024 - Game 2 🎄</h1>
     <div id="userStatus"></div>
     
-    <div id="explanation">
-        Good morning, fellows! I will explain the rules to you. This quiz has a few questions, each with multiple-choice answers. 
-        For each correct answer, you earn points. Good luck and have fun!
+ <!-- Game instructions -->
+    <div id="instructions">
+        <p>Décembre est enfin là, et cela ne peut signifier qu’une chose : l’atelier du Père Noël Adrien, que tout le monde appelle Topapa, est en effervescence. Fidèle à sa réputation, Topapa s’enfile une grande tasse de café. "Elle a meilleur goût quand c'est l'autre Dudley qui me la prépare" se dit-il et puis il s'élance dans l’atelier pour réveiller ses lutins. Ces derniers, encore en pyjama, s’étirent maladroitement alors que Topapa secoue une vieille ceinture de cuir devant eux.</p>
+        <p>« Allez, allez ! Au boulot, petits fainéants ! » dit-il d’une voix joviale.</p>
+        <p>Soudain, un cri fluet se fait entendre : « Graoumpf… » Les bébés Romain, encore enroulés dans leurs couvertures, ouvrent un œil en fronçant leur gros sourcil, perturbés dans leur douce sieste. Tout endormis, ils tentent d’appuyer en vain sur le bouton Snooze de leur réveil, espérant grappiller quelques minutes de sommeil supplémentaires. Mais leurs petites mains glissent et ratent à chaque tentative, provoquant des petits bruits de frustration.</p>
+        <p>Topapa, amusé, décide d'intervenir pour motiver ses petits nains : « Allez, allez, les nains ! On enfile les chaussures de sécurité. Décembre ne va pas attendre que vous vous réveilliez ! »</p>
+        <p>Explication jeu : Vous avez 4 essais pour améliorer votre score. Après avoir lancé le jeu, appuyer sur le bouton Snooze le plus de fois possibles en 10 secondes. Après 4 essais, vous pourrez toujours jouer à ce jeu passionnant.</p>
+        <p>Possible sur Smartphone comme sur ordinateur. Peut-être un mode est-il mieux qu’un autre.</p>
     </div>
     
     <div id="gameArea">
@@ -201,148 +189,189 @@
             },
             {
                 question: "Niveau Terminale (2024) : Quelle est la bonne orthographe de cette inégalité (en français) ?",
-                options: ["A) Bienaimé-Tchebychev", "B) Bienaymé-Tchebychev", "C) Bienaimé-Tchbeichev", "D) Bienaimé-Tchebychev"],
+                options: ["A) Bienaimé-Tchebychev", "B) Bienaymé-Tchebychev", "C) Bienaymé-Tchebitchev", "D) Bienaimé-Tchebitchev"],
                 answer: "B"
+            },
+            {    
+                question: "Niveau 3e (2010) : Quelle est la formule de la somme des n premiers entiers ?",
+                options: ["A) n*(n+1) /2 ", "B) n*(n-1) /2", "C) n²/2", "D)  n(n-1)"],
+                answer: "A"
+            },
+            {
+                question: "Niveau 3e (2010): Quel est le résultat de log (ab) ?",
+                options: ["A) log (a) - log (b)", "B) log (a) * log (b)", "C) log (a+b) ", "D) log (a) + log (b)"],
+                answer: "D"
+            },
+            {
+                question: "Niveau 2nd (2010) A quel théorème peut-on associer cette phrase : Si p est un nombre premier et a est un entier qui n'est pas divisible par p alors a^(p-1) ≡ 1 (mod p) ",
+                options: ["A) Bezout", "B) Fermat", "C) Baire", "D) Cauchy"],
+                answer: "B"
+            },
+            {
+                question: "Niveau 2nd (2010) A quel théorème peut-on associer cette phrase : Si a et b deux entiers, il existe des entiers x et y tels que ax+by=PGCD(a,b)",
+                options: ["A) Bezout", "B) Fermat", "C) Baire", "D) Cauchy"],
+                answer: "A"
+            },
+            {
+                question: "Niveau 2nd (2010) Si une fonction est continue sur un intervalle fermé et dérivable sur l'intervalle ouvert, et qu'elle prend la même valeur aux extrémités, alors il existe un point où la dérivée est nulle.",
+                options: ["A) Rolle", "B) Taylor", "C) Baire", "D) Gauss"],
+                answer: "A"
+            },
+            {
+                question: "Niveau 1ere (2010) : Quel est le rang maximale d'une matrice 2 * 3",
+                options: ["A) 1", "B) 2", "C) 3", "D) 4"],
+                answer: "B"
+            },
+            {
+                question: "Niveau 1ere (2010) : Application bijective qui préserve la structure, et dont la réciproque préserve aussi la structure entre deux ensembles structurés",
+                options: ["A) isomorphisme", "B) Endomorphisme", "C) Automorphisme", "D) Ker(Im) euuuuhhhh"],
+                answer: "A"
+            },
+            {
+                question: "Niveau 1ere (2010) : Somme des angles d'un polygone à n côtés",
+                options: ["A) (n-2)*90", "B) (n-2)*180", "C) n*90", "D) n*180"],
+                answer: "B"
+            },
+            {
+                question: "Niveau 1ere (2010) : Quel est le produit scalaire des vecteurs u ( 2,3) et v = (4, -1)",
+                options: ["A) 10", "B) 14", "C) 5", "D) 11"],
+                answer: "C"
+            },
+            {
+                question: "Niveau Terminale (2010) : Paul a 8 pommes, Alfred en mange 2. Quelle est la masse du soleil en kg?",
+                options: ["A) 10^25", "B) 10^27", "C) 10^30", "D) 10^32"],
+                answer: "C"
+            },
+            {
+                question: "Niveau Terminale (2010) Quelle découverte mathématique majeure sera démontrée en 2024 ? ",
+                options: ["A) La théorie de Yang-Mills", "B) Le P problème et le NP problème", "C) La conjecture de Hodge", "D)La correspondance de Langlands"],
+                answer: "D"
             }
         ];
 
-        let currentQuestionIndex = 0;
-        let timer;
-        let timeLimit = 30; // 30 seconds per question
-
-        // Function to update user status
-        onAuthStateChanged(auth, (user) => {
+        onAuthStateChanged(auth, async (user) => {
             if (user) {
                 userId = user.uid;
-                document.getElementById('userStatus').textContent = `Bienvenue, ${user.email}`;
-                checkUserStats();
+                document.getElementById('userStatus').innerText = `Logged in as: ${user.email}`;
+
+                const userRef = doc(db, 'users', userId);
+                const docSnap = await getDoc(userRef);
+
+                if (!docSnap.exists()) {
+                    await setDoc(userRef, { userId: userId, totalPlayCountGame2: 0, highestScoreGame2: 0 });
+                    console.log("User document created with initial values.");
+                } else {
+                    const userData = docSnap.data();
+                    totalPlayCountGame2 = userData.totalPlayCountGame2 || 0;
+                    highestScore = userData.highestScoreGame2 || 0;
+                    playCount = totalPlayCountGame2 + 1;
+                    console.log(`Loaded totalPlayCountGame2: ${totalPlayCountGame2}, highestScore: ${highestScore}`);
+                }
             } else {
-                document.getElementById('userStatus').textContent = 'Vous n\'êtes pas connecté.';
+                window.location.href = 'login.html';
             }
         });
 
-        // Function to start the game
-        startBtn.addEventListener('click', () => {
+        startBtn.addEventListener('click', async () => {
             score = 0;
-            playCount++;
-            currentQuestionIndex = 0;
-            scoreDisplay.textContent = `Score: ${score}`;
+            scoreDisplay.innerText = `Current Score: ${score}`;
             inputField.value = '';
             inputField.disabled = false;
-            startBtn.disabled = true;
-            startTimer();
-            showQuestion();
+            timerDisplay.innerText = '';
+            optionsDisplay.innerHTML = '';
+
+            // Increment totalPlayCount and update Firestore
+            totalPlayCountGame2 += 1;
+            await updateDoc(doc(db, 'users', userId), { totalPlayCountGame2: totalPlayCountGame2 });
+
+            let questionIndex = 0;
+            showQuestion(questionIndex);
+
+            const timerDuration = 15;
+            let timeLeft;
+
+            function startTimer() {
+                timeLeft = timerDuration;
+                timerDisplay.innerText = `Time Left: ${timeLeft}s`;
+
+                const timer = setInterval(() => {
+                    timeLeft -= 1;
+                    timerDisplay.innerText = `Time Left: ${timeLeft}s`;
+
+                    if (timeLeft <= 0) {
+                        clearInterval(timer);
+                        inputField.disabled = true; // Disable input after time runs out
+                        checkAnswer(questionIndex, ''); // Check answer as incorrect if time is up
+                        questionIndex++;
+                        if (questionIndex < questions.length) {
+                            showQuestion(questionIndex);
+                        } else {
+                            endGame();
+                        }
+                    }
+                }, 1000);
+                return timer; // Return timer reference for clearing if needed
+            }
+
+            let timer = startTimer(); // Start the timer for the first question
+
+            inputField.addEventListener('keyup', (event) => {
+                if (event.key === 'Enter' && inputField.value) {
+                    clearInterval(timer); // Clear the current timer
+                    checkAnswer(questionIndex, inputField.value.toUpperCase());
+                    questionIndex++;
+                    inputField.value = '';
+
+                    if (questionIndex < questions.length) {
+                        showQuestion(questionIndex);
+                        timer = startTimer(); // Start the timer for the next question
+                    } else {
+                        endGame();
+                    }
+                }
+            });
         });
 
-        // Function to start timer
-        function startTimer() {
-            timerDisplay.textContent = `Temps restant: ${timeLimit} secondes`;
-            timer = setInterval(() => {
-                timeLimit--;
-                timerDisplay.textContent = `Temps restant: ${timeLimit} secondes`;
-                if (timeLimit <= 0) {
-                    clearInterval(timer);
-                    alert('Temps écoulé !');
-                    endGame();
+        function showQuestion(index) {
+            const question = questions[index];
+            questionDisplay.innerText = question.question;
+            optionsDisplay.innerHTML = question.options.join('<br>');
+            timerDisplay.innerText = `Time Left: 15s`;
+            inputField.disabled = false;
+            inputField.focus();
+        }
+
+        function checkAnswer(index, userAnswer) {
+            if (userAnswer === questions[index].answer) {
+                score += 5;
+                scoreDisplay.innerText = `Current Score: ${score}`;
+                console.log("Correct Answer!");
+            } else if (userAnswer !== '') {
+                console.log("Incorrect Answer.");
+            }
+        }
+
+        async function saveScore(score) {
+            try {
+                const gameData = { score: score, playCount: playCount, timestamp: new Date() };
+                await addDoc(collection(db, 'users', userId, 'Game2'), gameData);
+
+                const userRef = doc(db, 'users', userId);
+                if (score > highestScore) {
+                    highestScore = score;
+                    await updateDoc(userRef, { highestScoreGame2: highestScore });
                 }
-            }, 1000);
-        }
-
-        // Function to show current question
-        function showQuestion() {
-            const currentQuestion = questions[currentQuestionIndex];
-            questionDisplay.textContent = currentQuestion.question;
-            optionsDisplay.innerHTML = '';
-            currentQuestion.options.forEach(option => {
-                const button = document.createElement('button');
-                button.textContent = option;
-                button.addEventListener('click', () => checkAnswer(option.charAt(0)));
-                optionsDisplay.appendChild(button);
-            });
-        }
-
-        // Function to check answer
-        function checkAnswer(selectedOption) {
-            const currentQuestion = questions[currentQuestionIndex];
-            if (selectedOption === currentQuestion.answer) {
-                score++;
-                scoreDisplay.textContent = `Score: ${score}`;
-            }
-            currentQuestionIndex++;
-            if (currentQuestionIndex < questions.length) {
-                timeLimit = 30; // Reset timer
-                showQuestion();
-            } else {
-                endGame();
+                console.log("Score saved successfully.");
+            } catch (error) {
+                console.error("Error saving score:", error);
             }
         }
 
-        // Function to end game
-        function endGame() {
-            clearInterval(timer);
-            alert(`Jeu terminé ! Votre score est: ${score}`);
-            saveUserStats();
-            resetGame();
-        }
-
-        // Function to reset game
-        function resetGame() {
-            startBtn.disabled = false;
+        async function endGame() {
             inputField.disabled = true;
-            questionDisplay.textContent = '';
-            optionsDisplay.innerHTML = '';
-            timerDisplay.textContent = '';
-        }
-
-        // Function to check user statistics
-        async function checkUserStats() {
-            const docRef = doc(db, 'users', userId);
-            const docSnap = await getDoc(docRef);
-            if (docSnap.exists()) {
-                totalPlayCountGame2 = docSnap.data().totalPlayCountGame2 || 0;
-                highestScore = docSnap.data().highestScore || 0;
-            }
-        }
-
-        // Function to save user statistics
-        async function saveUserStats() {
-            const docRef = doc(db, 'users', userId);
-            await updateDoc(docRef, {
-                totalPlayCountGame2: totalPlayCountGame2 + playCount,
-                highestScore: Math.max(highestScore, score)
-            });
-        }
-
-        // Snowflake generation
-        const snowflakeCount = 100; // Number of snowflakes
-        const snowflakeContainer = document.createElement('div');
-        document.body.appendChild(snowflakeContainer);
-
-        for (let i = 0; i < snowflakeCount; i++) {
-            const snowflake = document.createElement('div');
-            snowflake.classList.add('snowflake');
-            snowflake.textContent = '❄️'; // Unicode snowflake character
-            snowflake.style.left = Math.random() * window.innerWidth + 'px';
-            snowflake.style.fontSize = Math.random() * 20 + 10 + 'px'; // Random size
-            snowflakeContainer.appendChild(snowflake);
-
-            // Animate snowflakes
-            animateSnowflake(snowflake);
-        }
-
-        function animateSnowflake(snowflake) {
-            const fallDuration = Math.random() * 5 + 5; // Random fall duration
-            const leftPosition = parseFloat(snowflake.style.left);
-            const endPosition = leftPosition + (Math.random() * 100 - 50); // Random drift
-
-            snowflake.animate([
-                { transform: `translateY(0)` },
-                { transform: `translateY(${window.innerHeight + 100}px)`, left: `${endPosition}px` }
-            ], {
-                duration: fallDuration * 1000,
-                iterations: Infinity,
-                easing: 'linear'
-            });
+            await saveScore(score); // Save the score at the end of the game
+            console.log("Game Over. Final Score:", score);
+            alert(`The quiz is over! Your final score is: ${score}`);
         }
     </script>
 </body>
