@@ -54,7 +54,7 @@
             padding: 40px;  /* Keep padding for space around the content */
             box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
             width: 650px;  /* Increased width */
-            height: 650px; /* Increased height */
+            height: 800px; /* Increased height */
                 }
         #start-btn, #submit-btn {
             padding: 10px 20px;
@@ -105,7 +105,16 @@
     <h1>🎄 Trouve le mot avec Grinchémie 🎄</h1>
     <div id="userStatus"></div>
     <div id="instructions">
-        <p>Trouvez les mots cachés dans la grille de lettres. Vous avez 2 minutes !</p>
+        <p>TTopapa de Noël fronça les sourcils. « Qui peut donc toquer à cette heure-ci ? » se demanda-t-il, en se dirigeant vers la porte. En l’ouvrant, il découvrit son amie,  la crumpy Grinchémie.</p>
+<p>« Oh, Grinchémie ! Quelle surprise !» s’exclama Topapa, visiblement ravi de la visite. « Que dirais-tu d'un petit puzzle pour se détendre ? »</p>
+<p>Mais Grinchémie, sans même un mot, lança un regard glacial avant de descendre les escaliers menant à la cave, claquant la porte derrière elle. Topapa resta un instant interdit, puis haussa les épaules.</p>
+<p>« Mmh, je crois qu’elle n’est pas très intéressée… » dit-il en souriant. « Peut-être un petit jeu de Lego, alors ? » lança-t-il à travers la porte, en espérant susciter son attention.</p>
+<p>Soudain, on entendit la porte de la cave claquer une nouvelle fois, avec un écho sonore qui résonna dans toute la pièce.</p>
+<p>Topapa, pas découragé pour autant, lança une nouvelle suggestion : « Bon, d'accord, un petit Word Search ? Promis, il est hyper facile, vraiment nul. »</p>
+<p>Et alors, il entendit Grinchémie ouvrir la porte de sa chambre. </p>
+<p>Explication du jeu : Vous disposez de 5 minutes pour trouver le maximum de mots dans cette grille parmi les 20 présents. Ecrivez le nom du mot et si c'est juste, vous gagnez 5 points. </p>
+<p>Les mots peuvent être placés de manière horizontale, verticale ou en diagonale. Et  ils peuvent se lire de gauche à droite comme de droite à gauche. De haut en bas comme de.. Bref vous avez capté. Ils se cachent les fourbes. </p>
+ <p> Au passage, il existe des mots "Genre REMORD" ligne 1 qui sont là mais pas placés volontairement, donc ça ne marche pas. Mais les mots à chercher seront moins random que remord. Vous n'avez qu'un seul essai, alors attention avant de cliquer sur démarrer </p>       
     </div>
     <div id="gameArea">
         <button id="start-btn">Commencer le Jeu</button>
@@ -267,7 +276,7 @@
                 guessInput.value = ''; // Clear input
 
                 // Check for highest score
-                if (score > highestScoreGame4) {
+                if (totalPlayCountGame4 < 2 && score > highestScoreGame4) {
                     highestScoreGame4 = score;
                     await updateDoc(doc(db, 'users', userId), { highestScoreGame4: highestScoreGame4 });
                 }
