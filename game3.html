@@ -37,8 +37,8 @@
         }
 
         #instructions {
-            background: rgba(255, 255, 255, 0.8);
-            padding: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 200px;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
             margin-bottom: 20px;
@@ -47,7 +47,7 @@
             font-size: 1.2em;
             color: #333;
             overflow-y: auto;
-            max-height: 300px; /* Set a maximum height */
+            max-height: 500px; /* Set a maximum height */
         }
 
         #gameArea {
@@ -118,8 +118,7 @@
             width: 20px;
             height: 20px;
             border-radius: 50%;
-            background-color: #ff0000;
-            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
             animation: twinkle 1.5s infinite alternate;
         }
 
@@ -158,7 +157,16 @@
         <p>Explication du jeu : Vous devez remplir les formes au plus près du pourcentage cible. Le pourcentage s’exprime en volume de la forme. Attention aux volumes plus complexes. Chaque différence entre le pourcentage réel et la cible retire des points à votre score (qui commence à 100). Vous avez 10 essais pour améliorer votre score. Le jeu est encore disponible après mais le meilleur score ne sera pas amélioré. 
 </p>
     </div>
-
+    <div id="christmas-lights">
+        <div class="light"></div>
+        <div class="light"></div>
+        <div class="light"></div>
+        <div class="light"></div>
+        <div class="light"></div>
+        <div class="light"></div>
+        <div class="light"></div>
+        <div class="light"></div>
+    </div>
     <div id="gameArea">
         <button id="start-btn">Commencer le Jeu</button>
         <button id="fill-btn" disabled>Maintenir pour Remplir</button>
