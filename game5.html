@@ -256,16 +256,16 @@
 function updateContainerShape() {
     switch (round) {
         case 2:
-            container.style.clipPath = 'polygon(20% 100%, 40% 0%, 100% 90%)'; // Triangle 1
+            container.style.clipPath = 'polygon(0% 0%, 100% 0%, 50% 100%)'; // Triangle 1
             break;
         case 3:
-            container.style.clipPath = 'polygon(10% 100%, 50% 50%, 90% 100%)'; // Triangle 2
+            container.style.clipPath = 'polygon(0% 0%, 100% 0%, 0% 100%)'; // Triangle 2
             break;
         case 4:
-            container.style.clipPath = 'polygon(0% 80%, 50% 0%, 100% 80%)'; // Triangle 3
+            container.style.clipPath = 'polygon(0% 0%, 100% 0%, 100% 100%)'; // Triangle 3
             break;
         case 5:
-            container.style.clipPath = 'polygon(30% 100%, 50% 30%, 70% 100%)'; // Triangle 4
+            container.style.clipPath = 'polygon(0% 0%, 50% 0%, 50% 100%)'; // Triangle 4
             break;
         default:
             container.style.clipPath = 'polygon(0 0, 100% 0, 100% 100%, 0% 100%)'; // Default square shape
