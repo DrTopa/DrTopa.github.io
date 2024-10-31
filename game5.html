@@ -103,6 +103,32 @@
             max-width: 100px;
             z-index: 1;
         }
+
+        #gameArea {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80%;
+    margin: auto;
+    }
+    
+    #guessedWordsDisplay {
+    position: absolute;
+    right: 10px;
+    top: 200px;
+    background-color: #f0f0f0;
+    padding: 10px;
+    border: 1px solid #b71c1c;
+    border-radius: 5px;
+    max-width: 200px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+#guessedWordsList {
+    list-style-type: none;
+    padding: 0;
+    font-size: 1.1em;
+}
     </style>
 </head>
 <body>
@@ -122,7 +148,12 @@
         <button id="submit-btn" disabled>Soumettre</button>
         <small id="hint"></small>
     </div>
-
+    
+    <div id="guessedWordsDisplay">
+    <h3>Mots trouvés :</h3>
+    <ul id="guessedWordsList"></ul>
+    </div>
+   
     <script defer type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
@@ -148,6 +179,7 @@
         let score = 0;
         let timer;
         let timeLeft = 120;
+        let guessedWords = [];
 
         const wordsToFind = ["TOWERFALL", "GUEZ", "VIROFLAY", "POLYUREE", "BIOLOGIE", "MATHEMATIQUES", "RHEOLOGIE", 
                              "FRATRIE", "LACHEUR", "BOBBY", "QUOICOUBEH", "LUXEMBOURG", "NOEL", 
@@ -191,6 +223,8 @@
             totalPlayCountDisplay.innerText = `Total des Parties : ${totalPlayCountGame4}`;
             scoreDisplay.innerText = `Score : ${score}`;
             grid.innerHTML = '';
+            guessedWords = [];  // Reset the guessed words array
+            document.getElementById('guessedWordsList').innerHTML = '';  // Clear the displayed list
             createGrid();
             startTimer();
             startBtn.disabled = true;
@@ -226,33 +260,76 @@
             return alphabet[Math.floor(Math.random() * alphabet.length)];
         }
 
-        function placeWordsInGrid(words) {
-            words.forEach(word => {
-                let placed = false;
-                while (!placed) {
-                    const startIndex = Math.floor(Math.random() * 225);
-                    if (startIndex + word.length < 225) {
-                        for (let i = 0; i < word.length; i++) {
-                            grid.children[startIndex + i].textContent = word[i];
-                        }
-                        placed = true;
-                    }
-                }
-            });
-        }
+function placeWordInGrid(grid, word) {
+    word = word.toUpperCase();
+    const directions = [
+        [0, 1],    // Horizontal right
+        [0, -1],   // Horizontal left
+        [1, 0],    // Vertical down
+        [-1, 0],   // Vertical up
+        [1, 1],    // Diagonal down-right
+        [-1, -1],  // Diagonal up-left
+        [1, -1],   // Diagonal down-left
+        [-1, 1]    // Diagonal up-right
+    ];
+    let placed = false;
 
-        function submitGuess() {
-            const guessedWord = guessInput.value.toUpperCase();
-            if (wordsToFind.includes(guessedWord)) {
-                score += 10;
-                scoreDisplay.innerText = `Score : ${score}`;
-                hint.innerText = 'Bien joué !';
-            } else {
-                hint.innerText = 'Mot incorrect. Réessayez !';
+    while (!placed) {
+        const row = Math.floor(Math.random() * grid.length);
+        const col = Math.floor(Math.random() * grid[0].length);
+        const [dx, dy] = directions[Math.floor(Math.random() * directions.length)];
+
+        if (canPlaceWord(grid, word, row, col, dx, dy)) {
+            for (let k = 0; k < word.length; k++) {
+                grid[row + k * dx][col + k * dy] = word[k];
             }
-            guessInput.value = '';
+            placed = true;
         }
+    }
+}
 
+        function canPlaceWord(grid, word, row, col, dx, dy) {
+    for (let k = 0; k < word.length; k++) {
+        const x = row + k * dx;
+        const y = col + k * dy;
+        // Check if out of bounds or if the grid cell is not empty
+        if (x < 0 || x >= grid.length || y < 0 || y >= grid[0].length || grid[x][y] !== '') {
+            return false;
+        }
+    }
+    return true;
+}
+      function submitGuess() {
+    const guessedWord = guessInput.value.toUpperCase();
+    
+    if (wordsToFind.includes(guessedWord)) {
+        if (!guessedWords.includes(guessedWord)) {
+            // Add the word to the guessed words list
+            guessedWords.push(guessedWord);
+            
+            // Update the score
+            score += 5;
+            scoreDisplay.innerText = `Score : ${score}`;
+            
+            // Display the guessed word
+            displayGuessedWord(guessedWord);
+            
+            hint.innerText = 'Bien joué !';
+        } else {
+            hint.innerText = 'Mot déjà trouvé !';
+        }
+    } else {
+        hint.innerText = 'Mot incorrect. Réessayez !';
+    }
+    guessInput.value = '';
+}
+
+        function displayGuessedWord(word) {
+    const wordItem = document.createElement('li');
+    wordItem.textContent = word;
+    document.getElementById('guessedWordsList').appendChild(wordItem);
+}
+        
         async function endGame() {
             startBtn.disabled = false;
             submitBtn.disabled = true;
@@ -260,7 +337,7 @@
                 highestScoreGame4 = score;
                
             }
-            await saveGameRecord(score, totalPlayCountGame4);
+            await saveScore(score, totalPlayCountGame4);
             scoreDisplay.innerText = `Score : ${score} (Temps écoulé !)`;
             hint.innerText = '';
         }
