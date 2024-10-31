@@ -9,19 +9,19 @@
         body {
             font-family: 'Segoe UI', Tahoma, sans-serif;
             display: flex;
-            justify-content: start; /* Adjusted to make title more visible */
+            justify-content: start;
             align-items: center;
             flex-direction: column;
             height: 100vh;
             background-color: #ffebcd;
             background-image: url('https://www.transparenttextures.com/patterns/snow.png');
             margin: 0;
-            padding-top: 20px; /* Add padding to shift content down */
+            padding-top: 20px;
         }
 
         h1 {
             font-size: 2.5em;
-            margin-bottom: 10px; /* Reduced margin */
+            margin-bottom: 10px;
             color: #d32f2f;
             font-family: 'Comic Sans MS', cursive;
             text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
@@ -46,7 +46,6 @@
             max-width: 1000px;
             font-size: 1.2em;
             color: #333;
-            max-height: 500px; /* Set a maximum height */
         }
 
         #gameArea {
@@ -61,19 +60,7 @@
             box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
         }
 
-        #start-btn {
-            padding: 10px 20px;
-            margin: 10px;
-            font-size: 1.5em;
-            cursor: pointer;
-            background-color: #388e3c;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-
-        #submit-btn {
+        #start-btn, #submit-btn {
             padding: 10px 20px;
             margin: 10px;
             font-size: 1.5em;
@@ -107,7 +94,7 @@
             border: 1px solid #ccc;
             font-weight: bold;
             font-size: 1.2em;
-            user-select: none; /* Prevent text selection */
+            user-select: none;
         }
 
         #timer {
@@ -115,6 +102,11 @@
             color: #d32f2f;
         }
 
+        #hint {
+            color: red;
+            font-size: 0.9em;
+            margin-top: -10px;
+        }
     </style>
 </head>
 <body>
@@ -131,18 +123,18 @@
         <div id="totalPlayCountDisplay">Total des Parties : 0</div>
         <div id="grid"></div>
         <input type="text" id="guess" placeholder="Entrez un mot ici" />
+        <small id="hint"></small>
         <button id="submit-btn" disabled>Soumettre</button>
     </div>
 
     <script defer type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyC4bjg7lVwd8FU8MREaPhBsBENv5qmiYYM",
             authDomain: "calendrier-de-l-avent-54e3a.firebaseapp.com",
-            databaseURL: "https://calendrier-de-l-avent-54e3a-default-rtdb.europe-west1.firebasedatabase.app",
             projectId: "calendrier-de-l-avent-54e3a",
             storageBucket: "calendrier-de-l-avent-54e3a.appspot.com",
             messagingSenderId: "850639567855",
@@ -159,11 +151,12 @@
         let highestScoreGame4 = 0;
         let score = 0;
         let timer;
-        let timeLeft = 120; // 2 minutes in seconds
+        let timeLeft = 120;
 
-        const wordsToFind = ["Towerfall", "Guez", "Viroflay", "Polyuree", "Biologie", "Mathematiques", "Rheologie", 
-                             "fratrie", "Lacheur", "Bobby", "Quoicoubeh", "Luxembourg", "Café", "Noel", 
-                             "Doudou", "Pamplemousse", "Palindrome", "latin", "docteur", "neveo", "jeux"];
+        const wordsToFind = ["TOWERFALL", "GUEZ", "VIROFLAY", "POLYUREE", "BIOLOGIE", "MATHEMATIQUES", "RHEOLOGIE", 
+                             "FRATRIE", "LACHEUR", "BOBBY", "QUOICOUBEH", "LUXEMBOURG", "NOEL", 
+                             "DOUDOU", "PAMPLEMOUSSE", "PALINDROME", "LATIN", "DOCTEUR", "NEVEO", "JEUX"];
+
         const grid = document.getElementById('grid');
         const startBtn = document.getElementById('start-btn');
         const submitBtn = document.getElementById('submit-btn');
@@ -171,12 +164,12 @@
         const totalPlayCountDisplay = document.getElementById('totalPlayCountDisplay');
         const timerDisplay = document.getElementById('timer');
         const guessInput = document.getElementById('guess');
+        const hint = document.getElementById('hint');
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 userId = user.uid;
                 document.getElementById('userStatus').innerText = `Bienvenue : ${user.email}`;
-
                 const userRef = doc(db, 'users', userId);
                 const docSnap = await getDoc(userRef);
 
@@ -200,11 +193,12 @@
             score = 0;
             totalPlayCountGame4++;
             totalPlayCountDisplay.innerText = `Total des Parties : ${totalPlayCountGame4}`;
-            grid.innerHTML = ''; // Clear previous grid
+            grid.innerHTML = '';
             createGrid();
             startTimer();
             startBtn.disabled = true;
             submitBtn.disabled = false;
+            hint.innerText = '';
         }
 
         function createGrid() {
@@ -221,13 +215,11 @@
 
         function generateLetterGrid(rows, cols) {
             const grid = Array.from({ length: rows }, () => Array(cols).fill(''));
-            // Place hidden words randomly
             wordsToFind.forEach(word => placeWordInGrid(grid, word));
-            // Fill empty cells with random letters
             for (let i = 0; i < rows; i++) {
                 for (let j = 0; j < cols; j++) {
                     if (grid[i][j] === '') {
-                        grid[i][j] = String.fromCharCode(65 + Math.floor(Math.random() * 26)); // Random letter A-Z
+                        grid[i][j] = String.fromCharCode(65 + Math.floor(Math.random() * 26));
                     }
                 }
             }
@@ -235,51 +227,53 @@
         }
 
         function placeWordInGrid(grid, word) {
-            const rows = grid.length;
-            const cols = grid[0].length;
-            const wordLength = word.length;
-
-            const direction = Math.floor(Math.random() * 2); // 0 = horizontal, 1 = vertical
+            word = word.toUpperCase();
+            const directions = [[0, 1], [1, 0], [1, 1]];
             let placed = false;
 
             while (!placed) {
-                const row = Math.floor(Math.random() * rows);
-                const col = Math.floor(Math.random() * cols);
+                const row = Math.floor(Math.random() * grid.length);
+                const col = Math.floor(Math.random() * grid[0].length);
+                const [dx, dy] = directions[Math.floor(Math.random() * directions.length)];
 
-                if (direction === 0 && col + wordLength <= cols) { // Horizontal placement
-                    for (let i = 0; i < wordLength; i++) {
-                        if (grid[row][col + i] !== '') {
-                            break; // Collision detected
-                        }
-                        if (i === wordLength - 1) {
-                            for (let j = 0; j < wordLength; j++) {
-                                grid[row][col + j] = word[j];
-                            }
-                            placed = true;
-                        }
+                if (canPlaceWord(grid, word, row, col, dx, dy)) {
+                    for (let k = 0; k < word.length; k++) {
+                        grid[row + k * dx][col + k * dy] = word[k];
                     }
-                } else if (direction === 1 && row + wordLength <= rows) { // Vertical placement
-                    for (let i = 0; i < wordLength; i++) {
-                        if (grid[row + i][col] !== '') {
-                            break; // Collision detected
-                        }
-                        if (i === wordLength - 1) {
-                            for (let j = 0; j < wordLength; j++) {
-                                grid[row + j][col] = word[j];
-                            }
-                            placed = true;
-                        }
-                    }
+                    placed = true;
                 }
             }
         }
 
+        function canPlaceWord(grid, word, row, col, dx, dy) {
+            for (let k = 0; k < word.length; k++) {
+                const x = row + k * dx;
+                const y = col + k * dy;
+                if (x >= grid.length || y >= grid[0].length || grid[x][y] !== '') {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        function submitGuess() {
+            const guess = guessInput.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+            if (wordsToFind.includes(guess)) {
+                score++;
+                scoreDisplay.innerText = `Score : ${score}`;
+                hint.innerText = '';
+            } else {
+                hint.innerText = "Mot incorrect";
+            }
+            guessInput.value = '';
+        }
+
         function startTimer() {
-            timeLeft = 120; // Reset timer to 2 minutes
-            timerDisplay.innerText = `Temps restant : ${timeLeft} secondes`;
+            timeLeft = 120;
+            timerDisplay.innerText = `Temps restant : ${timeLeft} sec`;
             timer = setInterval(() => {
                 timeLeft--;
-                timerDisplay.innerText = `Temps restant : ${timeLeft} secondes`;
+                timerDisplay.innerText = `Temps restant : ${timeLeft} sec`;
                 if (timeLeft <= 0) {
                     clearInterval(timer);
                     endGame();
@@ -287,33 +281,23 @@
             }, 1000);
         }
 
-        function submitGuess() {
-            const guess = guessInput.value.trim();
-            guessInput.value = ''; // Clear input
-
-            if (wordsToFind.includes(guess)) {
-                score++;
-                scoreDisplay.innerText = `Score : ${score}`;
-            } else {
-                alert('Mot incorrect !');
-            }
-        }
-
-        async function endGame() {
-            clearInterval(timer);
+        function endGame() {
             startBtn.disabled = false;
             submitBtn.disabled = true;
-            alert(`Temps écoulé ! Votre score final est : ${score}`);
-
-            // Update Firestore with new data
             if (score > highestScoreGame4) {
                 highestScoreGame4 = score;
-                const userRef = doc(db, 'users', userId);
-                await updateDoc(userRef, { highestScoreGame4: highestScoreGame4 });
-                alert(`Nouveau meilleur score ! ${highestScoreGame4}`);
+                updateHighScore();
             }
+            scoreDisplay.innerText = `Score : ${score} (Temps écoulé !)`;
+            hint.innerText = '';
+        }
+
+        async function updateHighScore() {
             const userRef = doc(db, 'users', userId);
-            await updateDoc(userRef, { totalPlayCountGame4: totalPlayCountGame4 });
+            await updateDoc(userRef, {
+                highestScoreGame4: highestScoreGame4,
+                totalPlayCountGame4: totalPlayCountGame4
+            });
         }
     </script>
 </body>
