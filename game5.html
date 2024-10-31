@@ -245,105 +245,119 @@
             }, 1000);
         }
 
-        function createGrid() {
-            for (let i = 0; i < 225; i++) {
-                const cell = document.createElement('div');
-                cell.classList.add('cell');
-                cell.textContent = generateRandomLetter();
-                grid.appendChild(cell);
+function createGrid() {
+            grid = Array.from({ length: 15 }, () => Array(15).fill('')); // Initialize a 15x15 grid
+            placeWordsInGrid(grid, wordsToFind); // Place words in the grid
+            for (let i = 0; i < 15; i++) {
+                for (let j = 0; j < 15; j++) {
+                    if (grid[i][j] === '') {
+                        grid[i][j] = generateRandomLetter();
+                    }
+                    const cell = document.createElement('div');
+                    cell.classList.add('cell');
+                    cell.textContent = grid[i][j];
+                    document.getElementById('grid').appendChild(cell);
+                }
             }
-            placeWordsInGrid(wordsToFind);
         }
 
-        function generateRandomLetter() {
+function generateRandomLetter() {
             const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
             return alphabet[Math.floor(Math.random() * alphabet.length)];
         }
 
-function placeWordInGrid(grid, word) {
-    word = word.toUpperCase();
-    const directions = [
-        [0, 1],    // Horizontal right
-        [0, -1],   // Horizontal left
-        [1, 0],    // Vertical down
-        [-1, 0],   // Vertical up
-        [1, 1],    // Diagonal down-right
-        [-1, -1],  // Diagonal up-left
-        [1, -1],   // Diagonal down-left
-        [-1, 1]    // Diagonal up-right
-    ];
-    let placed = false;
-
-    while (!placed) {
-        const row = Math.floor(Math.random() * grid.length);
-        const col = Math.floor(Math.random() * grid[0].length);
-        const [dx, dy] = directions[Math.floor(Math.random() * directions.length)];
-
-        if (canPlaceWord(grid, word, row, col, dx, dy)) {
-            for (let k = 0; k < word.length; k++) {
-                grid[row + k * dx][col + k * dy] = word[k];
-            }
-            placed = true;
+        function placeWordsInGrid(grid, words) {
+            words.forEach(word => {
+                placeWordInGrid(grid, word);
+            });
         }
-    }
-}
+
+        function placeWordInGrid(grid, word) {
+            word = word.toUpperCase();
+            const directions = [
+                [0, 1],    // Horizontal right
+                [0, -1],   // Horizontal left
+                [1, 0],    // Vertical down
+                [-1, 0],   // Vertical up
+                [1, 1],    // Diagonal down-right
+                [-1, -1],  // Diagonal up-left
+                [1, -1],   // Diagonal down-left
+                [-1, 1]    // Diagonal up-right
+            ];
+            let placed = false;
+
+            while (!placed) {
+                const row = Math.floor(Math.random() * grid.length);
+                const col = Math.floor(Math.random() * grid[0].length);
+                const [dx, dy] = directions[Math.floor(Math.random() * directions.length)];
+
+                if (canPlaceWord(grid, word, row, col, dx, dy)) {
+                    for (let k = 0; k < word.length; k++) {
+                        grid[row + k * dx][col + k * dy] = word[k]; // Place word in the grid
+                    }
+                    placed = true;
+                }
+            }
+        }
 
         function canPlaceWord(grid, word, row, col, dx, dy) {
-    for (let k = 0; k < word.length; k++) {
-        const x = row + k * dx;
-        const y = col + k * dy;
-        // Check if out of bounds or if the grid cell is not empty
-        if (x < 0 || x >= grid.length || y < 0 || y >= grid[0].length || grid[x][y] !== '') {
-            return false;
+            for (let k = 0; k < word.length; k++) {
+                const x = row + k * dx;
+                const y = col + k * dy;
+                // Check if out of bounds or if the grid cell is not empty
+                if (x < 0 || x >= grid.length || y < 0 || y >= grid[0].length || grid[x][y] !== '') {
+                    return false;
+                }
+            }
+            return true;
         }
-    }
-    return true;
-}
-      function submitGuess() {
-    const guessedWord = guessInput.value.toUpperCase();
-    
-    if (wordsToFind.includes(guessedWord)) {
-        if (!guessedWords.includes(guessedWord)) {
-            // Add the word to the guessed words list
-            guessedWords.push(guessedWord);
+
+        function submitGuess() {
+            const guessedWord = guessInput.value.toUpperCase();
             
-            // Update the score
-            score += 5;
-            scoreDisplay.innerText = `Score : ${score}`;
-            
-            // Display the guessed word
-            displayGuessedWord(guessedWord);
-            
-            hint.innerText = 'Bien joué !';
-        } else {
-            hint.innerText = 'Mot déjà trouvé !';
+            if (wordsToFind.includes(guessedWord)) {
+                if (!guessedWords.includes(guessedWord)) {
+                    // Add the word to the guessed words list
+                    guessedWords.push(guessedWord);
+                    
+                    // Update the score
+                    score += 5;
+                    scoreDisplay.innerText = `Score : ${score}`;
+                    
+                    // Display the guessed word
+                    displayGuessedWord(guessedWord);
+                    
+                    hint.innerText = 'Bien joué !';
+                } else {
+                    hint.innerText = 'Mot déjà trouvé !';
+                }
+            } else {
+                hint.innerText = 'Mot incorrect. Réessayez !';
+            }
+            guessInput.value = '';
         }
-    } else {
-        hint.innerText = 'Mot incorrect. Réessayez !';
-    }
-    guessInput.value = '';
-}
 
         function displayGuessedWord(word) {
-    const wordItem = document.createElement('li');
-    wordItem.textContent = word;
-    document.getElementById('guessedWordsList').appendChild(wordItem);
-}
+            const wordItem = document.createElement('li');
+            wordItem.textContent = word;
+            document.getElementById('guessedWordsList').appendChild(wordItem);
+        }
         
         async function endGame() {
+            clearInterval(timer); // Stop the timer
             startBtn.disabled = false;
             submitBtn.disabled = true;
             if (score > highestScoreGame4) {
                 highestScoreGame4 = score;
-               
+                // You might want to update highestScoreGame4 to a display or storage
             }
-            await saveScore(score, totalPlayCountGame4);
             scoreDisplay.innerText = `Score : ${score} (Temps écoulé !)`;
             hint.innerText = '';
         }
 
         async function saveScore(score, gameCount) {
             try {
+                // Save score logic (Assuming Firestore or similar)
                 const gameData = { score: score, playCount: gameCount, timestamp: new Date() };
                 await addDoc(collection(db, 'users', userId, 'Game4'), gameData);
 
