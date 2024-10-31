@@ -96,13 +96,6 @@
             font-size: 0.9em;
             margin-top: 5px;
         }
-        .christmas-decoration {
-            position: absolute;
-            top: 5%;
-            left: 5%;
-            max-width: 100px;
-            z-index: 1;
-        }
     </style>
 </head>
 <body>
@@ -111,7 +104,6 @@
     <div id="instructions">
         <p>Trouvez les mots cachés dans la grille de lettres. Vous avez 2 minutes !</p>
     </div>
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Czerwona_bombka_choinkowa_ze_stanu_Tennessee_USA_zblizenie.jpg/1280px-Czerwona_bombka_choinkowa_ze_stanu_Tennessee_USA_zblizenie.jpg" alt="Christmas Decoration" class="christmas-decoration"/>
     <div id="gameArea">
         <button id="start-btn">Commencer le Jeu</button>
         <div id="timer"></div>
@@ -126,7 +118,7 @@
     <script defer type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyC4bjg7lVwd8FU8MREaPhBsBENv5qmiYYM",
@@ -149,20 +141,46 @@
         let timer;
         let timeLeft = 120;
 
-        const wordsToFind = ["TOWERFALL", "GUEZ", "VIROFLAY", "POLYUREE", "BIOLOGIE", "MATHEMATIQUES", "RHEOLOGIE", 
-                             "FRATRIE", "LACHEUR", "BOBBY", "QUOICOUBEH", "LUXEMBOURG", "NOEL", 
-                             "DOUDOU", "PAMPLEMOUSSE", "PALINDROME", "LATIN", "DOCTEUR", "NEVEO", "JEUX"];
+        const staticGrid = [
+            ["B", "F", "I", "R", "Q", "D", "O", "N", "Z", "H", "K", "W", "Y", "P", "X", "Q", "M"],
+            ["Z", "E", "O", "L", "J", "G", "A", "C", "I", "W", "B", "Q", "D", "M", "U", "H", "O"],
+            ["M", "S", "T", "N", "V", "E", "K", "L", "I", "A", "O", "H", "G", "D", "E", "B", "W"],
+            ["R", "H", "M", "E", "O", "L", "U", "X", "E", "M", "B", "O", "U", "R", "G", "O", "D"],
+            ["U", "Y", "A", "X", "E", "E", "X", "A", "O", "T", "J", "C", "H", "D", "K", "B", "O"],
+            ["E", "W", "T", "N", "L", "T", "L", "V", "P", "Z", "A", "Q", "H", "S", "D", "B", "U"],
+            ["T", "A", "H", "M", "N", "F", "J", "O", "T", "B", "K", "E", "U", "C", "V", "Y", "D"],
+            ["C", "S", "E", "T", "O", "W", "E", "R", "F", "A", "L", "L", "A", "T", "R", "X", "O"],
+            ["O", "N", "M", "R", "P", "Q", "O", "Z", "B", "E", "Y", "A", "X", "W", "U", "J", "U"],
+            ["D", "H", "A", "F", "A", "Z", "P", "C", "V", "J", "Y", "C", "T", "E", "L", "M", "B"],
+            ["J", "W", "T", "Q", "M", "S", "Z", "H", "N", "R", "L", "H", "J", "X", "B", "E", "O"],
+            ["T", "Y", "I", "U", "P", "K", "G", "U", "E", "Z", "H", "E", "C", "Q", "O", "I", "P"],
+            ["W", "M", "Q", "O", "L", "E", "N", "Y", "I", "J", "O", "U", "P", "E", "B", "G", "O"],
+            ["K", "E", "U", "I", "E", "C", "Q", "E", "M", "F", "H", "R", "U", "L", "B", "O", "L"],
+            ["E", "I", "E", "C", "M", "A", "G", "J", "V", "H", "F", "V", "S", "O", "Y", "L", "Y"],
+            ["V", "R", "S", "O", "O", "W", "I", "J", "M", "E", "U", "N", "B", "O", "E", "O", "U"],
+            ["L", "T", "H", "U", "U", "S", "Y", "V", "I", "R", "O", "F", "L", "A", "Y", "I", "R"],
+            ["E", "A", "M", "B", "S", "W", "C", "T", "G", "Y", "Z", "R", "Q", "A", "E", "B", "E"],
+            ["D", "R", "N", "E", "S", "T", "O", "I", "M", "W", "K", "P", "L", "R", "T", "Y", "E"],
+            ["X", "F", "A", "H", "E", "I", "G", "O", "L", "O", "E", "H", "R", "B", "F", "I", "R"],
+            ["N", "T", "O", "U", "F", "E", "M", "O", "R", "D", "N", "I", "L", "A", "P", "I", "N"]
+        ];
 
-        const grid = document.getElementById('grid');
-        const startBtn = document.getElementById('start-btn');
-        const submitBtn = document.getElementById('submit-btn');
+        const wordsToFind = [
+            "TOWERFALL", "GUEZ", "VIROFLAY", "POLYUREE", "BIOLOGIE",
+            "MATHEMATIQUES", "RHEOLOGIE", "FRATRIE", "LACHEUR",
+            "BOBBY", "QUOICOUBEH", "LUXEMBOURG", "NOEL", "DOUDOU",
+            "PAMPLEMOUSSE", "PALINDROME", "LATIN", "DOCTEUR", "NEVEO", "JEUX"
+        ];
+
         const scoreDisplay = document.getElementById('score');
         const totalPlayCountDisplay = document.getElementById('totalPlayCountDisplay');
+        const grid = document.getElementById('grid');
         const timerDisplay = document.getElementById('timer');
         const guessInput = document.getElementById('guess');
         const hint = document.getElementById('hint');
+        const startBtn = document.getElementById('start-btn');
+        const submitBtn = document.getElementById('submit-btn');
 
-        // Set to track found words
         const foundWords = new Set();
 
         onAuthStateChanged(auth, async (user) => {
@@ -203,7 +221,7 @@
         }
 
         function startTimer() {
-            timeLeft = 120;
+            timeLeft = 120; // Set timer to 120 seconds
             timerDisplay.innerText = `Temps restant : ${timeLeft}s`;
             timer = setInterval(() => {
                 timeLeft--;
@@ -216,101 +234,54 @@
         }
 
         function createGrid() {
-            for (let i = 0; i < 225; i++) {
-                const cell = document.createElement('div');
-                cell.classList.add('cell');
-                grid.appendChild(cell);
-            }
-            placeWordsInGrid(wordsToFind);
-            fillEmptyCells();
-        }
-
-        function generateRandomLetter() {
-            const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            return alphabet[Math.floor(Math.random() * alphabet.length)];
-        }
-
-        function placeWordsInGrid(words) {
-            words.forEach(word => {
-                let placed = false;
-                while (!placed) {
-                    const direction = Math.floor(Math.random() * 3); // 0: horizontal, 1: vertical, 2: diagonal
-                    const startRow = Math.floor(Math.random() * 15);
-                    const startCol = Math.floor(Math.random() * 15);
-                    
-                    if (direction === 0 && startCol + word.length <= 15) { // Horizontal
-                        placed = true;
-                        for (let i = 0; i < word.length; i++) {
-                            grid.children[startRow * 15 + (startCol + i)].textContent = word[i];
-                        }
-                    } else if (direction === 1 && startRow + word.length <= 15) { // Vertical
-                        placed = true;
-                        for (let i = 0; i < word.length; i++) {
-                            grid.children[(startRow + i) * 15 + startCol].textContent = word[i];
-                        }
-                    } else if (direction === 2 && startRow + word.length <= 15 && startCol + word.length <= 15) { // Diagonal
-                        placed = true;
-                        for (let i = 0; i < word.length; i++) {
-                            grid.children[(startRow + i) * 15 + (startCol + i)].textContent = word[i];
-                        }
-                    }
-                }
+            staticGrid.forEach(row => {
+                row.forEach(letter => {
+                    const cell = document.createElement('div');
+                    cell.classList.add('cell');
+                    cell.textContent = letter; // Fill grid with static letters
+                    grid.appendChild(cell);
+                });
             });
-        }
-
-        function fillEmptyCells() {
-            const cells = grid.children;
-            for (let i = 0; i < cells.length; i++) {
-                if (cells[i].textContent === '') {
-                    cells[i].textContent = generateRandomLetter();
-                }
-            }
         }
 
         function submitGuess() {
-            const guessedWord = guessInput.value.toUpperCase();
+            const guessedWord = guessInput.value.toUpperCase().trim();
+
+            if (!guessedWord) {
+                hint.innerText = "Veuillez entrer un mot valide.";
+                return;
+            }
+
+            if (foundWords.has(guessedWord)) {
+                hint.innerText = "Vous avez déjà trouvé ce mot.";
+                return;
+            }
+
             if (wordsToFind.includes(guessedWord)) {
-                if (!foundWords.has(guessedWord)) {
-                    score += 5;
-                    foundWords.add(guessedWord); // Add to the found words set
-                    scoreDisplay.innerText = `Score : ${score}`;
-                    hint.innerText = 'Bien joué !';
-                } else {
-                    hint.innerText = 'Vous avez déjà trouvé ce mot !'; // User already found the word
+                foundWords.add(guessedWord);
+                score += guessedWord.length * 10; // Update score based on the word length
+                scoreDisplay.innerText = `Score : ${score}`;
+                hint.innerText = `Bravo! Vous avez trouvé le mot : ${guessedWord}`;
+                guessInput.value = ''; // Clear input
+
+                // Check for highest score
+                if (score > highestScoreGame4) {
+                    highestScoreGame4 = score;
+                    await updateDoc(doc(db, 'users', userId), { highestScoreGame4: highestScoreGame4 });
                 }
             } else {
-                hint.innerText = 'Mot incorrect. Réessayez !';
+                hint.innerText = "Mot non trouvé, essayez encore!";
+                guessInput.value = ''; // Clear input
             }
-            guessInput.value = '';
         }
 
-        async function endGame() {
+        function endGame() {
+            clearInterval(timer);
             startBtn.disabled = false;
             submitBtn.disabled = true;
-            if (score > highestScoreGame4) {
-                highestScoreGame4 = score;
-                await updateHighScore();
-            }
-            await saveGameRecord(score, totalPlayCountGame4);
-            scoreDisplay.innerText = `Score : ${score} (Temps écoulé !)`;
-            hint.innerText = '';
-        }
-
-        async function saveGameRecord(score, gameCount) {
-            await addDoc(collection(db, 'Game4'), {
-                userId: userId,
-                score: score,
-                PlayCount: gameCount,
-                timestamp: new Date().toISOString()
-            });
-        }
-
-        async function updateHighScore() {
+            hint.innerText = `Temps écoulé! Votre score final est : ${score}`;
             const userRef = doc(db, 'users', userId);
-            await updateDoc(userRef, {
-                highestScoreGame4: highestScoreGame4,
-                totalPlayCountGame4: totalPlayCountGame4
-            });
+            await updateDoc(userRef, { totalPlayCountGame4: totalPlayCountGame4 });
         }
     </script>
 </body>
