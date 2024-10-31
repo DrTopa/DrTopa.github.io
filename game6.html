@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trouve le mot avec Grinchémie</title>
+    <style>
+        /* Styles for layout and holiday theme */
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            display: flex;
+            justify-content: start;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #ffebcd;
+            background-image: url('https://www.transparenttextures.com/patterns/snow.png');
+            margin: 0;
+            padding-top: 20px;
+        }
+        h1 {
+            font-size: 2.5em;
+            color: #d32f2f;
+            font-family: 'Comic Sans MS', cursive;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+        #userStatus {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.2em;
+            color: #a23636;
+        }
+        #instructions {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            text-align: center;
+            max-width: 1000px;
+            font-size: 1.2em;
+            color: #333;
+        }
+        #gameArea {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 2px solid #b71c1c;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+        }
+        #start-btn, #submit-btn {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 1.5em;
+            cursor: pointer;
+            background-color: #388e3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        #score, #totalPlayCountDisplay {
+            font-size: 1.8em;
+            margin: 15px;
+            color: #1565c0;
+        }
+        #grid {
+            display: grid;
+            grid-template-columns: repeat(15, 30px);
+            grid-template-rows: repeat(15, 30px);
+            margin: 20px;
+        }
+        .cell {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #ccc;
+            font-weight: bold;
+            font-size: 1.2em;
+            user-select: none;
+        }
+        #timer {
+            font-size: 1.5em;
+            color: #d32f2f;
+        }
+        #hint {
+            color: red;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        .christmas-decoration {
+            position: absolute;
+            top: 5%;
+            left: 5%;
+            max-width: 100px;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎄 Trouve le mot avec Grinchémie 🎄</h1>
+    <div id="userStatus"></div>
+    <div id="instructions">
+        <p>Trouvez les mots cachés dans la grille de lettres. Vous avez 2 minutes !</p>
+    </div>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Czerwona_bombka_choinkowa_ze_stanu_Tennessee_USA_zblizenie.jpg/1280px-Czerwona_bombka_choinkowa_ze_stanu_Tennessee_USA_zblizenie.jpg" alt="Christmas Decoration" class="christmas-decoration"/>
+    <div id="gameArea">
+        <button id="start-btn">Commencer le Jeu</button>
+        <div id="timer"></div>
+        <div id="score">Score : 0</div>
+        <div id="totalPlayCountDisplay">Total des Parties : 0</div>
+        <div id="grid"></div>
+        <input type="text" id="guess" placeholder="Entrez un mot ici" />
+        <button id="submit-btn" disabled>Soumettre</button>
+        <small id="hint"></small>
+    </div>
+
+    <script defer type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyC4bjg7lVwd8FU8MREaPhBsBENv5qmiYYM",
+            authDomain: "calendrier-de-l-avent-54e3a.firebaseapp.com",
+            projectId: "calendrier-de-l-avent-54e3a",
+            storageBucket: "calendrier-de-l-avent-54e3a.appspot.com",
+            messagingSenderId: "850639567855",
+            appId: "1:850639567855:web:0d799a1ecca005fcff141a",
+            measurementId: "G-PC1W7RYVEH"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let userId = '';
+        let totalPlayCountGame4 = 0;
+        let highestScoreGame4 = 0;
+        let score = 0;
+        let timer;
+        let timeLeft = 120;
+        let foundWords = new Set(); // Track found words
+
+        const wordsToFind = ["TOWERFALL", "GUEZ", "VIROFLAY", "POLYUREE", "BIOLOGIE", "MATHEMATIQUES", "RHEOLOGIE", 
+                             "FRATRIE", "LACHEUR", "BOBBY", "QUOICOUBEH", "LUXEMBOURG", "NOEL", 
+                             "DOUDOU", "PAMPLEMOUSSE", "PALINDROME", "LATIN", "DOCTEUR", "NEVEO", "JEUX"];
+
+        const grid = document.getElementById('grid');
+        const startBtn = document.getElementById('start-btn');
+        const submitBtn = document.getElementById('submit-btn');
+        const scoreDisplay = document.getElementById('score');
+        const totalPlayCountDisplay = document.getElementById('totalPlayCountDisplay');
+        const timerDisplay = document.getElementById('timer');
+        const guessInput = document.getElementById('guess');
+        const hint = document.getElementById('hint');
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                userId = user.uid;
+                document.getElementById('userStatus').innerText = `Bienvenue : ${user.email}`;
+                const userRef = doc(db, 'users', userId);
+                const docSnap = await getDoc(userRef);
+
+                if (!docSnap.exists()) {
+                    await setDoc(userRef, { userId: userId, totalPlayCountGame4: 0, highestScoreGame4: 0 });
+                } else {
+                    const userData = docSnap.data();
+                    totalPlayCountGame4 = userData.totalPlayCountGame4 || 0;
+                    highestScoreGame4 = userData.highestScoreGame4 || 0;
+                    totalPlayCountDisplay.innerText = `Total des Parties : ${totalPlayCountGame4}`;
+                }
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
+        startBtn.addEventListener('click', startGame);
+        submitBtn.addEventListener('click', submitGuess);
+
+        function startGame() {
+            score = 0;
+            totalPlayCountGame4++;
+            totalPlayCountDisplay.innerText = `Total des Parties : ${totalPlayCountGame4}`;
+            scoreDisplay.innerText = `Score : ${score}`;
+            grid.innerHTML = '';
+            foundWords.clear(); // Clear found words on new game
+            createGrid();
+            startTimer();
+            startBtn.disabled = true;
+            submitBtn.disabled = false;
+            hint.innerText = '';
+        }
+
+        function startTimer() {
+            timeLeft = 120; // Changed to 120 seconds as per original instructions
+            timerDisplay.innerText = `Temps restant : ${timeLeft}s`;
+            timer = setInterval(() => {
+                timeLeft--;
+                timerDisplay.innerText = `Temps restant : ${timeLeft}s`;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    endGame();
+                }
+            }, 1000);
+        }
+
+        function createGrid() {
+            for (let i = 0; i < 225; i++) {
+                const cell = document.createElement('div');
+                cell.classList.add('cell');
+                cell.textContent = generateRandomLetter();
+                grid.appendChild(cell);
+            }
+            placeWordsInGrid(wordsToFind);
+        }
+
+        function generateRandomLetter() {
+            const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            return alphabet[Math.floor(Math.random() * alphabet.length)];
+        }
+
+        function placeWordsInGrid(words) {
+            words.forEach(word => {
+                let placed = false;
+                while (!placed) {
+                    const direction = Math.floor(Math.random() * 3); // 0 = horizontal, 1 = vertical, 2 = diagonal
+                    const startRow = Math.floor(Math.random() * 15);
+                    const startCol = Math.floor(Math.random() * 15);
+
+                    if (canPlaceWord(word, startRow, startCol, direction)) {
+                        for (let i = 0; i < word.length; i++) {
+                            const index = getCellIndex(startRow, startCol, direction, i);
+                            grid.children[index].textContent = word[i];
+                        }
+                        placed = true;
+                    }
+                }
+            });
+        }
+
+        function canPlaceWord(word, startRow, startCol, direction) {
+            const wordLength = word.length;
+
+            for (let i = 0; i < wordLength; i++) {
+                const index = getCellIndex(startRow, startCol, direction, i);
+                if (index < 0 || index >= grid.children.length) {
+                    return false; // Out of bounds
+                }
+                if (grid.children[index].textContent !== "" && grid.children[index].textContent !== word[i]) {
+                    return false; // Cell already occupied by a different letter
+                }
+            }
+            return true;
+        }
+
+        function getCellIndex(row, col, direction, offset) {
+            if (direction === 0) { // Horizontal
+                return row * 15 + col + offset;
+            } else if (direction === 1) { // Vertical
+                return (row + offset) * 15 + col;
+            } else if (direction === 2) { // Diagonal
+                return (row + offset) * 15 + (col + offset);
+            }
+            return -1;
+        }
+
+        function submitGuess() {
+            const guessedWord = guessInput.value.toUpperCase();
+            if (foundWords.has(guessedWord)) {
+                hint.innerText = 'Vous avez déjà trouvé ce mot !';
+                return;
+            }
+            if (wordsToFind.includes(guessedWord)) {
+                foundWords.add(guessedWord); // Track found words
+                score += 5;
+                scoreDisplay.innerText = `Score : ${score}`;
+                hint.innerText = 'Bien joué !';
+            } else {
+                hint.innerText = 'Mot incorrect. Réessayez !';
+            }
+            guessInput.value = '';
+        }
+
+        async function endGame() {
+            startBtn.disabled = false;
+            submitBtn.disabled = true;
+            if (score > highestScoreGame4) {
+                highestScoreGame4 = score;
+                await updateHighScore();
+            }
+            await saveGameRecord(score, totalPlayCountGame4);
+            scoreDisplay.innerText = `Score : ${score} (Temps écoulé !)`;;
+            hint.innerText = '';
+        }
+
+        async function saveGameRecord(score, gameCount) {
+            await addDoc(collection(db, 'Game4'), {
+                userId: userId,
+                score: score,
+                PlayCount: gameCount,
+                timestamp: new Date().toISOString()
+            });
+        }
+
+        async function updateHighScore() {
+            const userRef = doc(db, 'users', userId);
+            await updateDoc(userRef, {
+                highestScoreGame4: highestScoreGame4,
+                totalPlayCountGame4: totalPlayCountGame4
+            });
+        }
+    </script>
+</body>
+</html>
