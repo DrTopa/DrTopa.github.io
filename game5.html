@@ -98,37 +98,11 @@
         }
         .christmas-decoration {
             position: absolute;
-            top: 50%;
+            top: 5%;
             left: 5%;
             max-width: 100px;
             z-index: 1;
         }
-
-        #gameArea {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 80%;
-    margin: auto;
-    }
-    
-    #guessedWordsDisplay {
-    position: absolute;
-    right: 10px;
-    top: 200px;
-    background-color: #f0f0f0;
-    padding: 10px;
-    border: 1px solid #b71c1c;
-    border-radius: 5px;
-    max-width: 200px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-#guessedWordsList {
-    list-style-type: none;
-    padding: 0;
-    font-size: 1.1em;
-}
     </style>
 </head>
 <body>
@@ -137,7 +111,7 @@
     <div id="instructions">
         <p>Trouvez les mots cachés dans la grille de lettres. Vous avez 2 minutes !</p>
     </div>
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Bombka_EXP_206_ubt.JPG/640px-Bombka_EXP_206_ubt.JPG" alt="Christmas Decoration" class="christmas-decoration"/>
+    <img src="https://path-to-your-decoration-image.png" alt="Christmas Decoration" class="christmas-decoration"/>
     <div id="gameArea">
         <button id="start-btn">Commencer le Jeu</button>
         <div id="timer"></div>
@@ -148,12 +122,7 @@
         <button id="submit-btn" disabled>Soumettre</button>
         <small id="hint"></small>
     </div>
-    
-    <div id="guessedWordsDisplay">
-    <h3>Mots trouvés :</h3>
-    <ul id="guessedWordsList"></ul>
-    </div>
-   
+
     <script defer type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
@@ -179,13 +148,12 @@
         let score = 0;
         let timer;
         let timeLeft = 120;
-        let guessedWords = [];
 
         const wordsToFind = ["TOWERFALL", "GUEZ", "VIROFLAY", "POLYUREE", "BIOLOGIE", "MATHEMATIQUES", "RHEOLOGIE", 
                              "FRATRIE", "LACHEUR", "BOBBY", "QUOICOUBEH", "LUXEMBOURG", "NOEL", 
                              "DOUDOU", "PAMPLEMOUSSE", "PALINDROME", "LATIN", "DOCTEUR", "NEVEO", "JEUX"];
 
-        let grid = document.getElementById('grid');
+        const grid = document.getElementById('grid');
         const startBtn = document.getElementById('start-btn');
         const submitBtn = document.getElementById('submit-btn');
         const scoreDisplay = document.getElementById('score');
@@ -223,8 +191,6 @@
             totalPlayCountDisplay.innerText = `Total des Parties : ${totalPlayCountGame4}`;
             scoreDisplay.innerText = `Score : ${score}`;
             grid.innerHTML = '';
-            guessedWords = [];  // Reset the guessed words array
-            document.getElementById('guessedWordsList').innerHTML = '';  // Clear the displayed list
             createGrid();
             startTimer();
             startBtn.disabled = true;
@@ -233,7 +199,7 @@
         }
 
         function startTimer() {
-            timeLeft = 20;
+            timeLeft = 120;
             timerDisplay.innerText = `Temps restant : ${timeLeft}s`;
             timer = setInterval(() => {
                 timeLeft--;
@@ -245,130 +211,75 @@
             }, 1000);
         }
 
-function createGrid() {
-            grid = Array.from({ length: 15 }, () => Array(15).fill('')); // Initialize a 15x15 grid
-            placeWordsInGrid(grid, wordsToFind); // Place words in the grid
-            for (let i = 0; i < 15; i++) {
-                for (let j = 0; j < 15; j++) {
-                    if (grid[i][j] === '') {
-                        grid[i][j] = generateRandomLetter();
-                    }
-                    const cell = document.createElement('div');
-                    cell.classList.add('cell');
-                    cell.textContent = grid[i][j];
-                    document.getElementById('grid').appendChild(cell);
-                }
+        function createGrid() {
+            for (let i = 0; i < 225; i++) {
+                const cell = document.createElement('div');
+                cell.classList.add('cell');
+                cell.textContent = generateRandomLetter();
+                grid.appendChild(cell);
             }
+            placeWordsInGrid(wordsToFind);
         }
 
-function generateRandomLetter() {
+        function generateRandomLetter() {
             const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
             return alphabet[Math.floor(Math.random() * alphabet.length)];
         }
 
-        function placeWordsInGrid(grid, words) {
+        function placeWordsInGrid(words) {
             words.forEach(word => {
-                placeWordInGrid(grid, word);
-            });
-        }
-
-        function placeWordInGrid(grid, word) {
-            word = word.toUpperCase();
-            const directions = [
-                [0, 1],    // Horizontal right
-                [0, -1],   // Horizontal left
-                [1, 0],    // Vertical down
-                [-1, 0],   // Vertical up
-                [1, 1],    // Diagonal down-right
-                [-1, -1],  // Diagonal up-left
-                [1, -1],   // Diagonal down-left
-                [-1, 1]    // Diagonal up-right
-            ];
-            let placed = false;
-
-            while (!placed) {
-                const row = Math.floor(Math.random() * grid.length);
-                const col = Math.floor(Math.random() * grid[0].length);
-                const [dx, dy] = directions[Math.floor(Math.random() * directions.length)];
-
-                if (canPlaceWord(grid, word, row, col, dx, dy)) {
-                    for (let k = 0; k < word.length; k++) {
-                        grid[row + k * dx][col + k * dy] = word[k]; // Place word in the grid
+                let placed = false;
+                while (!placed) {
+                    const startIndex = Math.floor(Math.random() * 225);
+                    if (startIndex + word.length < 225) {
+                        for (let i = 0; i < word.length; i++) {
+                            grid.children[startIndex + i].textContent = word[i];
+                        }
+                        placed = true;
                     }
-                    placed = true;
                 }
-            }
-        }
-
-        function canPlaceWord(grid, word, row, col, dx, dy) {
-            for (let k = 0; k < word.length; k++) {
-                const x = row + k * dx;
-                const y = col + k * dy;
-                // Check if out of bounds or if the grid cell is not empty
-                if (x < 0 || x >= grid.length || y < 0 || y >= grid[0].length || grid[x][y] !== '') {
-                    return false;
-                }
-            }
-            return true;
+            });
         }
 
         function submitGuess() {
             const guessedWord = guessInput.value.toUpperCase();
-            
             if (wordsToFind.includes(guessedWord)) {
-                if (!guessedWords.includes(guessedWord)) {
-                    // Add the word to the guessed words list
-                    guessedWords.push(guessedWord);
-                    
-                    // Update the score
-                    score += 5;
-                    scoreDisplay.innerText = `Score : ${score}`;
-                    
-                    // Display the guessed word
-                    displayGuessedWord(guessedWord);
-                    
-                    hint.innerText = 'Bien joué !';
-                } else {
-                    hint.innerText = 'Mot déjà trouvé !';
-                }
+                score += 10;
+                scoreDisplay.innerText = `Score : ${score}`;
+                hint.innerText = 'Bien joué !';
             } else {
                 hint.innerText = 'Mot incorrect. Réessayez !';
             }
             guessInput.value = '';
         }
 
-        function displayGuessedWord(word) {
-            const wordItem = document.createElement('li');
-            wordItem.textContent = word;
-            document.getElementById('guessedWordsList').appendChild(wordItem);
-        }
-        
         async function endGame() {
-            clearInterval(timer); // Stop the timer
             startBtn.disabled = false;
             submitBtn.disabled = true;
             if (score > highestScoreGame4) {
                 highestScoreGame4 = score;
-                // You might want to update highestScoreGame4 to a display or storage
+                await updateHighScore();
             }
+            await saveGameRecord(score, totalPlayCountGame4);
             scoreDisplay.innerText = `Score : ${score} (Temps écoulé !)`;
             hint.innerText = '';
         }
 
-        async function saveScore(score, gameCount) {
-            try {
-                // Save score logic (Assuming Firestore or similar)
-                const gameData = { score: score, playCount: gameCount, timestamp: new Date() };
-                await addDoc(collection(db, 'users', userId, 'Game4'), gameData);
+        async function saveGameRecord(score, gameCount) {
+            await addDoc(collection(db, 'Game4'), {
+                userId: userId,
+                score: score,
+                PlayCount: gameCount,
+                timestamp: new Date().toISOString()
+            });
+        }
 
-                const userRef = doc(db, 'users', userId);
-                if (totalPlayCountGame4 <= 1 && score > highestScore) {
-                    highestScoreGame4 = score;
-                    await updateDoc(userRef, { highestScoreGame4: highestScore });
-                }
-            } catch (error) {
-                console.error("Error saving score:", error);
-            }
+        async function updateHighScore() {
+            const userRef = doc(db, 'users', userId);
+            await updateDoc(userRef, {
+                highestScoreGame4: highestScoreGame4,
+                totalPlayCountGame4: totalPlayCountGame4
+            });
         }
     </script>
 </body>
