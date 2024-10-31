@@ -243,12 +243,12 @@
                 fillPercentage = currentFill; // Use current fill directly for non-triangle shapes
             }
             
-            const difference = Math.abs(currentFill - targetFill);
+            const difference = Math.abs(fillPercentage - targetFill);
             const roundPenalty = difference;
             score -= roundPenalty;
             scoreDisplay.innerText = `Score : ${score}`;
             
-            roundFillDisplay.innerText = `Remplissage Dernière Manche : ${currentFill}%`;
+            roundFillDisplay.innerText = `Remplissage Dernière Manche : ${fillPercentage}%`;
 
             if (round < 5) {
                 round++;
