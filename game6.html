@@ -96,6 +96,13 @@
             font-size: 0.9em;
             margin-top: 5px;
         }
+        .christmas-decoration {
+            position: absolute;
+            top: 5%;
+            left: 5%;
+            max-width: 100px;
+            z-index: 1;
+        }
     </style>
 </head>
 <body>
@@ -104,6 +111,7 @@
     <div id="instructions">
         <p>Trouvez les mots cachés dans la grille de lettres. Vous avez 2 minutes !</p>
     </div>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Czerwona_bombka_choinkowa_ze_stanu_Tennessee_USA_zblizenie.jpg/1280px-Czerwona_bombka_choinkowa_ze_stanu_Tennessee_USA_zblizenie.jpg" alt="Christmas Decoration" class="christmas-decoration"/>
     <div id="gameArea">
         <button id="start-btn">Commencer le Jeu</button>
         <div id="timer"></div>
@@ -140,7 +148,6 @@
         let score = 0;
         let timer;
         let timeLeft = 120;
-        let foundWords = new Set(); // Track found words
 
         const wordsToFind = ["TOWERFALL", "GUEZ", "VIROFLAY", "POLYUREE", "BIOLOGIE", "MATHEMATIQUES", "RHEOLOGIE", 
                              "FRATRIE", "LACHEUR", "BOBBY", "QUOICOUBEH", "LUXEMBOURG", "NOEL", 
@@ -154,6 +161,9 @@
         const timerDisplay = document.getElementById('timer');
         const guessInput = document.getElementById('guess');
         const hint = document.getElementById('hint');
+
+        // Set to track found words
+        const foundWords = new Set();
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
@@ -184,7 +194,7 @@
             totalPlayCountDisplay.innerText = `Total des Parties : ${totalPlayCountGame4}`;
             scoreDisplay.innerText = `Score : ${score}`;
             grid.innerHTML = '';
-            foundWords.clear(); // Clear found words on new game
+            foundWords.clear(); // Clear the found words set
             createGrid();
             startTimer();
             startBtn.disabled = true;
@@ -193,7 +203,7 @@
         }
 
         function startTimer() {
-            timeLeft = 120; // Changed to 120 seconds as per original instructions
+            timeLeft = 10;
             timerDisplay.innerText = `Temps restant : ${timeLeft}s`;
             timer = setInterval(() => {
                 timeLeft--;
@@ -212,7 +222,7 @@
                 cell.textContent = generateRandomLetter();
                 grid.appendChild(cell);
             }
-            wordsToFind.forEach(word => placeWordInGrid(word)); // Place words in the grid
+            placeWordsInGrid(wordsToFind);
         }
 
         function generateRandomLetter() {
@@ -220,66 +230,32 @@
             return alphabet[Math.floor(Math.random() * alphabet.length)];
         }
 
-        function placeWordInGrid(word) {
-            let placed = false;
-            let attempts = 0; // Add a maximum attempts counter
-
-            while (!placed && attempts < 100) { // Limit attempts to prevent infinite loops
-                const direction = Math.floor(Math.random() * 3); // 0 = horizontal, 1 = vertical, 2 = diagonal
-                const startRow = Math.floor(Math.random() * 15);
-                const startCol = Math.floor(Math.random() * 15);
-
-                if (canPlaceWord(word, startRow, startCol, direction)) {
-                    for (let i = 0; i < word.length; i++) {
-                        const index = getCellIndex(startRow, startCol, direction, i);
-                        grid.children[index].textContent = word[i];
+        function placeWordsInGrid(words) {
+            words.forEach(word => {
+                let placed = false;
+                while (!placed) {
+                    const startIndex = Math.floor(Math.random() * 225);
+                    if (startIndex + word.length < 225) {
+                        for (let i = 0; i < word.length; i++) {
+                            grid.children[startIndex + i].textContent = word[i];
+                        }
+                        placed = true;
                     }
-                    placed = true;
                 }
-                attempts++;
-            }
-            if (!placed) {
-                console.error(`Unable to place word: ${word} after multiple attempts`);
-            }
-        }
-
-        function canPlaceWord(word, startRow, startCol, direction) {
-            const wordLength = word.length;
-
-            for (let i = 0; i < wordLength; i++) {
-                const index = getCellIndex(startRow, startCol, direction, i);
-                if (index < 0 || index >= grid.children.length) {
-                    return false; // Out of bounds
-                }
-                if (grid.children[index].textContent !== "" && grid.children[index].textContent !== word[i]) {
-                    return false; // Cell already occupied by a different letter
-                }
-            }
-            return true;
-        }
-
-        function getCellIndex(row, col, direction, offset) {
-            if (direction === 0) { // Horizontal
-                return row * 15 + col + offset;
-            } else if (direction === 1) { // Vertical
-                return (row + offset) * 15 + col;
-            } else if (direction === 2) { // Diagonal
-                return (row + offset) * 15 + (col + offset);
-            }
-            return -1;
+            });
         }
 
         function submitGuess() {
             const guessedWord = guessInput.value.toUpperCase();
-            if (foundWords.has(guessedWord)) {
-                hint.innerText = 'Vous avez déjà trouvé ce mot !';
-                return;
-            }
             if (wordsToFind.includes(guessedWord)) {
-                foundWords.add(guessedWord); // Track found words
-                score += 5;
-                scoreDisplay.innerText = `Score : ${score}`;
-                hint.innerText = 'Bien joué !';
+                if (!foundWords.has(guessedWord)) {
+                    score += 5;
+                    foundWords.add(guessedWord); // Add to the found words set
+                    scoreDisplay.innerText = `Score : ${score}`;
+                    hint.innerText = 'Bien joué !';
+                } else {
+                    hint.innerText = 'Vous avez déjà trouvé ce mot !'; // User already found the word
+                }
             } else {
                 hint.innerText = 'Mot incorrect. Réessayez !';
             }
@@ -317,4 +293,3 @@
     </script>
 </body>
 </html>
-
