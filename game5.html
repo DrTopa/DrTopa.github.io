@@ -98,7 +98,7 @@
         }
         .christmas-decoration {
             position: absolute;
-            top: 5%;
+            top: 50%;
             left: 5%;
             max-width: 100px;
             z-index: 1;
@@ -111,7 +111,7 @@
     <div id="instructions">
         <p>Trouvez les mots cachés dans la grille de lettres. Vous avez 2 minutes !</p>
     </div>
-    <img src="https://path-to-your-decoration-image.png" alt="Christmas Decoration" class="christmas-decoration"/>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Bombka_EXP_206_ubt.JPG/640px-Bombka_EXP_206_ubt.JPG" alt="Christmas Decoration" class="christmas-decoration"/>
     <div id="gameArea">
         <button id="start-btn">Commencer le Jeu</button>
         <div id="timer"></div>
@@ -265,21 +265,19 @@
             hint.innerText = '';
         }
 
-        async function saveGameRecord(score, gameCount) {
-            await addDoc(collection(db, 'Game4'), {
-                userId: userId,
-                score: score,
-                PlayCount: gameCount,
-                timestamp: new Date().toISOString()
-            });
-        }
+        async function saveScore(score, gameCount) {
+            try {
+                const gameData = { score: score, playCount: gameCount, timestamp: new Date() };
+                await addDoc(collection(db, 'users', userId, 'Game4'), gameData);
 
-        async function updateHighScore() {
-            const userRef = doc(db, 'users', userId);
-            await updateDoc(userRef, {
-                highestScoreGame4: highestScoreGame4,
-                totalPlayCountGame4: totalPlayCountGame4
-            });
+                const userRef = doc(db, 'users', userId);
+                if (totalPlayCountGame4 <= 1 && score > highestScore) {
+                    highestScoreGame4 = score;
+                    await updateDoc(userRef, { highestScoreGame4: highestScore });
+                }
+            } catch (error) {
+                console.error("Error saving score:", error);
+            }
         }
     </script>
 </body>
