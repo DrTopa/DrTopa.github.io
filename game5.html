@@ -55,7 +55,6 @@
             box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
             width: 650px;  /* Increased width */
             height: 650px; /* Increased height */
-            overflow: auto; /* Allow scrolling if needed */
                 }
         #start-btn, #submit-btn {
             padding: 10px 20px;
@@ -75,10 +74,11 @@
         }
         #grid {
             display: grid;
-            grid-template-columns: repeat(15, 30px);
-            grid-template-rows: repeat(15, 30px);
-            margin: 20px;
-        }
+            grid-template-columns: repeat(20, 30px); /* 20 columns with 30px width each */
+            grid-template-rows: repeat(20, 30px);    /* 20 rows with 30px height each */
+            gap: 2px; /* Space between cells */
+                }
+        
         .cell {
             width: 30px;
             height: 30px;
