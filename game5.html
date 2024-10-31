@@ -237,10 +237,8 @@
              let fillPercentage;
 
             // Use calculateFillPercentage only for triangle rounds
-            if (round >= 2 && round <= 3) {
+            if (round >= 2 && round <= 5) {
                 fillPercentage = Math.round(calculateFillPercentage(currentFill)); // Calculate fill percentage for triangle
-            } else if (round >= 4 && round <= 5) {
-                fillPercentage = 100-Math.round(calculateFillPercentage(currentFill)); // Calculate fill percentage for triangle
             } else {
                 fillPercentage = Math.round(currentFill); // Use current fill directly for non-triangle shapes
             }
@@ -310,10 +308,12 @@ function calculateFillPercentage(fillHeight) {
     const totalArea = (base * height) / 2; // Area of the triangle
     const unfilledHeight = height-fillHeight
     const ratio = unfilledHeight/ height; // 
-    const unfilledArea = ((base*ratio) * (height*ratio)) / 2; // Area of the unfilled part
-
-    const fillPercentage = (1-(unfilledArea / totalArea)) * 100; // Calculate the fill percentage
-
+    if (round >= 2 && round <= 3) {
+        const unfilledArea = ((base*ratio) * (height*ratio)) / 2; // Area of the unfilled part
+        const fillPercentage = (1-(unfilledArea / totalArea)) * 100; // Calculate the fill percentage
+    }else{
+        const unfilledArea = ((base*ratio) * (height)) / 2; // Area of the unfilled part
+        const fillPercentage = ((unfilledArea / totalArea)) * 100; // Calculate the fill percentage
         // Log values to the console
     console.log("Total Area:", totalArea);
     console.log("Ratio (fillHeight/height):", ratio);
