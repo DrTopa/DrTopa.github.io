@@ -239,7 +239,7 @@
             // Use calculateFillPercentage only for triangle rounds
             if (round >= 2 && round <= 3) {
                 fillPercentage = Math.round(calculateFillPercentage(currentFill)); // Calculate fill percentage for triangle
-            if (round >= 4 && round <= 5) {
+            } else if (round >= 4 && round <= 5) {
                 fillPercentage = 100-Math.round(calculateFillPercentage(currentFill)); // Calculate fill percentage for triangle
             } else {
                 fillPercentage = Math.round(currentFill); // Use current fill directly for non-triangle shapes
