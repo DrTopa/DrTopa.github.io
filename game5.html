@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trouve le mot avec Grinchémie</title>
     <style>
+        /* Styles for layout and holiday theme */
         body {
             font-family: 'Segoe UI', Tahoma, sans-serif;
             display: flex;
@@ -19,7 +20,6 @@
         }
         h1 {
             font-size: 2.5em;
-            margin-bottom: 10px;
             color: #d32f2f;
             font-family: 'Comic Sans MS', cursive;
             text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
@@ -111,7 +111,7 @@
     <div id="instructions">
         <p>Trouvez les mots cachés dans la grille de lettres. Vous avez 2 minutes !</p>
     </div>
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Bombka_EXP_206_ubt.JPG/640px-Bombka_EXP_206_ubt.JPG" alt="Christmas Decoration" class="christmas-decoration"/>
+    <img src="https://path-to-your-decoration-image.png" alt="Christmas Decoration" class="christmas-decoration"/>
     <div id="gameArea">
         <button id="start-btn">Commencer le Jeu</button>
         <div id="timer"></div>
@@ -197,89 +197,66 @@
             submitBtn.disabled = false;
             hint.innerText = '';
         }
- function createGrid() {
-            const letters = generateLetterGrid(15, 15);
-            letters.forEach(row => {
-                row.forEach(letter => {
-                    const cell = document.createElement('div');
-                    cell.className = 'cell';
-                    cell.innerText = letter;
-                    grid.appendChild(cell);
-                });
-            });
-        }
-
-        function generateLetterGrid(rows, cols) {
-            const grid = Array.from({ length: rows }, () => Array(cols).fill(''));
-            wordsToFind.forEach(word => placeWordInGrid(grid, word));
-            for (let i = 0; i < rows; i++) {
-                for (let j = 0; j < cols; j++) {
-                    if (grid[i][j] === '') {
-                        grid[i][j] = String.fromCharCode(65 + Math.floor(Math.random() * 26));
-                    }
-                }
-            }
-            return grid;
-        }
-
-        function placeWordInGrid(grid, word) {
-            word = word.toUpperCase();
-            const directions = [[0, 1], [1, 0], [1, 1]];
-            let placed = false;
-
-            while (!placed) {
-                const row = Math.floor(Math.random() * grid.length);
-                const col = Math.floor(Math.random() * grid[0].length);
-                const [dx, dy] = directions[Math.floor(Math.random() * directions.length)];
-
-                if (canPlaceWord(grid, word, row, col, dx, dy)) {
-                    for (let k = 0; k < word.length; k++) {
-                        grid[row + k * dx][col + k * dy] = word[k];
-                    }
-                    placed = true;
-                }
-            }
-        }
-
-        function canPlaceWord(grid, word, row, col, dx, dy) {
-            for (let k = 0; k < word.length; k++) {
-                const x = row + k * dx;
-                const y = col + k * dy;
-                if (x >= grid.length || y >= grid[0].length || grid[x][y] !== '') {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        function submitGuess() {
-            const guess = guessInput.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-            if (wordsToFind.includes(guess)) {
-                score++;
-                scoreDisplay.innerText = Score : ${score};
-                hint.innerText = '';
-            } else {
-                hint.innerText = "Mot incorrect";
-            }
-            guessInput.value = '';
-        }
 
         function startTimer() {
             timeLeft = 120;
-            timerDisplay.innerText = Temps restant : ${timeLeft} sec;
+            timerDisplay.innerText = `Temps restant : ${timeLeft}s`;
             timer = setInterval(() => {
                 timeLeft--;
-                timerDisplay.innerText = Temps restant : ${timeLeft} sec;
+                timerDisplay.innerText = `Temps restant : ${timeLeft}s`;
                 if (timeLeft <= 0) {
                     clearInterval(timer);
                     endGame();
                 }
             }, 1000);
         }
+
+        function createGrid() {
+            for (let i = 0; i < 225; i++) {
+                const cell = document.createElement('div');
+                cell.classList.add('cell');
+                cell.textContent = generateRandomLetter();
+                grid.appendChild(cell);
+            }
+            placeWordsInGrid(wordsToFind);
+        }
+
+        function generateRandomLetter() {
+            const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            return alphabet[Math.floor(Math.random() * alphabet.length)];
+        }
+
+        function placeWordsInGrid(words) {
+            words.forEach(word => {
+                let placed = false;
+                while (!placed) {
+                    const startIndex = Math.floor(Math.random() * 225);
+                    if (startIndex + word.length < 225) {
+                        for (let i = 0; i < word.length; i++) {
+                            grid.children[startIndex + i].textContent = word[i];
+                        }
+                        placed = true;
+                    }
+                }
+            });
+        }
+
+        function submitGuess() {
+            const guessedWord = guessInput.value.toUpperCase();
+            if (wordsToFind.includes(guessedWord)) {
+                score += 10;
+                scoreDisplay.innerText = `Score : ${score}`;
+                hint.innerText = 'Bien joué !';
+            } else {
+                hint.innerText = 'Mot incorrect. Réessayez !';
+            }
+            guessInput.value = '';
+        }
+
         async function endGame() {
             startBtn.disabled = false;
             submitBtn.disabled = true;
-            if (totalPlayCountGame4 <= 1 && score > highestScoreGame4) {
+            if (score > highestScoreGame4) {
                 highestScoreGame4 = score;
                 await updateHighScore();
             }
