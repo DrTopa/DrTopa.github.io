@@ -96,13 +96,6 @@
             font-size: 0.9em;
             margin-top: 5px;
         }
-        .christmas-decoration {
-            position: absolute;
-            top: 5%;
-            left: 5%;
-            max-width: 100px;
-            z-index: 1;
-        }
     </style>
 </head>
 <body>
@@ -111,7 +104,6 @@
     <div id="instructions">
         <p>Trouvez les mots cachés dans la grille de lettres. Vous avez 2 minutes !</p>
     </div>
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Czerwona_bombka_choinkowa_ze_stanu_Tennessee_USA_zblizenie.jpg/1280px-Czerwona_bombka_choinkowa_ze_stanu_Tennessee_USA_zblizenie.jpg" alt="Christmas Decoration" class="christmas-decoration"/>
     <div id="gameArea">
         <button id="start-btn">Commencer le Jeu</button>
         <div id="timer"></div>
@@ -220,7 +212,7 @@
                 cell.textContent = generateRandomLetter();
                 grid.appendChild(cell);
             }
-            placeWordsInGrid(wordsToFind);
+            wordsToFind.forEach(word => placeWordInGrid(word)); // Place words in the grid
         }
 
         function generateRandomLetter() {
@@ -228,23 +220,27 @@
             return alphabet[Math.floor(Math.random() * alphabet.length)];
         }
 
-        function placeWordsInGrid(words) {
-            words.forEach(word => {
-                let placed = false;
-                while (!placed) {
-                    const direction = Math.floor(Math.random() * 3); // 0 = horizontal, 1 = vertical, 2 = diagonal
-                    const startRow = Math.floor(Math.random() * 15);
-                    const startCol = Math.floor(Math.random() * 15);
+        function placeWordInGrid(word) {
+            let placed = false;
+            let attempts = 0; // Add a maximum attempts counter
 
-                    if (canPlaceWord(word, startRow, startCol, direction)) {
-                        for (let i = 0; i < word.length; i++) {
-                            const index = getCellIndex(startRow, startCol, direction, i);
-                            grid.children[index].textContent = word[i];
-                        }
-                        placed = true;
+            while (!placed && attempts < 100) { // Limit attempts to prevent infinite loops
+                const direction = Math.floor(Math.random() * 3); // 0 = horizontal, 1 = vertical, 2 = diagonal
+                const startRow = Math.floor(Math.random() * 15);
+                const startCol = Math.floor(Math.random() * 15);
+
+                if (canPlaceWord(word, startRow, startCol, direction)) {
+                    for (let i = 0; i < word.length; i++) {
+                        const index = getCellIndex(startRow, startCol, direction, i);
+                        grid.children[index].textContent = word[i];
                     }
+                    placed = true;
                 }
-            });
+                attempts++;
+            }
+            if (!placed) {
+                console.error(`Unable to place word: ${word} after multiple attempts`);
+            }
         }
 
         function canPlaceWord(word, startRow, startCol, direction) {
@@ -298,7 +294,7 @@
                 await updateHighScore();
             }
             await saveGameRecord(score, totalPlayCountGame4);
-            scoreDisplay.innerText = `Score : ${score} (Temps écoulé !)`;;
+            scoreDisplay.innerText = `Score : ${score} (Temps écoulé !)`;
             hint.innerText = '';
         }
 
@@ -321,3 +317,4 @@
     </script>
 </body>
 </html>
+
