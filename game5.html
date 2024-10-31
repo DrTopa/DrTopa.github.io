@@ -258,7 +258,7 @@
             submitBtn.disabled = true;
             if (score > highestScoreGame4) {
                 highestScoreGame4 = score;
-                await updateHighScore();
+               
             }
             await saveGameRecord(score, totalPlayCountGame4);
             scoreDisplay.innerText = `Score : ${score} (Temps écoulé !)`;
