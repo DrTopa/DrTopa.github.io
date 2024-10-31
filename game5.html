@@ -234,6 +234,15 @@
         }
 
         function calculateScore() {
+             let fillPercentage;
+
+            // Use calculateFillPercentage only for triangle rounds
+            if (round >= 2 && round <= 5) {
+                fillPercentage = calculateFillPercentage(currentFill); // Calculate fill percentage for triangle
+            } else {
+                fillPercentage = currentFill; // Use current fill directly for non-triangle shapes
+            }
+            
             const difference = Math.abs(currentFill - targetFill);
             const roundPenalty = difference;
             score -= roundPenalty;
