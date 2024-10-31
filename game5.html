@@ -111,7 +111,7 @@
     <div id="instructions">
         <p>Trouvez les mots cachés dans la grille de lettres. Vous avez 2 minutes !</p>
     </div>
-    <img src="https://path-to-your-decoration-image.png" alt="Christmas Decoration" class="christmas-decoration"/>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Czerwona_bombka_choinkowa_ze_stanu_Tennessee_USA_zblizenie.jpg/1280px-Czerwona_bombka_choinkowa_ze_stanu_Tennessee_USA_zblizenie.jpg" alt="Christmas Decoration" class="christmas-decoration"/>
     <div id="gameArea">
         <button id="start-btn">Commencer le Jeu</button>
         <div id="timer"></div>
@@ -199,7 +199,7 @@
         }
 
         function startTimer() {
-            timeLeft = 120;
+            timeLeft = 10;
             timerDisplay.innerText = `Temps restant : ${timeLeft}s`;
             timer = setInterval(() => {
                 timeLeft--;
@@ -244,7 +244,7 @@
         function submitGuess() {
             const guessedWord = guessInput.value.toUpperCase();
             if (wordsToFind.includes(guessedWord)) {
-                score += 10;
+                score += 5;
                 scoreDisplay.innerText = `Score : ${score}`;
                 hint.innerText = 'Bien joué !';
             } else {
