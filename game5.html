@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trouve le mot avec Grinchémie</title>
     <style>
-        /* General body styling */
         body {
             font-family: 'Segoe UI', Tahoma, sans-serif;
             display: flex;
@@ -18,7 +17,6 @@
             margin: 0;
             padding-top: 20px;
         }
-
         h1 {
             font-size: 2.5em;
             margin-bottom: 10px;
@@ -27,7 +25,6 @@
             text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
             text-align: center;
         }
-
         #userStatus {
             position: absolute;
             top: 10px;
@@ -35,7 +32,6 @@
             font-size: 1.2em;
             color: #a23636;
         }
-
         #instructions {
             background: rgba(255, 255, 255, 0.9);
             padding: 15px;
@@ -47,7 +43,6 @@
             font-size: 1.2em;
             color: #333;
         }
-
         #gameArea {
             display: flex;
             flex-direction: column;
@@ -59,7 +54,6 @@
             padding: 20px;
             box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
         }
-
         #start-btn, #submit-btn {
             padding: 10px 20px;
             margin: 10px;
@@ -71,20 +65,17 @@
             border-radius: 5px;
             transition: background-color 0.3s;
         }
-
         #score, #totalPlayCountDisplay {
             font-size: 1.8em;
             margin: 15px;
             color: #1565c0;
         }
-
         #grid {
             display: grid;
             grid-template-columns: repeat(15, 30px);
             grid-template-rows: repeat(15, 30px);
             margin: 20px;
         }
-
         .cell {
             width: 30px;
             height: 30px;
@@ -96,26 +87,31 @@
             font-size: 1.2em;
             user-select: none;
         }
-
         #timer {
             font-size: 1.5em;
             color: #d32f2f;
         }
-
         #hint {
             color: red;
             font-size: 0.9em;
-            margin-top: -10px;
+            margin-top: 5px;
+        }
+        .christmas-decoration {
+            position: absolute;
+            top: 5%;
+            left: 5%;
+            max-width: 100px;
+            z-index: 1;
         }
     </style>
 </head>
 <body>
     <h1>🎄 Trouve le mot avec Grinchémie 🎄</h1>
-
     <div id="userStatus"></div>
     <div id="instructions">
         <p>Trouvez les mots cachés dans la grille de lettres. Vous avez 2 minutes !</p>
     </div>
+    <img src="https://path-to-your-decoration-image.png" alt="Christmas Decoration" class="christmas-decoration"/>
     <div id="gameArea">
         <button id="start-btn">Commencer le Jeu</button>
         <div id="timer"></div>
@@ -123,14 +119,14 @@
         <div id="totalPlayCountDisplay">Total des Parties : 0</div>
         <div id="grid"></div>
         <input type="text" id="guess" placeholder="Entrez un mot ici" />
-        <small id="hint"></small>
         <button id="submit-btn" disabled>Soumettre</button>
+        <small id="hint"></small>
     </div>
 
     <script defer type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyC4bjg7lVwd8FU8MREaPhBsBENv5qmiYYM",
@@ -193,6 +189,7 @@
             score = 0;
             totalPlayCountGame4++;
             totalPlayCountDisplay.innerText = `Total des Parties : ${totalPlayCountGame4}`;
+            scoreDisplay.innerText = `Score : ${score}`;
             grid.innerHTML = '';
             createGrid();
             startTimer();
@@ -201,95 +198,25 @@
             hint.innerText = '';
         }
 
-        function createGrid() {
-            const letters = generateLetterGrid(15, 15);
-            letters.forEach(row => {
-                row.forEach(letter => {
-                    const cell = document.createElement('div');
-                    cell.className = 'cell';
-                    cell.innerText = letter;
-                    grid.appendChild(cell);
-                });
-            });
-        }
-
-        function generateLetterGrid(rows, cols) {
-            const grid = Array.from({ length: rows }, () => Array(cols).fill(''));
-            wordsToFind.forEach(word => placeWordInGrid(grid, word));
-            for (let i = 0; i < rows; i++) {
-                for (let j = 0; j < cols; j++) {
-                    if (grid[i][j] === '') {
-                        grid[i][j] = String.fromCharCode(65 + Math.floor(Math.random() * 26));
-                    }
-                }
-            }
-            return grid;
-        }
-
-        function placeWordInGrid(grid, word) {
-            word = word.toUpperCase();
-            const directions = [[0, 1], [1, 0], [1, 1]];
-            let placed = false;
-
-            while (!placed) {
-                const row = Math.floor(Math.random() * grid.length);
-                const col = Math.floor(Math.random() * grid[0].length);
-                const [dx, dy] = directions[Math.floor(Math.random() * directions.length)];
-
-                if (canPlaceWord(grid, word, row, col, dx, dy)) {
-                    for (let k = 0; k < word.length; k++) {
-                        grid[row + k * dx][col + k * dy] = word[k];
-                    }
-                    placed = true;
-                }
-            }
-        }
-
-        function canPlaceWord(grid, word, row, col, dx, dy) {
-            for (let k = 0; k < word.length; k++) {
-                const x = row + k * dx;
-                const y = col + k * dy;
-                if (x >= grid.length || y >= grid[0].length || grid[x][y] !== '') {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        function submitGuess() {
-            const guess = guessInput.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-            if (wordsToFind.includes(guess)) {
-                score++;
-                scoreDisplay.innerText = `Score : ${score}`;
-                hint.innerText = '';
-            } else {
-                hint.innerText = "Mot incorrect";
-            }
-            guessInput.value = '';
-        }
-
-        function startTimer() {
-            timeLeft = 120;
-            timerDisplay.innerText = `Temps restant : ${timeLeft} sec`;
-            timer = setInterval(() => {
-                timeLeft--;
-                timerDisplay.innerText = `Temps restant : ${timeLeft} sec`;
-                if (timeLeft <= 0) {
-                    clearInterval(timer);
-                    endGame();
-                }
-            }, 1000);
-        }
-
-        function endGame() {
+        async function endGame() {
             startBtn.disabled = false;
             submitBtn.disabled = true;
-            if (score > highestScoreGame4) {
+            if (totalPlayCountGame4 <= 1 && score > highestScoreGame4) {
                 highestScoreGame4 = score;
-                updateHighScore();
+                await updateHighScore();
             }
+            await saveGameRecord(score, totalPlayCountGame4);
             scoreDisplay.innerText = `Score : ${score} (Temps écoulé !)`;
             hint.innerText = '';
+        }
+
+        async function saveGameRecord(score, gameCount) {
+            await addDoc(collection(db, 'Game4'), {
+                userId: userId,
+                score: score,
+                PlayCount: gameCount,
+                timestamp: new Date().toISOString()
+            });
         }
 
         async function updateHighScore() {
