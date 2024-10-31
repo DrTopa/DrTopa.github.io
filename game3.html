@@ -335,9 +335,9 @@ function calculateFillPercentage(fillHeight) {
                 await addDoc(collection(db, 'users', userId, 'Game3'), gameData);
 
                 const userRef = doc(db, 'users', userId);
-                if (totalPlayCountGame3 <= 10 && finalScore > highestScoreGame3) {
+                if (totalPlayCountGame3 <= 3 && finalScore > highestScoreGame3) {
                     highestScoreGame3 = finalScore;
-                    await updateDoc(userRef, { highestScoreGame3 });
+                    await updateDoc(userRef, { highestScoreGame3 : finalScore});
                 }
             } catch (error) {
                 console.error("Erreur lors de la sauvegarde du score :", error);
