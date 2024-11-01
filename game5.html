@@ -105,6 +105,8 @@
     <div id="userStatus"></div>
     <div id="gameArea">
         <button id="start-btn">Commencer le jeu</button>
+        <div id="high-score">Meilleur score: 0</div>
+        <div id="total-games">Total de jeux joués: 0</div>
         <div id="timer">Temps restant: 60s</div>
         <div id="score">Score actuel: 0</div>
         <input type="text" id="word-input" placeholder="Tapez le mot ici" disabled />
@@ -278,6 +280,9 @@
                     totalPlayCountGame5 = userData.totalPlayCountGame5 || 0;
                     highestScore = userData.highestScoreGame5 || 0;
                     playCount = totalPlayCountGame5 + 1;
+
+                    document.getElementById('high-score').innerText = `Meilleur score: ${highestScore}`;
+                    document.getElementById('total-games').innerText = `Total de jeux joués: ${totalPlayCountGame5}`;
                 }
             } else {
                 window.location.href = 'login.html';
@@ -329,6 +334,8 @@
                     
                 } else {
                     // Skip to the next word without scoring
+                    typedWords -= 0.5; // Increment typed words count
+                    scoreDisplay.innerText = `Score actuel: ${typedWords}`;
                     wordInput.value = ''; // Clear input field
                     wordArray.shift(); // Remove the first word (current word)
                     addRandomWord(); // Add a new random word to the end
@@ -366,6 +373,9 @@
             let finalScore = typedWords * 2;
 
             saveScore(finalScore);
+            
+            document.getElementById('total-games').innerText = `Total de jeux joués: ${totalPlayCountGame5}`;
+            document.getElementById('high-score').innerText = `Meilleur score: ${highestScore}`; // Update high score if necessary
         }
 
         async function saveScore(score) {
