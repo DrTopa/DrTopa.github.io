@@ -132,6 +132,8 @@
         <button id="click-btn" disabled>Snooze!</button>
         <div id="timer">Temps restant: 10s</div>
         <div id="score">Score actuel: 0</div>
+        <div id="highest-score">Meilleur score: 0</div>
+        <div id="total-play-count">Jeux joués: 0</div>
     </div>
 
     <!-- Christmas Tree and Santa Images -->
@@ -170,6 +172,8 @@
         const clickBtn = document.getElementById('click-btn');
         const timerDisplay = document.getElementById('timer');
         const scoreDisplay = document.getElementById('score');
+        const highestScoreDisplay = document.getElementById('highest-score');
+        const totalPlayCountDisplay = document.getElementById('total-play-count');
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
@@ -186,6 +190,11 @@
                     totalPlayCountGame1 = userData.totalPlayCountGame1 || 0;
                     highestScore = userData.highestScoreGame1 || 0;
                     playCount = totalPlayCountGame1 + 1;
+                    
+                    highestScoreDisplay.innerText = `Meilleur score: ${highestScore}`;
+                    totalPlayCountDisplay.innerText = `Jeux joués: ${totalPlayCountGame1}`;
+                    
+                    
                 }
             } else {
                 window.location.href = 'login.html';
@@ -212,6 +221,7 @@
 
             totalPlayCountGame1 += 1;
             await updateDoc(doc(db, 'users', userId), { totalPlayCountGame1: totalPlayCountGame1 });
+            totalPlayCountDisplay.innerText = `Jeux joués: ${totalPlayCountGame1}`;  // Update display for total play count
         });
 
         clickBtn.addEventListener('click', () => {
@@ -228,6 +238,7 @@
                 if (totalPlayCountGame1 <= 7 && score > highestScore) {
                     highestScore = score;
                     await updateDoc(userRef, { highestScoreGame1: highestScore });
+                    highestScoreDisplay.innerText = `Meilleur score: ${highestScore}`; // Update display for highest score
                 }
             } catch (error) {
                 console.error("Error saving score:", error);
