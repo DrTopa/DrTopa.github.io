@@ -312,17 +312,42 @@
         }
 
         wordInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter' && wordInput.value.trim().toLowerCase() === currentWord) {
-                typedWords += 1;
-                scoreDisplay.innerText = `Score actuel: ${typedWords}`;
-                displayNewWord();
-                wordInput.value = '';
+            if (e.key === 'Enter') {
+                const typedWord = wordInput.value.trim().toLowerCase();
+                
+                if (typedWord === currentWord) {
+                    typedWords += 1;
+                    scoreDisplay.innerText = `Score actuel: ${typedWords}`;
+                    wordInput.value = ''; // Clear input field
+                    displayNewWord(); // Show the next word(s)
+                } else {
+                    // Skip to the next word without scoring
+                    wordInput.value = ''; // Clear input field
+                    displayNewWord(); // Show the next word(s)
+                }
             }
         });
 
         function displayNewWord() {
+            // Select a random word from the wordList
             currentWord = wordList[Math.floor(Math.random() * wordList.length)];
+        
+            // Ensure that we have enough words in the list for the next two words
+            const currentIndex = wordList.indexOf(currentWord);
+            const nextWords = [];
+            for (let i = 1; i <= 2; i++) {
+                const nextIndex = (currentIndex + i) % wordList.length;
+                nextWords.push(wordList[nextIndex]);
+            }
+        
             wordDisplay.innerText = currentWord;
+            
+            // Display next two words below the current word
+            const nextWordsDisplay = document.createElement('div');
+            nextWordsDisplay.innerText = `Mots suivants: ${nextWords.join(', ')}`;
+            nextWordsDisplay.style.fontSize = '1.2em';
+            nextWordsDisplay.style.color = '#666'; // Lighter color for next words
+            wordDisplay.appendChild(nextWordsDisplay);
         }
 
         async function endGame() {
