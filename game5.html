@@ -139,8 +139,6 @@
         let highestScore = 0;
         let currentWord = '';
         let timerInterval;
-        let usedWords = new Set(); // Tracks words displayed in the current game session
-
 
         const startBtn = document.getElementById('start-btn');
         const timerDisplay = document.getElementById('timer');
@@ -148,12 +146,126 @@
         const wordDisplay = document.getElementById('word-display');
         const wordInput = document.getElementById('word-input');
 
-        const frenchWords = ["amour", "banane", "bateau", "cactus", "déluge", "éclair", "forêt", "gâteau", "hélice", "jardin"];
+        const wordList = [
+    "abandon", "abaisser", "abandonner", "abandon", "abeille", "abondance", "abord", "aboyer", "abri", "absence",
+    "absolu", "absolument", "absorber", "abuser", "académie", "accepter", "accompagnement", "accord", "accorder", "accueillir",
+    "accusation", "accuser", "achèvement", "acheter", "achat", "acheteur", "achèvement", "adieu", "admirer", "adolescent",
+    "adoption", "adresser", "affaire", "affectif", "afficher", "affirmer", "affrontement", "age", "agence", "agitation",
+    "agricole", "agriculture", "ajouter", "ajustement", "alerte", "allemand", "alliance", "allumer", "alors", "alterner",
+    "amateur", "ambiance", "ambition", "ami", "amitié", "amour", "analyser", "anecdote", "ancien", "année",
+    "annoncer", "annonce", "annoncer", "annuaire", "anonyme", "antécédent", "anthropologie", "appareil", "appartement", "apparence",
+    "appeler", "appétit", "apporter", "apprécier", "approcher", "approfondir", "arbre", "arrière", "arriver", "artiste",
+    "assez", "assistance", "assurer", "assumer", "association", "astuce", "attendre", "attitude", "attitude", "attraper",
+    "audace", "aujourd'hui", "augmenter", "aura", "autant", "auteur", "automatique", "autre", "avance", "avantage",
+    "avent", "avenir", "avion", "avocat", "avoir", "bâti", "bâtiment", "beaucoup", "beau", "beauté",
+    "berceau", "besoin", "bêtise", "bête", "bibliothèque", "bien", "biens", "bizarre", "blague", "blesser",
+    "boire", "bois", "bonheur", "bonté", "boulanger", "boutique", "bruit", "bulle", "bureau", "cadenas",
+    "café", "calme", "canard", "caractère", "carrefour", "carrière", "carte", "cas", "catégorie", "cause",
+    "chaîne", "chanson", "chapitre", "chaque", "chaud", "chemin", "cheval", "chef", "chiffre", "choisir",
+    "choix", "ciel", "cigarette", "cinq", "circuit", "citron", "classe", "climat", "clinique", "cloche",
+    "coeur", "collège", "comment", "commun", "compagnie", "compte", "compter", "confiance", "confort", "connaître",
+    "conscience", "conséquence", "construire", "consultation", "contact", "content", "contexte", "contrôle", "conversation", "copain",
+    "corps", "cour", "courant", "court", "coup", "couverture", "crédit", "creux", "croire", "croissance",
+    "cuisine", "début", "débuter", "découverte", "décroître", "définir", "départ", "développer", "développement", "développement",
+    "difficile", "direct", "direction", "discuter", "distraction", "divers", "document", "dollar", "donner", "donneur",
+    "dormir", "douceur", "drapeau", "échelle", "éclair", "école", "économie", "éducation", "effet", "effort",
+    "effrayer", "élève", "énergie", "enfant", "environnement", "ensemble", "entreprise", "envers", "épicerie", "époque",
+    "esprit", "esthétique", "état", "étude", "exemple", "exiger", "existant", "expérience", "exposition", "exprimer",
+    "façon", "fête", "fier", "figurer", "fille", "finir", "flamme", "floraison", "foi", "fond",
+    "forêt", "fort", "français", "fraternité", "fréquence", "frisson", "froid", "gagner", "garantir", "garde",
+    "gâteau", "général", "génération", "gérer", "geste", "groupe", "guérir", "habitude", "habitation", "hauteur",
+    "heure", "heureux", "histoire", "homme", "honneur", "idée", "immédiatement", "importance", "impression", "inauguration",
+    "incapable", "inconnu", "information", "inspiration", "installer", "intelligence", "interroger", "interview", "intime", "invention",
+    "jour", "jouer", "jouet", "juge", "juin", "juillet", "juste", "labo", "langue", "lien",
+    "limite", "livre", "loi", "loisir", "lueur", "magie", "maison", "marcher", "marche", "mariage",
+    "marque", "matériel", "maîtrise", "mémoire", "méthode", "mettre", "milieu", "miser", "moi", "monde",
+    "mot", "mouvement", "mur", "musique", "nature", "navire", "négation", "nourriture", "nouveau", "nuage",
+    "nuit", "obstacle", "océan", "offrir", "opération", "opinion", "ordre", "origine", "oublier", "parcours",
+    "parler", "partager", "partenaire", "passage", "passer", "patience", "pays", "peinture", "peu", "photo",
+    "physique", "plage", "plante", "plaisir", "pleurer", "pluie", "politique", "pomme", "poésie", "point",
+    "poivre", "populaire", "position", "possibilité", "pouvoir", "préparation", "présentation", "problème", "produit", "progression",
+    "promesse", "proposition", "protection", "public", "quitter", "quelque", "quelquefois", "quand", "quatre", "racine",
+    "rapide", "réaction", "réalité", "réaliser", "réflexion", "référent", "réseau", "réussite", "réveil", "révision",
+    "révolte", "riche", "risque", "romantique", "sac", "savoir", "situation", "sourire", "spectacle", "spectateur",
+    "sphère", "spirale", "station", "structure", "succès", "tâche", "table", "tâtonner", "talent", "téléphone",
+    "température", "temps", "terme", "terre", "texte", "théâtre", "thème", "ton", "tour", "tranche",
+    "transporter", "tromper", "trouver", "tune", "urgence", "utiliser", "valeur", "valise", "vanter", "vendre",
+    "vent", "village", "vocation", "voici", "voiture", "volonté", "votre", "voyage", "yoga", "zèbre",
+    "abaisser", "abandonner", "abbé", "aberration", "abîme", "abscisse", "abstrait", "acajou", "accident", "accorder",
+    "accroître", "acquérir", "actif", "adaptation", "adéquat", "adverse", "affairisme", "affairiste", "affection", "agence",
+    "aggravation", "agrément", "ahurissant", "aimable", "ajustement", "alarme", "alimentation", "allergie", "allumer", "amateur",
+    "ambivalence", "ample", "anecdote", "annonciation", "annulation", "anodin", "anthropologie", "appartement", "approbation", "aptitude",
+    "arbitrage", "arbre", "argenterie", "arrêter", "artichaut", "assentiment", "attribut", "augmentation", "authentique", "avancement",
+    "aventure", "banque", "banlieue", "barbecue", "basse", "bilan", "blague", "blessure", "blizzard", "boîte",
+    "bonbon", "bond", "bourse", "brassard", "brûler", "café", "cagoule", "camarade", "campagne", "canne",
+    "capacité", "carburant", "carte", "causalité", "cavité", "cerf", "chagrin", "champion", "chanson", "chant",
+    "chapeau", "chiffon", "choix", "circuit", "citoyen", "civilisation", "claret", "climat", "clinique", "collaboration",
+    "communauté", "comportement", "concorde", "connaissance", "conservateur", "convention", "convoquer", "coque", "coup", "cour",
+    "couronne", "création", "critique", "croissance", "cuisine", "débat", "déclencheur", "défrayer", "définition", "délégation",
+    "démarche", "démocratique", "départ", "dépôt", "dépresseur", "déroute", "détail", "détente", "développement", "difficulté",
+    "diversité", "dix", "doigt", "dossier", "doubler", "drame", "économie", "écran", "éducation", "efficacité",
+    "électoral", "éléphant", "élément", "élite", "employé", "enquête", "entrepreneur", "épaisseur", "espace", "esthétique",
+    "étonnement", "étude", "évaluation", "examen", "exécutif", "exploitation", "extension", "faux", "femme", "ferme",
+    "ferraille", "fiabilité", "fidelité", "fête", "fillette", "flotte", "flûte", "folklore", "foule", "fourchette",
+    "franchise", "galerie", "garde", "générosité", "généralisation", "geste", "groupe", "habiller", "hémisphère", "honneur",
+    "horloge", "humanitaire", "hygiène", "importance", "impulsion", "indépendance", "information", "ingénieur", "inondation", "instrument",
+    "interaction", "intervention", "interview", "isoler", "jambe", "jouet", "journal", "journalisme", "juge", "justesse",
+    "laïcité", "lavage", "lecture", "leçon", "liberté", "litige", "littérature", "logement", "loi", "manoeuvre",
+    "marché", "marque", "matériel", "maître", "mécanisme", "mémoire", "métier", "moment", "monde", "montagne",
+    "motivation", "mouvement", "nature", "négation", "négation", "négatif", "nourrir", "nouveau", "numérique", "obstacle",
+    "observation", "obstination", "opportunité", "opinion", "oublier", "ouverture", "parole", "partenaire", "passage", "paysage",
+    "pensée", "perception", "perception", "phénomène", "philosophie", "plaisir", "plan", "plaque", "poids", "poing",
+    "politique", "position", "possibilité", "précision", "présentation", "problème", "proposition", "protection", "quand", "réalité",
+    "réflexion", "régime", "réduction", "réponse", "réputation", "responsabilité", "restauration", "réveil", "réseau", "romantisme",
+    "satisfaction", "semaine", "situation", "société", "sombre", "sourire", "spécial", "spécificité", "spectacle", "stabilité",
+    "succès", "système", "tâche", "tableau", "talent", "technologie", "téléphone", "temps", "terme", "terrain",
+    "théâtre", "tour", "trajectoire", "transformation", "tremblement", "trou", "valeur", "valise", "vantage", "vague",
+    "vallée", "vanille", "vassal", "vigilance", "vision", "voisin", "voiture", "volonté", "volte", "zone",
+    "abord", "abstrait", "accorder", "accuser", "achèvement", "acteur", "adoption", "affectif", "ajouter", "analogie",
+    "animaux", "annoncer", "appartement", "appeler", "apprentissage", "arbre", "artiste", "assister", "aventure", "avantage",
+    "banque", "banlieue", "baptême", "bavarder", "beau", "beaucoup", "bon", "bonheur", "boucle", "briser",
+    "cabane", "calcul", "calendrier", "calmer", "campagne", "cancer", "chaîne", "chaleur", "champ", "chanson",
+    "chaos", "chaud", "chiffre", "choc", "circuit", "citron", "claret", "cloche", "collectif", "colonisation",
+    "collier", "commun", "compte", "concert", "conscience", "construire", "contexte", "convenance", "conversation", "croire",
+    "culture", "cuisine", "cumul", "débat", "décider", "déclaration", "découvert", "défense", "défendre", "dégât",
+    "démocratique", "démolition", "dépenses", "déplacement", "député", "désert", "dépôts", "déroulement", "détail", "détente",
+    "développer", "difficulté", "distraction", "écran", "éducatif", "éligibilité", "émotion", "environnement", "envers", "espace",
+    "étonnement", "examen", "exécuter", "expérience", "exploitation", "exposition", "exprimer", "femme", "fin", "flamme",
+    "flore", "frappé", "fréquence", "frisson", "gagner", "garde", "gâteau", "génération", "grandeur", "grève",
+    "grignoter", "groupe", "habitat", "histoire", "homme", "honneur", "humilité", "impact", "implication", "importance",
+    "information", "inscription", "interruption", "interview", "isoler", "joueur", "juge", "justice", "libre", "loi",
+    "magie", "maître", "mariage", "mécanique", "mélodie", "merveille", "monde", "mouvement", "nature", "naviguer",
+    "observation", "offre", "opinion", "ordinaire", "ouverture", "parler", "passage", "patin", "pensée", "perception",
+    "perte", "philosophie", "plage", "plante", "poids", "politique", "précision", "présentation", "problème", "proposition",
+    "qualité", "quand", "quittance", "réaliser", "réalité", "réflexion", "réputation", "respect", "restauration", "satisfaction",
+    "scène", "semaine", "situation", "société", "soupçon", "spécial", "spectateur", "spectacle", "structure", "succès",
+    "surprise", "système", "tâche", "technique", "température", "temps", "terme", "terrain", "théâtre", "tradition",
+    "travail", "trou", "type", "unique", "valeur", "vantage", "vendre", "vent", "vérification", "vision",
+    "voix", "volonté", "voyage", "zéro", "abandon", "abominable", "abonnir", "acclamation", "accompagner", "adversaire", "aider", "aimant", "aimer",
+    "alignement", "alimentation", "allié", "amplitude", "ancrage", "anticipation", "apprentissage", "approfondir", "approvisionner", "arbitre",
+    "arrière", "articuler", "attacher", "attraction", "audace", "augmentation", "bâtir", "bâtisse", "bénéfice", "bonbon",
+    "bourse", "boussole", "bruit", "cacher", "calque", "canevas", "capable", "capacité", "caractériser", "casse",
+    "causer", "centre", "chiffon", "clarté", "clin", "clique", "collecter", "compétence", "concurrence", "connaissances",
+    "conseil", "copain", "correspondre", "coûter", "coupable", "créer", "croissance", "cuisine", "cumul", "décider",
+    "déclencheur", "délibération", "déterminé", "délivrer", "demander", "déménager", "déplacer", "dépôt", "dériver", "détendre",
+    "développer", "difficulté", "diplomate", "distributeur", "dormir", "doubler", "éclaircir", "éclat", "écran", "énergie",
+    "environnement", "état", "examen", "exécution", "exposer", "fête", "feuille", "fluctuer", "frapper", "gagner",
+    "garde", "garer", "génération", "grandir", "gravitational", "guider", "harmonie", "histoire", "hommes", "idéal",
+    "imagination", "impact", "impression", "individu", "informer", "inspirer", "interruption", "intervenir", "jardin", "jeu",
+    "joli", "joli", "jouet", "législation", "liberté", "loi", "maturité", "mécanisme", "mode", "monde",
+    "motivation", "nature", "naviguer", "nuance", "objectif", "occasion", "opportunité", "ordinaire", "paradigme", "partenaire",
+    "passeport", "perception", "perspective", "philosopher", "plaisir", "politique", "préoccupation", "préparer", "préventif", "progrès",
+    "proximité", "quitter", "rareté", "réaliser", "réchauffement", "réflexion", "réforme", "rester", "réussir", "savoir",
+    "situation", "société", "sonner", "spectre", "spirituel", "stabilité", "stratégie", "succès", "technique", "témoigner",
+    "terrains", "temps", "théorie", "travailler", "trouble", "unité", "unique", "valeur", "valoir", "vérifier",
+    "voyage", "yoga"
+];
+
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 userId = user.uid;
-                document.getElementById('userStatus').innerText = `Bienvenue : ${user.email}`;
+                document.getElementById('userStatus').innerText = Bienvenue : ${user.email};
 
                 const userRef = doc(db, 'users', userId);
                 const docSnap = await getDoc(userRef);
@@ -173,7 +285,7 @@
 
         startBtn.addEventListener('click', async () => {
             typedWords = 0;
-            scoreDisplay.innerText = `Score actuel: ${typedWords}`;
+            scoreDisplay.innerText = Score actuel: ${typedWords};
             playCount = totalPlayCountGame5 + 1;
             wordInput.disabled = false;
             wordInput.focus();
@@ -182,15 +294,14 @@
         });
 
         function startGame() {
-            usedWords.clear();
             startBtn.disabled = true;
             let timeLeft = 60;
-            timerDisplay.innerText = `Temps restant: ${timeLeft}s`;
+            timerDisplay.innerText = Temps restant: ${timeLeft}s;
 
-            displayNextWord();
+            displayNewWord();
             timerInterval = setInterval(() => {
                 timeLeft -= 1;
-                timerDisplay.innerText = `Temps restant: ${timeLeft}s`;
+                timerDisplay.innerText = Temps restant: ${timeLeft}s;
                 if (timeLeft <= 0) {
                     clearInterval(timerInterval);
                     endGame();
@@ -204,30 +315,16 @@
         wordInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter' && wordInput.value.trim().toLowerCase() === currentWord) {
                 typedWords += 1;
-                scoreDisplay.innerText = `Score actuel: ${typedWords}`;
+                scoreDisplay.innerText = Score actuel: ${typedWords};
                 displayNewWord();
                 wordInput.value = '';
             }
         });
 
-        function displayNextWord() {
-        const newWord = generateRandomWord();
-        wordDisplay.innerText = newWord;
-       }
-        
-        function generateRandomWord() {
-    const letters = "abcdefghijklmnopqrstuvwxyz"; // French alphabet without accents
-    let newWord;
-    
-    do {
-        // Generate a random word with length between 3 and 7
-        let wordLength = Math.floor(Math.random() * 5) + 3;
-        newWord = Array.from({ length: wordLength }, () => letters[Math.floor(Math.random() * letters.length)]).join('');
-    } while (usedWords.has(newWord)); // Ensure uniqueness
-    
-    usedWords.add(newWord); // Add the new word to the used words set
-    return newWord;
-}
+        function displayNewWord() {
+            currentWord = wordList[Math.floor(Math.random() * frenchWords.length)];
+            wordDisplay.innerText = currentWord;
+        }
 
         async function endGame() {
             wordInput.disabled = true;
