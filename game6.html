@@ -1,39 +1,39 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trouve le mot avec Grinchémie</title>
+    <title>Quizz du passé </title>
     <style>
-        /* Styles for layout and holiday theme */
         body {
             font-family: 'Segoe UI', Tahoma, sans-serif;
             display: flex;
-            justify-content: start;
+            justify-content: center;
             align-items: center;
             flex-direction: column;
             height: 100vh;
             background-color: #ffebcd;
             background-image: url('https://www.transparenttextures.com/patterns/snow.png');
             margin: 0;
-            padding-top: 20px;
         }
+        /* Christmas themed title */
         h1 {
             font-size: 2.5em;
+            margin-bottom: 20px;
             color: #d32f2f;
             font-family: 'Comic Sans MS', cursive;
             text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
-            text-align: center;
         }
         #userStatus {
             position: absolute;
             top: 10px;
             right: 10px;
             font-size: 1.2em;
-            color: #a23636;
         }
+                
+        /* Instructions section */
         #instructions {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.8);
             padding: 15px;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
@@ -42,85 +42,101 @@
             max-width: 1000px;
             font-size: 1.2em;
             color: #333;
+            overflow-y: auto;  /* Added for scrolling if needed */
+            max-height: 300px; /* Set a maximum height */
         }
         #gameArea {
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-top: 20px;
-            background: rgba(255, 255, 255, 0.8);
-            border: 2px solid #b71c1c;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+            margin-top: 50px;
         }
-        #start-btn, #submit-btn {
-            padding: 10px 20px;
+        #start-btn {
+            padding: 10px 0px;
             margin: 10px;
             font-size: 1.5em;
             cursor: pointer;
-            background-color: #388e3c;
+            background-color: #007BFF;
             color: white;
             border: none;
-            border-radius: 5px;
-            transition: background-color 0.3s;
         }
-        #score, #totalPlayCountDisplay {
-            font-size: 1.8em;
-            margin: 15px;
-            color: #1565c0;
+        #start-btn:hover {
+            background-color: #0056b3;
         }
-        #grid {
-            display: grid;
-            grid-template-columns: repeat(15, 30px);
-            grid-template-rows: repeat(15, 30px);
-            margin: 20px;
-        }
-        .cell {
-            width: 30px;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid #ccc;
-            font-weight: bold;
-            font-size: 1.2em;
-            user-select: none;
-        }
-        #timer {
+        #question {
             font-size: 1.5em;
-            color: #d32f2f;
+            margin: 0px;
         }
-        #hint {
-            color: red;
-            font-size: 0.9em;
-            margin-top: 5px;
+        #options {
+            font-size: 1.em;
+            margin: 10px;
         }
-        .christmas-decoration {
+        #timer, #score {
+            font-size: 1.5em;
+            margin: 10px;
+        }
+        #input {
+            padding: 10px;
+            font-size: 1.em;
+            margin: 10px;
+            width: 50px;
+        }
+      
+        /* Snowflake styles */
+        .snowflake {
             position: absolute;
-            top: 5%;
-            left: 5%;
-            max-width: 100px;
-            z-index: 1;
+            top: -10px;
+            color: white;
+            font-size: 1em; /* Adjust the size of the snowflakes */
+            pointer-events: none;
+            opacity: 0.8;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(0);
+            }
+            100% {
+                transform: translateY(100vh);
+            }
         }
     </style>
 </head>
 <body>
-    <h1>🎄 Trouve le mot avec Grinchémie 🎄</h1>
+
+    <h1>🎅 Quizz du passé 🎅</h1>
     <div id="userStatus"></div>
+    
+ <!-- Game instructions -->
     <div id="instructions">
-        <p>Trouvez les mots cachés dans la grille de lettres. Vous avez 2 minutes !</p>
+        <p>L’atelier de Topapa ressemblait désormais à une véritable auberge espagnole. Les bébés Romain se disputaient férocement, se mordillant les chaussures, tandis que le Dudley se lançait dans une compétition d’intensité avec Grinchémie, jouant à qui « ker » le mieux son « im ». De son côté, RaseToiLaMoustache, avec l’esprit rebelle et l’audace d’un jeune yolo, marquait son territoire en levant la patte sur le mur de l'atelier.</p>
+<p>Au milieu de ce chaos sans nom, Topapa, totalement débordé, voyait ses préparatifs de Noël prendre un retard monumental. Des rouleaux de papier cadeau traînaient dans un coin, des rubans volaient dans tous les sens, et les cadeaux n’étaient même pas emballés. Soudain, alors qu’il croyait perdre la bataille, une lumière intense descendit du ciel, illuminant la pièce d’un éclat doré. Devant lui apparut une entité divine, sous la forme… d’une ceinture en cuir brillante.</p>
+<p>Sans crier gare, la ceinture magique fit son œuvre et vlah, chacun en reçut un bon coup pour le rappeler à l’ordre ! Sauf Dudley, bien sûr. Lui, en tant que chouchou, ne reçut qu’une petite caresse, presque bienveillante, pour ne pas froisser son jeune ego.</p>
+<p>« Mes enfants, » tonna la ceinture céleste, d’une voix grave, « sauf le Phasme… toi, tu es adopté… ressaisissez-vous ! Il est temps de vous unir et de former une équipe digne de sauver Noël ! Pour y parvenir, vous allez devoir réussir une série de défis. Je vais vous envoyer dans le passé pour un team building façon "vintage". Souvenez-vous bien : seuls ceux qui réussissent les jeux d’antan pourront en sortir. Ensemble, vous y arriverez… peut-être. »</p>
+<p>À peine ces paroles prononcées, un tourbillon lumineux enveloppa les cinq protagonistes, les transportant instantanément dans un couloir sombre et mystérieux. Autour d’eux, le silence, entrecoupé de leurs respirations anxieuses. Devant eux se tenait une seule porte, vieille et grinçante, qui semblait les inviter à entrer.</p>
+<p>Sans trop réfléchir, ils s’y engouffrèrent, le cœur battant, prêts à affronter des épreuves qu’ils n’imaginaient même pas.</p>
+
+<p>Ils entrèrent dans la salle, et à leur grande surprise, elle ressemblait étrangement à la caverne de Grinchémie. Les murs étaient d’un rose éclatant, presque agressif. Grinchémie plissa les yeux, perplexe. « Attendez une minute… les murs de ma caverne ne sont plus roses depuis des lustres. » Une lueur de compréhension traversa son regard. « Nous sommes dans le passé ! » déclara-t-elle avec triomphe.</p>
+<p>Dudley, appuyé contre un mur, leva les yeux au ciel. « Oui, bravo, » répondit-il avec un soupçon de sarcasme. « Quelle perspicacité, Flash McQueen. »</p>
+<p>Soudain, la ceinture divine réapparut silencieusement derrière eux, flottant dans l’air. « Seulement de quelques mois, » précisa-t-elle d’un ton solennel. « Vous allez devoir passer un quiz sur un jeu qui, je l’espère, vous a enseigné quelques leçons utiles. »</p>
+<p>Elle marqua une pause théâtrale avant d’ajouter : « Et puis, soyons honnêtes… le narrateur de cette histoire, qui est aussi le développeur du site, n’a pas eu le temps de coder une nouvelle page. Des bugs, du temps perdu… donc voilà, on recycle les épreuves précédentes. »</p>
+<p>Tout le groupe se regarda, mi-intrigué, mi-amusé par cette chute inattendue du quatrième mur. RaseToiLaMoustache en profita pour intervenir, « D’ailleurs, puisqu’on parle franchement, pourquoi je suis le seul personnagequi ne parle pas et qui se fait bolosser ? J’aimerais aussi un peu de… »</p>
+<p>Mais avant qu’il puisse finir, le quatrième mur se rétablit brusquement, et sa réplique se perdit dans un murmure incompréhensible : « Meuhouauhah… »</p>
+<p>Bébé Romain le regarda, perplexe, et haussa les épaules. « Je pense qu’il est constipé, » déclara-t-il avec un sérieux déconcertant.</p>
+<p>Un silence de plomb s’installa, avant que Grinchémie ne laisse échapper un rire nerveux. La ceinture divine, quant à elle, secoua son extrémité en soupirant. « Allons, mes chers, assez de bavardages ! Le quiz vous attend, et vous devrez répondre avec précision… et solidarité ! »</p>
+<p>Explication du jeu : Il s’agit encore d’un quizz comme le jeu 2. Sauf que les questions sont pas les mêmes . Voilà, rien d’autre. 
+
+</p>
     </div>
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Czerwona_bombka_choinkowa_ze_stanu_Tennessee_USA_zblizenie.jpg/1280px-Czerwona_bombka_choinkowa_ze_stanu_Tennessee_USA_zblizenie.jpg" alt="Christmas Decoration" class="christmas-decoration"/>
+    
     <div id="gameArea">
-        <button id="start-btn">Commencer le Jeu</button>
+        <button id="start-btn">🎅Start Game🎅</button>
         <div id="timer"></div>
-        <div id="score">Score : 0</div>
-        <div id="totalPlayCountDisplay">Total des Parties : 0</div>
-        <div id="grid"></div>
-        <input type="text" id="guess" placeholder="Entrez un mot ici" />
-        <button id="submit-btn" disabled>Soumettre</button>
-        <small id="hint"></small>
+        <div id="score"></div>
+        <div id="question"></div>
+        <div id="options"></div>
+        <input type="text" id="input" placeholder="A/B/C/D" maxlength="1" disabled>
     </div>
 
     <script defer type="module">
@@ -128,9 +144,11 @@
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
         import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
+        // Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyC4bjg7lVwd8FU8MREaPhBsBENv5qmiYYM",
             authDomain: "calendrier-de-l-avent-54e3a.firebaseapp.com",
+            databaseURL: "https://calendrier-de-l-avent-54e3a-default-rtdb.europe-west1.firebasedatabase.app",
             projectId: "calendrier-de-l-avent-54e3a",
             storageBucket: "calendrier-de-l-avent-54e3a.appspot.com",
             messagingSenderId: "850639567855",
@@ -143,152 +161,266 @@
         const db = getFirestore(app);
 
         let userId = '';
-        let totalPlayCountGame4 = 0;
-        let highestScoreGame4 = 0;
         let score = 0;
-        let timer;
-        let timeLeft = 120;
+        let playCount = 0;
+        let totalPlayCountGame6 = 0;
+        let highestScore = 0;
 
-        const wordsToFind = ["TOWERFALL", "GUEZ", "VIROFLAY", "POLYUREE", "BIOLOGIE", "MATHEMATIQUES", "RHEOLOGIE", 
-                             "FRATRIE", "LACHEUR", "BOBBY", "QUOICOUBEH", "LUXEMBOURG", "NOEL", 
-                             "DOUDOU", "PAMPLEMOUSSE", "PALINDROME", "LATIN", "DOCTEUR", "NEVEO", "JEUX"];
-
-        const grid = document.getElementById('grid');
         const startBtn = document.getElementById('start-btn');
-        const submitBtn = document.getElementById('submit-btn');
-        const scoreDisplay = document.getElementById('score');
-        const totalPlayCountDisplay = document.getElementById('totalPlayCountDisplay');
         const timerDisplay = document.getElementById('timer');
-        const guessInput = document.getElementById('guess');
-        const hint = document.getElementById('hint');
+        const scoreDisplay = document.getElementById('score');
+        const questionDisplay = document.getElementById('question');
+        const optionsDisplay = document.getElementById('options');
+        const inputField = document.getElementById('input');
 
-        // Set to track found words
-        const foundWords = new Set();
+        
+            // Create falling snowflakes
+        function createSnowflakes() {
+            const snowflakeCount = 100; // Number of snowflakes to create
+            for (let i = 0; i < snowflakeCount; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.className = 'snowflake';
+                snowflake.innerText = '❄️'; // Snowflake character
+                snowflake.style.left = Math.random() * 100 + 'vw'; // Random horizontal position
+                snowflake.style.animationDuration = Math.random() * 3 + 2 + 's'; // Random fall speed
+                snowflake.style.opacity = Math.random(); // Random opacity
+                document.body.appendChild(snowflake);
+            }
+        }
+
+        createSnowflakes(); // Call the function to create snowflakes
+
+        const questions = [
+            {
+                question: "TOP 15 : Quel est le 2e pays avec la plus grande superficie ?",
+                options: ["A) Russie", "B) Canada", "C) USA", "D) Chine"],
+                answer: "B"
+            },
+            {
+                question: "Quelle est la 3e langue la plus parlée au monde ?",
+                options: ["A) Mandarin", "B) Espagnol", "C) Hindi", "D) Arabe"],
+                answer: "C"
+            },
+            {
+                question: "Quel est le film le plus rentable en terme de recettes?",
+                options: ["A) Star wars 7 ", "B) Avatar", "C) Titanic", "D) Avengers : Endgame"],
+                answer: "D"
+            },
+            {
+                question: "Qui est l'artiste la plus écoutés sur Spotify (en nombre de streams) ?",
+                options: ["A) Taylor Swift", "B) Drake", "C) Eminem", "D) Joe Hisaishi"],
+                answer: "A"
+            },
+            {
+                question: "En terme de capital boursier, a quelle place se situait Amazon en 2023",
+                options: ["A) 1", "B) 5", "C) 12", "D) Hors du Top 15"],
+                answer: "B"
+            },
+            {
+                question: "Quel est le jeu de société le plus vendu au monde?",
+                options: ["A) Echecs", "B) Catan", "C) Elbofos", "D) Monopoly"],
+                answer: "A"
+            },
+            {
+                question: "En nombre de population, à quel rang se situe la mégalopole de Delhi dans le monde",
+                options: ["A) 1 ", "B) 3", "C) 5", "D) 7"],
+                answer: "C"
+            },
+            {
+                question: "En nombre de population, à quel rang se situe la ville de Goris en Arménie ",
+                options: ["A) 2", "B) 6", "C) 9", "D) 10"],
+                answer: "D"
+            },
+            {
+                question:" Quelle marque de voitures produit-elle le plus d'automobiles ?",
+                options: ["A) Toyota", "B) Nissan", "C) General motors", "D) Volkswagen"],
+                answer: "A"
+            },
+            {
+                question: "En nombre d'entrées, qui est le 10e acteur français qui en a réalisé le plus ?",
+                options: ["A) Galabru, "B) Delon", "C) Belmondo", "D) Lhermitte"],
+                answer: "B"
+            },
+            {    
+                question: "En nombre d'entrées, qui est le 10e acteur français qui en a réalisé le plus ?",
+                options: ["A) Bardot ", "B) Miou-Miou", "C) Michèle Morgan", "D)  Tautou"],
+                answer: "C"
+            },
+            {
+                question: "Laquelle de ces consoles est la 3e la plus vendues de tous les temps",
+                options: ["Xbox 360", "B) Switch", "C) Wii", "D) PS2"],
+                answer: "B"
+            },
+            {
+                question: "En nombre de citations, à quelle place se trouve Severus Rogue dans les romans Harry Potter ",
+                options: ["A) 2", "B) 5", "C) 10", "D) 15"],
+                answer: "B"
+            },
+            {
+                question: "Quelle est la 15e ville la plus peuplée de France ?",
+                options: ["A) Le Havre", "B) Metz", "C) Villeurbanne", "D) Viroflay"],
+                answer: "A"
+            },
+            {
+                question: "Selon Allocine, à quel place se situe Your Name dans le classement des meilleurs films d'animation",
+                options: ["A) 1", "B) 2", "C) 8", "D) Hors top 15 evidemment"],
+                answer: "A"
+            },
+            {
+                question: "Tojours selon Allocine, quelle est la meilleure série TV de tous les temps ?",
+                options: ["A) Breaking bad", "B) Games of Thrones", "C) Peaky Blinders", "D) L'attaque des Titans"],
+                answer: "A"
+            },
+            {
+                question: "Quel est le prénom masculin le plus donné de tous les temps en France",
+                options: ["A) Thaddée", "B) Pierre", "C) Michel", "D) Jean"],
+                answer: "D"
+            },
+            {
+                question: "Si la Tour Eiffel est le monument le plus photographié au monde, lequel est le 2e ?",
+                options: ["A) le Louvre", "B) L'Empire State Building", "C) Big Ben", "D) Taj Mahal"],
+                answer: "C"
+            },
+            {
+                question: "Sachant que Honshu est la 8e plus grande ile au monde, laquelle est la 10e",
+                options: ["A) Ile du Nprd (NZ)", "B) Madagascar", "C) Australie", "D) Grande Bretagne"],
+                answer: "D"
+            },
+            {
+                question: "Sachant que le Vollyeball est le 6e sport le plus populaire au monde, lequel est le 7e ?",
+                options: ["A) Boxe", "B) Hockey sur gazon", "C) Tennis de Table", "D) Rugby"],
+                answer: "C"
+            },
+            {
+                question: "Quel est le 7e plus grand empire qui a existé",
+                options: ["A) Le califat omeyiade ", "B) Le califat omeyyiade ", "C) Le califat ommeyade ", "D)Le califat omeyyade "],
+                answer: "D"
+            }
+        ];
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 userId = user.uid;
-                document.getElementById('userStatus').innerText = `Bienvenue : ${user.email}`;
+                document.getElementById('userStatus').innerText = `Welcome: ${user.email}`;
+
                 const userRef = doc(db, 'users', userId);
                 const docSnap = await getDoc(userRef);
 
                 if (!docSnap.exists()) {
-                    await setDoc(userRef, { userId: userId, totalPlayCountGame4: 0, highestScoreGame4: 0 });
+                    await setDoc(userRef, { userId: userId, totalPlayCountGame6: 0, highestScoreGame6: 0 });
+                    console.log("User document created with initial values.");
                 } else {
                     const userData = docSnap.data();
-                    totalPlayCountGame4 = userData.totalPlayCountGame4 || 0;
-                    highestScoreGame4 = userData.highestScoreGame4 || 0;
-                    totalPlayCountDisplay.innerText = `Total des Parties : ${totalPlayCountGame4}`;
+                    totalPlayCountGame6 = userData.totalPlayCountGame6 || 0;
+                    highestScore = userData.highestScoreGame6 || 0;
+                    playCount = totalPlayCountGame6 + 1;
+                    console.log(`Loaded totalPlayCountGame6: ${totalPlayCountGame6}, highestScore: ${highestScore}`);
                 }
             } else {
                 window.location.href = 'login.html';
             }
         });
 
-        startBtn.addEventListener('click', startGame);
-        submitBtn.addEventListener('click', submitGuess);
-
-        function startGame() {
+        startBtn.addEventListener('click', async () => {
             score = 0;
-            totalPlayCountGame4++;
-            totalPlayCountDisplay.innerText = `Total des Parties : ${totalPlayCountGame4}`;
-            scoreDisplay.innerText = `Score : ${score}`;
-            grid.innerHTML = '';
-            foundWords.clear(); // Clear the found words set
-            createGrid();
-            startTimer();
-            startBtn.disabled = true;
-            submitBtn.disabled = false;
-            hint.innerText = '';
-        }
+            scoreDisplay.innerText = `Current Score: ${score}`;
+            inputField.value = '';
+            inputField.disabled = false;
+            timerDisplay.innerText = '';
+            optionsDisplay.innerHTML = '';
 
-        function startTimer() {
-            timeLeft = 10;
-            timerDisplay.innerText = `Temps restant : ${timeLeft}s`;
-            timer = setInterval(() => {
-                timeLeft--;
-                timerDisplay.innerText = `Temps restant : ${timeLeft}s`;
-                if (timeLeft <= 0) {
-                    clearInterval(timer);
-                    endGame();
-                }
-            }, 1000);
-        }
+            // Increment totalPlayCount and update Firestore
+            totalPlayCountGame6 += 1;
+            await updateDoc(doc(db, 'users', userId), { totalPlayCountGame6: totalPlayCountGame6 });
 
-        function createGrid() {
-            for (let i = 0; i < 225; i++) {
-                const cell = document.createElement('div');
-                cell.classList.add('cell');
-                cell.textContent = generateRandomLetter();
-                grid.appendChild(cell);
-            }
-            placeWordsInGrid(wordsToFind);
-        }
+            let questionIndex = 0;
+            showQuestion(questionIndex);
 
-        function generateRandomLetter() {
-            const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            return alphabet[Math.floor(Math.random() * alphabet.length)];
-        }
+            const timerDuration = 15;
+            let timeLeft;
 
-        function placeWordsInGrid(words) {
-            words.forEach(word => {
-                let placed = false;
-                while (!placed) {
-                    const startIndex = Math.floor(Math.random() * 225);
-                    if (startIndex + word.length < 225) {
-                        for (let i = 0; i < word.length; i++) {
-                            grid.children[startIndex + i].textContent = word[i];
+            function startTimer() {
+                timeLeft = timerDuration;
+                timerDisplay.innerText = `Temps restant: ${timeLeft}s`;
+
+                const timer = setInterval(() => {
+                    timeLeft -= 1;
+                    timerDisplay.innerText = `Temps restant: ${timeLeft}s`;
+
+                    if (timeLeft <= 0) {
+                        clearInterval(timer);
+                        inputField.disabled = true; // Disable input after time runs out
+                        checkAnswer(questionIndex, ''); // Check answer as incorrect if time is up
+                        questionIndex++;
+                        if (questionIndex < questions.length) {
+                            showQuestion(questionIndex);
+                        } else {
+                            endGame();
                         }
-                        placed = true;
+                    }
+                }, 1000);
+                return timer; // Return timer reference for clearing if needed
+            }
+
+            let timer = startTimer(); // Start the timer for the first question
+
+            inputField.addEventListener('keyup', (event) => {
+                if (event.key === 'Enter' && inputField.value) {
+                    clearInterval(timer); // Clear the current timer
+                    checkAnswer(questionIndex, inputField.value.toUpperCase());
+                    questionIndex++;
+                    inputField.value = '';
+
+                    if (questionIndex < questions.length) {
+                        showQuestion(questionIndex);
+                        timer = startTimer(); // Start the timer for the next question
+                    } else {
+                        endGame();
                     }
                 }
             });
+        });
+
+        function showQuestion(index) {
+            const question = questions[index];
+            questionDisplay.innerText = question.question;
+            optionsDisplay.innerHTML = question.options.join('<br>');
+            timerDisplay.innerText = `Temps restant : 15s`;
+            inputField.disabled = false;
+            inputField.focus();
         }
 
-        function submitGuess() {
-            const guessedWord = guessInput.value.toUpperCase();
-            if (wordsToFind.includes(guessedWord)) {
-                if (!foundWords.has(guessedWord)) {
-                    score += 5;
-                    foundWords.add(guessedWord); // Add to the found words set
-                    scoreDisplay.innerText = `Score : ${score}`;
-                    hint.innerText = 'Bien joué !';
-                } else {
-                    hint.innerText = 'Vous avez déjà trouvé ce mot !'; // User already found the word
-                }
-            } else {
-                hint.innerText = 'Mot incorrect. Réessayez !';
+        function checkAnswer(index, userAnswer) {
+            if (userAnswer === questions[index].answer) {
+                score += 5;
+                scoreDisplay.innerText = `Score actuel: ${score}`;
+                console.log("Correct Answer!");
+            } else if (userAnswer !== '') {
+                console.log("Incorrect Answer.");
             }
-            guessInput.value = '';
+        }
+
+        async function saveScore(score) {
+            try {
+                const gameData = { score: score, playCount: playCount, timestamp: new Date() };
+                await addDoc(collection(db, 'users', userId, 'Game6'), gameData);
+
+                const userRef = doc(db, 'users', userId);
+                if (totalPlayCountGame6 <= 1 &&score > highestScore) {
+                    highestScore = score;
+                    await updateDoc(userRef, { highestScoreGame6: highestScore });
+                }
+                console.log("Score saved successfully.");
+            } catch (error) {
+                console.error("Error saving score:", error);
+            }
         }
 
         async function endGame() {
-            startBtn.disabled = false;
-            submitBtn.disabled = true;
-            if (score > highestScoreGame4) {
-                highestScoreGame4 = score;
-                await updateHighScore();
-            }
-            await saveGameRecord(score, totalPlayCountGame4);
-            scoreDisplay.innerText = `Score : ${score} (Temps écoulé !)`;
-            hint.innerText = '';
-        }
-
-        async function saveGameRecord(score, gameCount) {
-            await addDoc(collection(db, 'Game4'), {
-                userId: userId,
-                score: score,
-                PlayCount: gameCount,
-                timestamp: new Date().toISOString()
-            });
-        }
-
-        async function updateHighScore() {
-            const userRef = doc(db, 'users', userId);
-            await updateDoc(userRef, {
-                highestScoreGame4: highestScoreGame4,
-                totalPlayCountGame4: totalPlayCountGame4
-            });
+            inputField.disabled = true;
+            await saveScore(score); // Save the score at the end of the game
+            console.log("Game Over. Final Score:", score);
+            alert(`The quiz is over! Your final score is: ${score}`);
         }
     </script>
 </body>
