@@ -139,6 +139,8 @@
         let highestScore = 0;
         let currentWord = '';
         let timerInterval;
+        let usedWords = new Set(); // Tracks words displayed in the current game session
+
 
         const startBtn = document.getElementById('start-btn');
         const timerDisplay = document.getElementById('timer');
@@ -180,11 +182,12 @@
         });
 
         function startGame() {
+            usedWords.clear();
             startBtn.disabled = true;
             let timeLeft = 60;
             timerDisplay.innerText = `Temps restant: ${timeLeft}s`;
 
-            displayNewWord();
+            displayNextWord();
             timerInterval = setInterval(() => {
                 timeLeft -= 1;
                 timerDisplay.innerText = `Temps restant: ${timeLeft}s`;
@@ -207,10 +210,25 @@
             }
         });
 
-        function displayNewWord() {
-            currentWord = frenchWords[Math.floor(Math.random() * frenchWords.length)];
-            wordDisplay.innerText = currentWord;
-        }
+        function displayNextWord() {
+        const wordDisplay = document.getElementById('wordDisplay');
+        const newWord = generateRandomWord();
+        wordDisplay.innerText = newWord;
+       
+        
+        function generateRandomWord() {
+    const letters = "abcdefghijklmnopqrstuvwxyz"; // French alphabet without accents
+    let newWord;
+    
+    do {
+        // Generate a random word with length between 3 and 7
+        let wordLength = Math.floor(Math.random() * 5) + 3;
+        newWord = Array.from({ length: wordLength }, () => letters[Math.floor(Math.random() * letters.length)]).join('');
+    } while (usedWords.has(newWord)); // Ensure uniqueness
+    
+    usedWords.add(newWord); // Add the new word to the used words set
+    return newWord;
+}
 
         async function endGame() {
             wordInput.disabled = true;
