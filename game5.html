@@ -318,12 +318,14 @@
                 const typedWord = wordInput.value.trim().toLowerCase();
                 
                 if (typedWord === currentWord) {
+                    typedWords += 1; // Increment typed words count
+                    scoreDisplay.innerText = `Score actuel: ${typedWords}`;
                     wordInput.value = ''; // Clear input field
                     wordArray.shift(); // Remove the first word (current word)
                     addRandomWord(); // Add a new random word to the end
                     displayWords(); // Update displayed words
-                    typedWords += 1; // Increment typed words count
-                    scoreDisplay.innerText = `Score actuel: ${typedWords}`;
+                    currentWord = wordArray[0]; // Update currentWord to the new first word
+                    
                     
                 } else {
                     // Skip to the next word without scoring
@@ -331,6 +333,7 @@
                     wordArray.shift(); // Remove the first word (current word)
                     addRandomWord(); // Add a new random word to the end
                     displayWords(); // Update displayed words
+                    currentWord = wordArray[0]; // Update currentWord to the new first word
                 }
             }
         });
@@ -353,6 +356,7 @@
             for (let i = 0; i < numberOfWords; i++) {
                 addRandomWord();
             }
+            currentWord = wordArray[0];
             displayWords();
         }
 
