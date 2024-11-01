@@ -264,7 +264,7 @@
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 userId = user.uid;
-                document.getElementById('userStatus').innerText = Bienvenue : ${user.email};
+                document.getElementById('userStatus').innerText = 'Bienvenue : ${user.email}';
 
                 const userRef = doc(db, 'users', userId);
                 const docSnap = await getDoc(userRef);
@@ -284,7 +284,7 @@
 
         startBtn.addEventListener('click', async () => {
             typedWords = 0;
-            scoreDisplay.innerText = Score actuel: ${typedWords};
+            scoreDisplay.innerText = 'Score actuel: ${typedWords}';
             playCount = totalPlayCountGame5 + 1;
             wordInput.disabled = false;
             wordInput.focus();
@@ -295,12 +295,12 @@
         function startGame() {
             startBtn.disabled = true;
             let timeLeft = 60;
-            timerDisplay.innerText = Temps restant: ${timeLeft}s;
+            timerDisplay.innerText = 'Temps restant: ${timeLeft}s';
 
             displayNewWord();
             timerInterval = setInterval(() => {
                 timeLeft -= 1;
-                timerDisplay.innerText = Temps restant: ${timeLeft}s;
+                timerDisplay.innerText = 'Temps restant: ${timeLeft}s';
                 if (timeLeft <= 0) {
                     clearInterval(timerInterval);
                     endGame();
@@ -314,14 +314,14 @@
         wordInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter' && wordInput.value.trim().toLowerCase() === currentWord) {
                 typedWords += 1;
-                scoreDisplay.innerText = Score actuel: ${typedWords};
+                scoreDisplay.innerText = 'Score actuel: ${typedWords}';
                 displayNewWord();
                 wordInput.value = '';
             }
         });
 
         function displayNewWord() {
-            currentWord = wordList[Math.floor(Math.random() * frenchWords.length)];
+            currentWord = wordList[Math.floor(Math.random() * wordList.length)];
             wordDisplay.innerText = currentWord;
         }
 
