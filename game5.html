@@ -139,8 +139,6 @@
         let highestScore = 0;
         let currentWord = '';
         let timerInterval;
-        let currentWordIndex = -1; // Index of the current word in the word list
-        let nextWordIndex = -1; // Index of the next word in the word list
         let wordArray = []; // Array to hold the current words
 
         const startBtn = document.getElementById('start-btn');
@@ -301,7 +299,7 @@
             let timeLeft = 60;
             timerDisplay.innerText = `Temps restant: ${timeLeft}s`;
             initializeWordArray();
-            displayNewWord();
+            displayWords();
             timerInterval = setInterval(() => {
                 timeLeft -= 1;
                 timerDisplay.innerText = `Temps restant: ${timeLeft}s`;
