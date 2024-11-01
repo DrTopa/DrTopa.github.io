@@ -141,12 +141,14 @@
         let timerInterval;
         let currentWordIndex = -1; // Index of the current word in the word list
         let nextWordIndex = -1; // Index of the next word in the word list
+        let wordArray = []; // Array to hold the current words
 
         const startBtn = document.getElementById('start-btn');
         const timerDisplay = document.getElementById('timer');
         const scoreDisplay = document.getElementById('score');
         const wordDisplay = document.getElementById('word-display');
         const wordInput = document.getElementById('word-input');
+        const numberOfWords = 3; // Number of words to display
 
         const wordList = [
     "abandon", "abaisser", "abandonner", "abandon", "abeille", "abondance", "abord", "aboyer", "abri", "absence",
@@ -298,7 +300,7 @@
             startBtn.disabled = true;
             let timeLeft = 60;
             timerDisplay.innerText = `Temps restant: ${timeLeft}s`;
-
+            initializeWordArray();
             displayNewWord();
             timerInterval = setInterval(() => {
                 timeLeft -= 1;
@@ -318,49 +320,43 @@
                 const typedWord = wordInput.value.trim().toLowerCase();
                 
                 if (typedWord === currentWord) {
-                    typedWords += 1;
-                    scoreDisplay.innerText = `Score actuel: ${typedWords}`;
                     wordInput.value = ''; // Clear input field
-                    displayNewWord(); // Show the next word(s)
+                    wordArray.shift(); // Remove the first word (current word)
+                    addRandomWord(); // Add a new random word to the end
+                    displayWords(); // Update displayed words
+                    typedWords += 1; // Increment typed words count
+                    scoreDisplay.innerText = `Score actuel: ${typedWords}`;
+                    
                 } else {
                     // Skip to the next word without scoring
                     wordInput.value = ''; // Clear input field
-                    currentWordIndex = (currentWordIndex + 1) % wordList.length; // Move to the next current word
-                    displayNewWord(); // Show the next word(s)
+                    wordArray.shift(); // Remove the first word (current word)
+                    addRandomWord(); // Add a new random word to the end
+                    displayWords(); // Update displayed words
                 }
             }
         });
 
-function displayNewWord() {
-    // Select a new random word for the next word
-    let randomWordIndex;
-    
-    // Ensure we get a new random word that is not the current or next word
-    do {
-        randomWordIndex = Math.floor(Math.random() * wordList.length);
-    } while (randomWordIndex === nextWordIndex || randomWordIndex === currentWordIndex);
-    
-    // Update the current word and next word
-    currentWordIndex = nextWordIndex !== -1 ? nextWordIndex : randomWordIndex; // if nextWordIndex is set, current becomes that
-    nextWordIndex = randomWordIndex; // the random word becomes the next word
-    currentWord = wordList[currentWordIndex]; // Get the current word
+        function addRandomWord() {
+            let randomWordIndex;
+            do {
+                randomWordIndex = Math.floor(Math.random() * wordList.length);
+            } while (wordArray.includes(wordList[randomWordIndex])); // Ensure no duplicates
+            wordArray.push(wordList[randomWordIndex]);
+        }
+        
+        function displayWords() {
+            wordDisplay.innerText = wordArray.join(', ');
+        }
 
-    // Display the current word
-    wordDisplay.innerText = currentWord;
-
-    // Get the next word
-    const nextWord = wordList[(currentWordIndex + 1) % wordList.length]; // Get the next word in the sequence
-
-    // Display the next word and a random word next to it
-    const nextWordsDisplay = `Mots suivants: ${nextWord}, ${wordList[nextWordIndex]}`;
-    
-    const nextWordsContainer = document.createElement('div');
-    nextWordsContainer.innerText = nextWordsDisplay;
-    nextWordsContainer.style.fontSize = '1.2em';
-    nextWordsContainer.style.color = '#666'; // Lighter color for next words
-    wordDisplay.appendChild(nextWordsContainer);
-}
-
+            
+        function initializeWordArray() {
+            wordArray = [];
+            for (let i = 0; i < numberOfWords; i++) {
+                addRandomWord();
+            }
+            displayWords();
+        }
 
         async function endGame() {
             wordInput.disabled = true;
