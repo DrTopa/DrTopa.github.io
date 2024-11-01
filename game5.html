@@ -139,6 +139,8 @@
         let highestScore = 0;
         let currentWord = '';
         let timerInterval;
+        let currentWordIndex = -1; // Index of the current word in the word list
+        let nextWordIndex = -1; // Index of the next word in the word list
 
         const startBtn = document.getElementById('start-btn');
         const timerDisplay = document.getElementById('timer');
@@ -323,32 +325,42 @@
                 } else {
                     // Skip to the next word without scoring
                     wordInput.value = ''; // Clear input field
+                    currentWordIndex = (currentWordIndex + 1) % wordList.length; // Move to the next current word
                     displayNewWord(); // Show the next word(s)
                 }
             }
         });
 
-        function displayNewWord() {
-            // Select a random word from the wordList
-            currentWord = wordList[Math.floor(Math.random() * wordList.length)];
-        
-            // Ensure that we have enough words in the list for the next two words
-            const currentIndex = wordList.indexOf(currentWord);
-            const nextWords = [];
-            for (let i = 1; i <= 2; i++) {
-                const nextIndex = (currentIndex + i) % wordList.length;
-                nextWords.push(wordList[nextIndex]);
-            }
-        
-            wordDisplay.innerText = currentWord;
-            
-            // Display next two words below the current word
-            const nextWordsDisplay = document.createElement('div');
-            nextWordsDisplay.innerText = `Mots suivants: ${nextWords.join(', ')}`;
-            nextWordsDisplay.style.fontSize = '1.2em';
-            nextWordsDisplay.style.color = '#666'; // Lighter color for next words
-            wordDisplay.appendChild(nextWordsDisplay);
-        }
+function displayNewWord() {
+    // Select a new random word for the next word
+    let randomWordIndex;
+    
+    // Ensure we get a new random word that is not the current or next word
+    do {
+        randomWordIndex = Math.floor(Math.random() * wordList.length);
+    } while (randomWordIndex === nextWordIndex || randomWordIndex === currentWordIndex);
+    
+    // Update the current word and next word
+    currentWordIndex = nextWordIndex !== -1 ? nextWordIndex : randomWordIndex; // if nextWordIndex is set, current becomes that
+    nextWordIndex = randomWordIndex; // the random word becomes the next word
+    currentWord = wordList[currentWordIndex]; // Get the current word
+
+    // Display the current word
+    wordDisplay.innerText = currentWord;
+
+    // Get the next word
+    const nextWord = wordList[(currentWordIndex + 1) % wordList.length]; // Get the next word in the sequence
+
+    // Display the next word and a random word next to it
+    const nextWordsDisplay = `Mots suivants: ${nextWord}, ${wordList[nextWordIndex]}`;
+    
+    const nextWordsContainer = document.createElement('div');
+    nextWordsContainer.innerText = nextWordsDisplay;
+    nextWordsContainer.style.fontSize = '1.2em';
+    nextWordsContainer.style.color = '#666'; // Lighter color for next words
+    wordDisplay.appendChild(nextWordsContainer);
+}
+
 
         async function endGame() {
             wordInput.disabled = true;
