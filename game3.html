@@ -173,6 +173,7 @@
         <div id="target-percentage">Cible : 0%</div>
         <div id="round-info">Manche 1 sur 5</div>
         <div id="score">Score : 100</div>
+        <div id="highestScoreDisplay">Meilleur Score : 0</div>
         <div id="totalPlayCountDisplay">Total des Parties : 0</div>
 
         <div id="container">
@@ -237,6 +238,7 @@
                     totalPlayCountGame3 = userData.totalPlayCountGame3 || 0;
                     highestScoreGame3 = userData.highestScoreGame3 || 0;
                     totalPlayCountDisplay.innerText = `Total des Parties : ${totalPlayCountGame3}`;
+                    document.getElementById('highestScoreDisplay').innerText = `Meilleur Score : ${highestScoreGame3}`; // Add this line
                 }
             } else {
                 window.location.href = 'login.html';
@@ -252,6 +254,9 @@
             score = 100;
             totalPlayCountGame3++;
             totalPlayCountDisplay.innerText = `Total des Parties : ${totalPlayCountGame3}`;
+            document.getElementById('highestScoreDisplay').innerText = `Meilleur Score : ${highestScoreGame3}`; // Update display
+            updateContainerShape();
+            resetFill();
             updateContainerShape();
             resetFill();
             updateTarget();
@@ -391,6 +396,7 @@ function calculateFillPercentage(fillHeight) {
                 if (totalPlayCountGame3 <= 3 && finalScore > highestScoreGame3) {
                     highestScoreGame3 = finalScore;
                     await updateDoc(userRef, { highestScoreGame3 : finalScore});
+                    document.getElementById('highestScoreDisplay').innerText = `Meilleur Score : ${highestScoreGame3}`; // Update display
                 }
             } catch (error) {
                 console.error("Erreur lors de la sauvegarde du score :", error);
