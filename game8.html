@@ -197,7 +197,7 @@
                 score += 1;
                 scoreDisplay.innerText = `Score: ${score}`;
             }
-            if (score % 10 === 0 && obstacleGenerationInterval > 200) {
+            if (score % 100 === 0 && obstacleGenerationInterval > 200) {
                 obstacleGenerationInterval -= 50; // Decrease interval every 10 points, to a minimum of 200ms
                 clearInterval(obstacleInterval);
                 obstacleInterval = setInterval(createObstacle, obstacleGenerationInterval);
@@ -207,10 +207,10 @@
         function createObstacle() {
             const randomValue = Math.random();
 
-            if (randomValue < 0.3) {
+            if (randomValue < 0.4) {
                 // Create a top obstacle
                 createSingleObstacle('top');
-            } else if (randomValue < 0.7) {
+            } else if (randomValue < 0.8) {
                 // Create a bottom obstacle
                 createSingleObstacle('bottom');
             } else {
