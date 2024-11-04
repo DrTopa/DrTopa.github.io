@@ -187,7 +187,7 @@
             bird.style.top = `${birdY}px`;
 
             // Increase obstacle speed based on score
-            obstacleSpeed = 3 + (score / 1000) * 3; // Increases speed from 3 to 6 based on score
+            obstacleSpeed = 1.5 + (score / 1000) * 3; // Increases speed from 3 to 6 based on score
 
             // Check if bird hits top or bottom boundaries
             if (birdY <= 0 || birdY >= gameArea.offsetHeight - bird.offsetHeight || checkCollision()) {
@@ -201,10 +201,10 @@
         function createObstacle() {
             const randomValue = Math.random();
 
-            if (randomValue < 0.01) {
+            if (randomValue < 0.001) {
                 // Create a top obstacle
                 createSingleObstacle('top');
-            } else if (randomValue < 0.02) {
+            } else if (randomValue < 0.002) {
                 // Create a bottom obstacle
                 createSingleObstacle('bottom');
             } else {
