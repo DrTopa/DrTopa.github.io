@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -177,8 +178,8 @@
             gameInterval = setInterval(updateGame, 20);
             gravityInterval = setInterval(() => velocity += 0.5, 30); // Slower gravity for easier gameplay
 
-            // Generate obstacles every 1.5 seconds
-            obstacleInterval = setInterval(createObstacle, 1500);
+            // Generate obstacles every 1 second (increased frequency)
+            obstacleInterval = setInterval(createObstacle, 1000);
         }
 
         function updateGame() {
@@ -198,6 +199,21 @@
         }
 
         function createObstacle() {
+            const randomValue = Math.random();
+
+            if (randomValue < 0.5) {
+                // Create a top obstacle
+                createSingleObstacle('top');
+            } else if (randomValue < 0.8) {
+                // Create a bottom obstacle
+                createSingleObstacle('bottom');
+            } else {
+                // Create both top and bottom obstacles
+                createDoubleObstacle();
+            }
+        }
+
+        function createSingleObstacle(position) {
             const obstacle = document.createElement('div');
             obstacle.classList.add('obstacle');
 
@@ -205,9 +221,8 @@
             obstacle.style.height = `${obstacleHeight}px`;
             obstacle.style.width = '30px';
             obstacle.style.left = `${gameArea.offsetWidth}px`;
-            
-            // Randomly position obstacle from top or bottom
-            if (Math.random() > 0.5) {
+
+            if (position === 'top') {
                 obstacle.style.top = '0';
             } else {
                 obstacle.style.bottom = '0';
@@ -222,10 +237,50 @@
                     gameArea.removeChild(obstacle);
                     clearInterval(moveInterval);
                 } else {
-                    obstacle.style.left = `${obstacleLeft - obstacleSpeed}px`; // Use the variable speed
+                    obstacle.style.left = `${obstacleLeft - obstacleSpeed}px`;
                 }
             }, 20);
         }
+
+function createDoubleObstacle() {
+    const topObstacle = document.createElement('div');
+    const bottomObstacle = document.createElement('div');
+
+    topObstacle.classList.add('obstacle');
+    bottomObstacle.classList.add('obstacle');
+
+    const gameAreaHeight = gameArea.offsetHeight;
+    const minSpace = gameAreaHeight / 6;
+
+    const topObstacleHeight = Math.random() * (gameAreaHeight - minSpace) + minSpace; // Ensure enough space for the bottom obstacle
+    const bottomObstacleHeight = gameAreaHeight - topObstacleHeight - minSpace; // Calculate height for bottom obstacle to maintain space
+
+    topObstacle.style.height = `${topObstacleHeight}px`;
+    bottomObstacle.style.height = `${bottomObstacleHeight}px`;
+    topObstacle.style.width = '30px';
+    bottomObstacle.style.width = '30px';
+    topObstacle.style.left = `${gameArea.offsetWidth}px`;
+    bottomObstacle.style.left = `${gameArea.offsetWidth}px`;
+
+    topObstacle.style.top = '0';
+    bottomObstacle.style.bottom = '0';
+
+    gameArea.appendChild(topObstacle);
+    gameArea.appendChild(bottomObstacle);
+
+    const moveInterval = setInterval(() => {
+        const topObstacleLeft = parseInt(topObstacle.style.left, 10);
+        const bottomObstacleLeft = parseInt(bottomObstacle.style.left, 10);
+        if (topObstacleLeft < -30) {
+            gameArea.removeChild(topObstacle);
+            gameArea.removeChild(bottomObstacle);
+            clearInterval(moveInterval);
+        } else {
+            topObstacle.style.left = `${topObstacleLeft - obstacleSpeed}px`;
+            bottomObstacle.style.left = `${bottomObstacleLeft - obstacleSpeed}px`;
+        }
+    }, 20);
+}
 
         function checkCollision() {
             const obstacles = document.getElementsByClassName('obstacle');
