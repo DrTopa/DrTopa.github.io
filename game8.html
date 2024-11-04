@@ -201,10 +201,10 @@
         function createObstacle() {
             const randomValue = Math.random();
 
-            if (randomValue < 0.4) {
+            if (randomValue < 0.05) {
                 // Create a top obstacle
                 createSingleObstacle('top');
-            } else if (randomValue < 0.7) {
+            } else if (randomValue < 0.1) {
                 // Create a bottom obstacle
                 createSingleObstacle('bottom');
             } else {
@@ -250,7 +250,7 @@ function createDoubleObstacle() {
     bottomObstacle.classList.add('obstacle');
 
     const gameAreaHeight = gameArea.offsetHeight;
-    const minSpace = gameAreaHeight / 6;
+    const minSpace = gameAreaHeight / 5;
 
     const topObstacleHeight = Math.random() * (gameAreaHeight - minSpace) + minSpace; // Ensure enough space for the bottom obstacle
     const bottomObstacleHeight = gameAreaHeight - topObstacleHeight - minSpace; // Calculate height for bottom obstacle to maintain space
@@ -326,7 +326,7 @@ function createDoubleObstacle() {
         startButton.addEventListener('click', startGame);
 
         window.addEventListener('keydown', (e) => {
-            if (e.code === 'Space') velocity = -5; // Press space to make bird jump
+            if (e.code === 'Space') velocity = -4; // Press space to make bird jump
         });
     </script>
 </body>
