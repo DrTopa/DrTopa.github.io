@@ -148,7 +148,7 @@
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 userId = user.uid;
-                document.getElementById('userStatus').innerText = Bienvenue : ${user.email};
+                document.getElementById('userStatus').innerText = `Bienvenue : ${user.email}`;
 
                 const userRef = doc(db, 'users', userId);
                 const docSnap = await getDoc(userRef);
@@ -168,9 +168,9 @@
             score = 0;
             birdY = 200;
             velocity = 0;
-            bird.style.top = ${birdY}px;
+            bird.style.top = `${birdY}px`;
             obstacleSpeed = 3; // Reset obstacle speed
-            scoreDisplay.innerText = Score: ${score};
+            scoreDisplay.innerText = `Score: ${score}`;
             startButton.style.display = 'none';
 
             // Game loop for bird movement and gravity
@@ -193,7 +193,7 @@
                 endGame();
             } else {
                 score += 1;
-                scoreDisplay.innerText = Score: ${score};
+                scoreDisplay.innerText = `Score: ${score}`;
             }
         }
 
@@ -217,9 +217,9 @@
             obstacle.classList.add('obstacle');
 
             const obstacleHeight = Math.random() * 100 + 100; // Random height for obstacles
-            obstacle.style.height = ${obstacleHeight}px;
+            obstacle.style.height = `${obstacleHeight}px`;
             obstacle.style.width = '30px';
-            obstacle.style.left = ${gameArea.offsetWidth}px;
+            obstacle.style.left = `${gameArea.offsetWidth}px`;
 
             if (position === 'top') {
                 obstacle.style.top = '0';
@@ -254,12 +254,12 @@ function createDoubleObstacle() {
     const topObstacleHeight = Math.random() * (gameAreaHeight - minSpace) + minSpace; // Ensure enough space for the bottom obstacle
     const bottomObstacleHeight = gameAreaHeight - topObstacleHeight - minSpace; // Calculate height for bottom obstacle to maintain space
 
-    topObstacle.style.height = ${topObstacleHeight}px;
-    bottomObstacle.style.height = ${bottomObstacleHeight}px;
+    topObstacle.style.height = `${topObstacleHeight}px`;
+    bottomObstacle.style.height = `${bottomObstacleHeight}px`;
     topObstacle.style.width = '30px';
     bottomObstacle.style.width = '30px';
-    topObstacle.style.left = ${gameArea.offsetWidth}px;
-    bottomObstacle.style.left = ${gameArea.offsetWidth}px;
+    topObstacle.style.left = `${gameArea.offsetWidth}px`;
+    bottomObstacle.style.left = `${gameArea.offsetWidth}px`;
 
     topObstacle.style.top = '0';
     bottomObstacle.style.bottom = '0';
@@ -304,7 +304,7 @@ function createDoubleObstacle() {
             clearInterval(gravityInterval);
             clearInterval(obstacleInterval);
             saveScore(score);
-            alert(Partie terminée! Votre score: ${score});
+            alert(`Partie terminée! Votre score: ${score}`);
             startButton.style.display = 'block';
         }
 
