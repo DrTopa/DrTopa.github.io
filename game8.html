@@ -58,7 +58,7 @@
             overflow: hidden;
         }
 
-        /* Bird and lines */
+        /* Bird and obstacles */
         .bird {
             position: absolute;
             width: 30px;
@@ -67,10 +67,9 @@
             border-radius: 50%;
         }
 
-        .line {
+        .obstacle {
             position: absolute;
-            width: 100%;
-            height: 5px;
+            width: 30px;
             background-color: #00695c;
         }
 
@@ -80,6 +79,22 @@
             margin: 10px;
             color: #1b5e20;
         }
+
+        /* Start Button */
+        #start-btn {
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            background-color: #388e3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        
+        #start-btn:hover {
+            background-color: #2e7d32;
+        }
     </style>
 </head>
 <body>
@@ -88,11 +103,12 @@
     <!-- Instructions -->
     <div id="instructions">
         <p>Bienvenue dans le jeu QuiVaLaManger !</p>
-        <p>Utilisez la barre d'espace pour faire voler l'oiseau entre les lignes. Si l'oiseau touche une ligne, le ciel ou le sol, vous perdez. Essayez de battre votre meilleur score !</p>
+        <p>Utilisez la barre d'espace pour faire voler l'oiseau entre les obstacles. Si l'oiseau touche un obstacle, le ciel ou le sol, vous perdez. Essayez de battre votre meilleur score !</p>
     </div>
 
     <div id="userStatus"></div>
     <div id="score">Score: 0</div>
+    <button id="start-btn">Commencer le jeu</button>
     <div id="gameArea">
         <div id="bird" class="bird"></div>
     </div>
@@ -120,6 +136,13 @@
         let userId = '';
         let score = 0;
         let highestScore = 0;
+        let gameInterval, gravityInterval, obstacleInterval;
+        const bird = document.getElementById('bird');
+        const gameArea = document.getElementById('gameArea');
+        const scoreDisplay = document.getElementById('score');
+        const startButton = document.getElementById('start-btn');
+        let birdY = 200;
+        let velocity = 0;
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
@@ -140,26 +163,27 @@
             }
         });
 
-        const bird = document.getElementById('bird');
-        const gameArea = document.getElementById('gameArea');
-        const scoreDisplay = document.getElementById('score');
-        let gameInterval, gravityInterval;
-        let birdY = 200;
-        let velocity = 0;
-
         function startGame() {
             score = 0;
             birdY = 200;
             velocity = 0;
             bird.style.top = `${birdY}px`;
+            scoreDisplay.innerText = `Score: ${score}`;
+            startButton.style.display = 'none';
+
+            // Game loop for bird movement and gravity
             gameInterval = setInterval(updateGame, 20);
-            gravityInterval = setInterval(() => velocity += 1, 20);
+            gravityInterval = setInterval(() => velocity += 0.5, 30); // Slower gravity for easier gameplay
+
+            // Generate obstacles every 1.5 seconds
+            obstacleInterval = setInterval(createObstacle, 1500);
         }
 
         function updateGame() {
             birdY += velocity;
             bird.style.top = `${birdY}px`;
 
+            // Check if bird hits top or bottom boundaries
             if (birdY <= 0 || birdY >= gameArea.offsetHeight - bird.offsetHeight || checkCollision()) {
                 endGame();
             } else {
@@ -168,12 +192,48 @@
             }
         }
 
+        function createObstacle() {
+            const obstacle = document.createElement('div');
+            obstacle.classList.add('obstacle');
+
+            const obstacleHeight = Math.random() * 100 + 100; // Random height for obstacles
+            obstacle.style.height = `${obstacleHeight}px`;
+            obstacle.style.width = '30px';
+            obstacle.style.left = `${gameArea.offsetWidth}px`;
+            
+            // Randomly position obstacle from top or bottom
+            if (Math.random() > 0.5) {
+                obstacle.style.top = '0';
+            } else {
+                obstacle.style.bottom = '0';
+            }
+
+            gameArea.appendChild(obstacle);
+
+            // Move the obstacle across the game area
+            const moveInterval = setInterval(() => {
+                const obstacleLeft = parseInt(obstacle.style.left, 10);
+                if (obstacleLeft < -30) {
+                    gameArea.removeChild(obstacle);
+                    clearInterval(moveInterval);
+                } else {
+                    obstacle.style.left = `${obstacleLeft - 3}px`;
+                }
+            }, 20);
+        }
+
         function checkCollision() {
-            // Check for collision with lines
-            const lines = document.getElementsByClassName('line');
-            for (let line of lines) {
-                if (bird.offsetTop < line.offsetTop + line.offsetHeight &&
-                    bird.offsetTop + bird.offsetHeight > line.offsetTop) {
+            const obstacles = document.getElementsByClassName('obstacle');
+            for (let obstacle of obstacles) {
+                const birdRect = bird.getBoundingClientRect();
+                const obstacleRect = obstacle.getBoundingClientRect();
+
+                if (
+                    birdRect.right > obstacleRect.left &&
+                    birdRect.left < obstacleRect.right &&
+                    birdRect.bottom > obstacleRect.top &&
+                    birdRect.top < obstacleRect.bottom
+                ) {
                     return true;
                 }
             }
@@ -183,8 +243,10 @@
         function endGame() {
             clearInterval(gameInterval);
             clearInterval(gravityInterval);
+            clearInterval(obstacleInterval);
             saveScore(score);
             alert(`Partie terminée! Votre score: ${score}`);
+            startButton.style.display = 'block';
         }
 
         async function saveScore(currentScore) {
@@ -201,11 +263,11 @@
             }
         }
 
-        window.addEventListener('keydown', (e) => {
-            if (e.code === 'Space') velocity = -8;
-        });
+        startButton.addEventListener('click', startGame);
 
-        startGame();
+        window.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') velocity = -6; // Press space to make bird jump
+        });
     </script>
 </body>
 </html>
