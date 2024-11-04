@@ -160,6 +160,7 @@
         let userId = '';
         let score = 0;
         let highestScore = 0;
+        let totalPlayCountGame8 = 0;
         let gameInterval, gravityInterval, obstacleInterval;
         const bird = document.getElementById('bird');
         const gameArea = document.getElementById('gameArea');
@@ -181,6 +182,7 @@
                     await setDoc(userRef, { userId: userId, totalPlayCountGame8: 0, highestScoreGame8: 0 });
                 } else {
                     const userData = docSnap.data();
+                    totalPlayCountGame8 = userData.totalPlayCountGame8 || 0;
                     highestScore = userData.highestScoreGame8 || 0;
                 }
             } else {
@@ -339,13 +341,15 @@ function createDoubleObstacle() {
 
         async function saveScore(currentScore) {
             try {
-                const gameData = { score: currentScore, timestamp: new Date() };
+                const gameData = { score: currentScore,playCount: totalPlayCountGame8 + 1 timestamp: new Date() };
                 await addDoc(collection(db, 'users', userId, 'Game8'), gameData);
 
                 if (totalPlayCountGame8 < 15 && currentScore > highestScore) {
                    highestScore = Math.ceil(currentScore / 50);
                     await updateDoc(doc(db, 'users', userId), { highestScoreGame8: highestScore });
                 }
+            totalPlayCountGame8 += 1;
+            await updateDoc(userRef, { totalPlayCountGame8 });
             } catch (error) {
                 console.error("Erreur en sauvegardant le score:", error);
             }
