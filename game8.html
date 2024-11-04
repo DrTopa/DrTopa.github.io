@@ -341,7 +341,7 @@ function createDoubleObstacle() {
 
         async function saveScore(currentScore) {
             try {
-                const gameData = { score: currentScore,playCount: totalPlayCountGame8 + 1 timestamp: new Date() };
+                const gameData = { score: currentScore,playCount: totalPlayCountGame8 + 1, timestamp: new Date() };
                 await addDoc(collection(db, 'users', userId, 'Game8'), gameData);
 
                 if (totalPlayCountGame8 < 15 && currentScore > highestScore) {
