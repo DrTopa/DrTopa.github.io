@@ -136,7 +136,7 @@
         let userId = '';
         let score = 0;
         let highestScore = 0;
-        let gameInterval, gravityInterval;
+        let gameInterval, gravityInterval, obstacleInterval;
         const bird = document.getElementById('bird');
         const gameArea = document.getElementById('gameArea');
         const scoreDisplay = document.getElementById('score');
@@ -144,9 +144,6 @@
         let birdY = 200;
         let velocity = 0;
         let obstacleSpeed = 3; // Initial speed for obstacles
-        let obstacleInterval; // Declare obstacleInterval globally
-        let obstacleGenerationTime = 1000; // Initial time for obstacle generation (1 second)
-
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
@@ -168,65 +165,39 @@
         });
 
         function startGame() {
-    score = 0;
-    birdY = 200;
-    velocity = 0;
-    bird.style.top = `${birdY}px`;
-    obstacleSpeed = 3; // Reset obstacle speed
-    obstacleGenerationTime = 1000; // Reset generation time
-    scoreDisplay.innerText = `Score: ${score}`;
-    startButton.style.display = 'none';
+            score = 0;
+            birdY = 200;
+            velocity = 0;
+            bird.style.top = `${birdY}px`;
+            obstacleSpeed = 3; // Reset obstacle speed
+            scoreDisplay.innerText = `Score: ${score}`;
+            startButton.style.display = 'none';
 
-    // Game loop for bird movement and gravity
-    gameInterval = setInterval(updateGame, 20);
-    gravityInterval = setInterval(() => velocity += 0.5, 30); // Slower gravity for easier gameplay
+            // Game loop for bird movement and gravity
+            gameInterval = setInterval(updateGame, 20);
+            gravityInterval = setInterval(() => velocity += 0.5, 30); // Slower gravity for easier gameplay
 
-    // Generate obstacles for the first time
-    obstacleInterval = setInterval(createObstacle, obstacleGenerationTime);
-}
-function updateGame() {
-    birdY += velocity;
-    bird.style.top = `${birdY}px`;
-
-    // Increase obstacle speed based on score
-    obstacleSpeed = 3 + (score / 1000) * 3; // Increases speed from 3 to 6 based on score
-
-    // Adjust the obstacle generation time based on speed
-    if (obstacleSpeed > 3) {
-        // If the speed is increased, adjust the generation time
-        const newObstacleGenerationTime = Math.max(1000 - (obstacleSpeed - 3) * 100, 200); // Minimum of 200ms interval
-        if (newObstacleGenerationTime < obstacleGenerationTime) {
-            clearInterval(obstacleInterval);
-            obstacleGenerationTime = newObstacleGenerationTime;
-            obstacleInterval = setInterval(createObstacle, obstacleGenerationTime);
+            // Generate obstacles every 1.5 seconds
+            obstacleInterval = setInterval(createObstacle, 1500);
         }
-    }
 
-    // Check if bird hits top or bottom boundaries
-    if (birdY <= 0 || birdY >= gameArea.offsetHeight - bird.offsetHeight || checkCollision()) {
-        endGame();
-    } else {
-        score += 1;
-        scoreDisplay.innerText = `Score: ${score}`;
-    }
-}
+        function updateGame() {
+            birdY += velocity;
+            bird.style.top = `${birdY}px`;
 
-        function createObstacle() {
-            const randomValue = Math.random();
+            // Increase obstacle speed based on score
+            obstacleSpeed = 3 + (score / 1000) * 3; // Increases speed from 3 to 6 based on score
 
-            if (randomValue < 0.4) {
-                // Create a top obstacle
-                createSingleObstacle('top');
-            } else if (randomValue < 0.8) {
-                // Create a bottom obstacle
-                createSingleObstacle('bottom');
+            // Check if bird hits top or bottom boundaries
+            if (birdY <= 0 || birdY >= gameArea.offsetHeight - bird.offsetHeight || checkCollision()) {
+                endGame();
             } else {
-                // Create both top and bottom obstacles
-                createDoubleObstacle();
+                score += 1;
+                scoreDisplay.innerText = `Score: ${score}`;
             }
         }
 
-        function createSingleObstacle(position) {
+        function createObstacle() {
             const obstacle = document.createElement('div');
             obstacle.classList.add('obstacle');
 
@@ -234,8 +205,9 @@ function updateGame() {
             obstacle.style.height = `${obstacleHeight}px`;
             obstacle.style.width = '30px';
             obstacle.style.left = `${gameArea.offsetWidth}px`;
-
-            if (position === 'top') {
+            
+            // Randomly position obstacle from top or bottom
+            if (Math.random() > 0.5) {
                 obstacle.style.top = '0';
             } else {
                 obstacle.style.bottom = '0';
@@ -250,59 +222,23 @@ function updateGame() {
                     gameArea.removeChild(obstacle);
                     clearInterval(moveInterval);
                 } else {
-                    obstacle.style.left = `${obstacleLeft - obstacleSpeed}px`;
-                }
-            }, 20);
-        }
-
-        function createDoubleObstacle() {
-            const topObstacle = document.createElement('div');
-            const bottomObstacle = document.createElement('div');
-
-            topObstacle.classList.add('obstacle');
-            bottomObstacle.classList.add('obstacle');
-
-            const gameAreaHeight = gameArea.offsetHeight;
-            const minSpace = gameAreaHeight / 6;
-
-            const obstacleHeight = Math.random() * (gameAreaHeight - minSpace - 100) + 100; // Random height for top obstacle
-            const gapHeight = Math.random() * minSpace + minSpace; // Gap height between top and bottom obstacle
-
-            topObstacle.style.height = `${obstacleHeight}px`;
-            bottomObstacle.style.height = `${gameAreaHeight - obstacleHeight - gapHeight}px`;
-            topObstacle.style.width = bottomObstacle.style.width = '30px';
-            topObstacle.style.left = bottomObstacle.style.left = `${gameArea.offsetWidth}px`;
-            topObstacle.style.top = '0';
-            bottomObstacle.style.bottom = '0';
-
-            gameArea.appendChild(topObstacle);
-            gameArea.appendChild(bottomObstacle);
-
-            const moveInterval = setInterval(() => {
-                const topObstacleLeft = parseInt(topObstacle.style.left, 10);
-                const bottomObstacleLeft = parseInt(bottomObstacle.style.left, 10);
-                if (topObstacleLeft < -30) {
-                    gameArea.removeChild(topObstacle);
-                    gameArea.removeChild(bottomObstacle);
-                    clearInterval(moveInterval);
-                } else {
-                    topObstacle.style.left = `${topObstacleLeft - obstacleSpeed}px`;
-                    bottomObstacle.style.left = `${bottomObstacleLeft - obstacleSpeed}px`;
+                    obstacle.style.left = `${obstacleLeft - obstacleSpeed}px`; // Use the variable speed
                 }
             }, 20);
         }
 
         function checkCollision() {
-            const obstacles = document.querySelectorAll('.obstacle');
-            const birdRect = bird.getBoundingClientRect();
-
-            for (const obstacle of obstacles) {
+            const obstacles = document.getElementsByClassName('obstacle');
+            for (let obstacle of obstacles) {
+                const birdRect = bird.getBoundingClientRect();
                 const obstacleRect = obstacle.getBoundingClientRect();
 
-                if (obstacleRect.left < birdRect.right &&
-                    obstacleRect.right > birdRect.left &&
-                    obstacleRect.top < birdRect.bottom &&
-                    obstacleRect.bottom > birdRect.top) {
+                if (
+                    birdRect.right > obstacleRect.left &&
+                    birdRect.left < obstacleRect.right &&
+                    birdRect.bottom > obstacleRect.top &&
+                    birdRect.top < obstacleRect.bottom
+                ) {
                     return true;
                 }
             }
@@ -318,21 +254,24 @@ function updateGame() {
             startButton.style.display = 'block';
         }
 
-        async function saveScore(score) {
-            const userRef = doc(db, 'users', userId);
-            await updateDoc(userRef, {
-                totalPlayCountGame8: firebase.firestore.FieldValue.increment(1),
-                highestScoreGame8: Math.max(score, highestScore)
-            });
+        async function saveScore(currentScore) {
+            try {
+                const gameData = { score: currentScore, timestamp: new Date() };
+                await addDoc(collection(db, 'users', userId, 'Game8'), gameData);
+
+                if (currentScore > highestScore) {
+                    highestScore = currentScore;
+                    await updateDoc(doc(db, 'users', userId), { highestScoreGame8: highestScore });
+                }
+            } catch (error) {
+                console.error("Erreur en sauvegardant le score:", error);
+            }
         }
 
-        document.getElementById('start-btn').addEventListener('click', startGame);
+        startButton.addEventListener('click', startGame);
 
-        // Optional: Listen for space key to make the bird jump
-        window.addEventListener('keydown', (event) => {
-            if (event.code === 'Space') {
-                velocity = -5; // Negative value to jump up
-            }
+        window.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') velocity = -6; // Press space to make bird jump
         });
     </script>
 </body>
