@@ -144,6 +144,9 @@
         let birdY = 200;
         let velocity = 0;
         let obstacleSpeed = 3; // Initial speed for obstacles
+        let obstacleInterval; // Declare obstacleInterval globally
+        let obstacleGenerationTime = 1000; // Initial time for obstacle generation (1 second)
+
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
@@ -165,37 +168,48 @@
         });
 
         function startGame() {
-            score = 0;
-            birdY = 200;
-            velocity = 0;
-            bird.style.top = `${birdY}px`;
-            obstacleSpeed = 3; // Reset obstacle speed
-            scoreDisplay.innerText = `Score: ${score}`;
-            startButton.style.display = 'none';
+    score = 0;
+    birdY = 200;
+    velocity = 0;
+    bird.style.top = `${birdY}px`;
+    obstacleSpeed = 3; // Reset obstacle speed
+    obstacleGenerationTime = 1000; // Reset generation time
+    scoreDisplay.innerText = `Score: ${score}`;
+    startButton.style.display = 'none';
 
-            // Game loop for bird movement and gravity
-            gameInterval = setInterval(updateGame, 20);
-            gravityInterval = setInterval(() => velocity += 0.5, 30); // Slower gravity for easier gameplay
+    // Game loop for bird movement and gravity
+    gameInterval = setInterval(updateGame, 20);
+    gravityInterval = setInterval(() => velocity += 0.5, 30); // Slower gravity for easier gameplay
 
-            // Generate obstacles every 1 second (increased frequency)
-            obstacleInterval = setInterval(createObstacle, 1000);
+    // Generate obstacles for the first time
+    obstacleInterval = setInterval(createObstacle, obstacleGenerationTime);
+}
+function updateGame() {
+    birdY += velocity;
+    bird.style.top = `${birdY}px`;
+
+    // Increase obstacle speed based on score
+    obstacleSpeed = 3 + (score / 1000) * 3; // Increases speed from 3 to 6 based on score
+
+    // Adjust the obstacle generation time based on speed
+    if (obstacleSpeed > 3) {
+        // If the speed is increased, adjust the generation time
+        const newObstacleGenerationTime = Math.max(1000 - (obstacleSpeed - 3) * 100, 200); // Minimum of 200ms interval
+        if (newObstacleGenerationTime < obstacleGenerationTime) {
+            clearInterval(obstacleInterval);
+            obstacleGenerationTime = newObstacleGenerationTime;
+            obstacleInterval = setInterval(createObstacle, obstacleGenerationTime);
         }
+    }
 
-        function updateGame() {
-            birdY += velocity;
-            bird.style.top = `${birdY}px`;
-
-            // Increase obstacle speed based on score
-            obstacleSpeed = 3 + (score / 1000) * 3; // Increases speed from 3 to 6 based on score
-
-            // Check if bird hits top or bottom boundaries
-            if (birdY <= 0 || birdY >= gameArea.offsetHeight - bird.offsetHeight || checkCollision()) {
-                endGame();
-            } else {
-                score += 1;
-                scoreDisplay.innerText = `Score: ${score}`;
-            }
-        }
+    // Check if bird hits top or bottom boundaries
+    if (birdY <= 0 || birdY >= gameArea.offsetHeight - bird.offsetHeight || checkCollision()) {
+        endGame();
+    } else {
+        score += 1;
+        scoreDisplay.innerText = `Score: ${score}`;
+    }
+}
 
         function createObstacle() {
             const randomValue = Math.random();
@@ -317,7 +331,7 @@
         // Optional: Listen for space key to make the bird jump
         window.addEventListener('keydown', (event) => {
             if (event.code === 'Space') {
-                velocity = -2.5; // Negative value to jump up
+                velocity = -5; // Negative value to jump up
             }
         });
     </script>
