@@ -144,6 +144,7 @@
         let birdY = 200;
         let velocity = 0;
         let obstacleSpeed = 3; // Initial speed for obstacles
+        let obstacleGenerationInterval = 1000; // Starting interval
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
@@ -178,7 +179,8 @@
             gravityInterval = setInterval(() => velocity += 0.5, 30); // Slower gravity for easier gameplay
 
             // Generate obstacles every 1 second (increased frequency)
-            obstacleInterval = setInterval(createObstacle, 1000);
+            obstacleInterval = setInterval(createObstacle, obstacleGenerationInterval);
+
         }
 
         function updateGame() {
@@ -195,15 +197,20 @@
                 score += 1;
                 scoreDisplay.innerText = `Score: ${score}`;
             }
+            if (score % 10 === 0 && obstacleGenerationInterval > 200) {
+                obstacleGenerationInterval -= 50; // Decrease interval every 10 points, to a minimum of 200ms
+                clearInterval(obstacleInterval);
+                obstacleInterval = setInterval(createObstacle, obstacleGenerationInterval);
+            }
         }
 
         function createObstacle() {
             const randomValue = Math.random();
 
-            if (randomValue < 0.5) {
+            if (randomValue < 0.3) {
                 // Create a top obstacle
                 createSingleObstacle('top');
-            } else if (randomValue < 0.8) {
+            } else if (randomValue < 0.7) {
                 // Create a bottom obstacle
                 createSingleObstacle('bottom');
             } else {
