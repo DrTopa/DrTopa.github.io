@@ -201,10 +201,10 @@
         function createObstacle() {
             const randomValue = Math.random();
 
-            if (randomValue < 0.5) {
+            if (randomValue < 0.4) {
                 // Create a top obstacle
                 createSingleObstacle('top');
-            } else if (randomValue < 0.8) {
+            } else if (randomValue < 0.7) {
                 // Create a bottom obstacle
                 createSingleObstacle('bottom');
             } else {
@@ -217,7 +217,7 @@
             const obstacle = document.createElement('div');
             obstacle.classList.add('obstacle');
 
-            const obstacleHeight = Math.random() * 100 + 100; // Random height for obstacles
+            const obstacleHeight = Math.random() * 100 + 80; // Random height for obstacles
             obstacle.style.height = `${obstacleHeight}px`;
             obstacle.style.width = '30px';
             obstacle.style.left = `${gameArea.offsetWidth}px`;
@@ -326,7 +326,7 @@ function createDoubleObstacle() {
         startButton.addEventListener('click', startGame);
 
         window.addEventListener('keydown', (e) => {
-            if (e.code === 'Space') velocity = -6; // Press space to make bird jump
+            if (e.code === 'Space') velocity = -5; // Press space to make bird jump
         });
     </script>
 </body>
