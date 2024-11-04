@@ -79,8 +79,8 @@
             background-color: #2e7d32;
         }
 
-        /* Score and rounds display */
-        #score, #rounds {
+        /* Score, rounds and result display */
+        #score, #rounds, #computerChoice, #resultMessage {
             font-size: 1.8em;
             margin: 15px;
             color: #1565c0;
@@ -103,6 +103,8 @@
         <button class="choice-btn" id="btnCiseaux">Ciseaux</button>
         <div id="score">Score actuel: 0</div>
         <div id="rounds">Manches jouées: 0</div>
+        <div id="computerChoice">Choix de l'ordinateur : -</div>
+        <div id="resultMessage"></div>
     </div>
 
     <script defer type="module">
@@ -134,6 +136,8 @@
 
         const scoreDisplay = document.getElementById('score');
         const roundsDisplay = document.getElementById('rounds');
+        const computerChoiceDisplay = document.getElementById('computerChoice');
+        const resultMessageDisplay = document.getElementById('resultMessage');
 
         const choices = ['Pierre', 'Feuille', 'Ciseaux'];
 
@@ -181,18 +185,26 @@
             const computerChoice = getComputerChoice();
             const result = determineWinner(userChoice, computerChoice);
 
+            computerChoiceDisplay.innerText = `Choix de l'ordinateur : ${computerChoice}`;
+
             if (result === 'win') {
                 score += 5;
+                resultMessageDisplay.innerText = "Vous avez gagné cette manche!";
+            } else if (result === 'lose') {
+                resultMessageDisplay.innerText = "Vous avez perdu cette manche.";
+            } else {
+                resultMessageDisplay.innerText = "Égalité!";
             }
 
             if (result !== 'draw') {
                 rounds += 1;
                 roundsDisplay.innerText = `Manches jouées: ${rounds}`;
             }
-            
+
             scoreDisplay.innerText = `Score actuel: ${score}`;
-            
+
             if (rounds >= 20) {
+                resultMessageDisplay.innerText = "Le jeu est terminé !";
                 await saveScore(score);
             }
         }
