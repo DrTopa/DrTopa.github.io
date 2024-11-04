@@ -93,19 +93,7 @@
     <h1>QuiVaLaManger ? - Jeu 7</h1>
 
     <div id="instructions">
-        <p>"Franchement, ce jeu, c’est guez," râla Dudley, les bras croisés. "À partir du moment où il faut de la bulture, c'est que ça pue."</p>
- <p>"La culture, Dudley, la culture," rectifia Grinchémie en soupirant. Mais ce que Dudley ne savait pas encore, c’est qu’un nouveau Top 15 – un défi encore plus fou – était déjà en préparation. Et, il y avait de fortes chances pour qu’il perde encore face à un simple renne muet.</p>
- <p>Après ce passage par une caverne humide et lugubre, nos compagnons débouchèrent dans un couloir sombre. Deux portes se dressaient devant eux : une à gauche, l’autre à droite. Ils décidèrent de s’engager dans la porte de gauche .</p>
- <p>« Eh non, non, Stanley, enfin Bébé Romain c’est la porte de droite" intervint le narrateur. Mais ce  dernier en tendant l’oreille entendit des éclats de rire et… des pleurs venant de la porte de droite. Sans plus attendre, ils se précipitèrent vers la droite et ouvrirent la porte.</p>
- <p>À l’intérieur, une grande table ornée de trois crêpes trônait au milieu de la pièce. La table était vide, en dehors de ces crêpes étrangement appétissantes. Problème : ils étaient cinq. </p>
- <p>"On pourrait partager ? Ça ferait 0,6 crêpes par personne," proposa Noémie avec un sérieux presque mathématique. Elle sortit déjà son calepin pour calculer au cas où.</p>
- <p>Mais Dudley, lui, n’avait pas l’air emballé : "Moi, je dis que ça fait environ 3,14 divisé par le… truc là, la moyenne de… euh... » Il n’eut pas le temps de finir que Bébé Romain enchainait "Sinon," dit Romain, l’air de rien, "je prends deux crêpes, et on coupe la dernière en quatre, ça devrait le faire, non ?"</p>
- <p>Mais à ce moment-là, on entendit. "Meuhehahahaha !" C’était RaseToiLaMoustache. Il a raison, dit Topapa, qui était le seul à le comprendre"Il n’y a qu’une seule solution pour savoir qui aura les crêpes : le CHIFOUMI !"</p>
- <p>Tous se regardèrent. Mais la décision était prise. Le CHIFOUMI allait décider de leur sort.</p>
- <p>Alors que chacun se préparait à lancer son coup de pierre-papier-ciseaux, la fameuse Ceinture Magique de Noël, fit irruption: "Euh… sinon, je peux en faire deux autres, ça réglerait tout, non ?"</p>
- <p>Mais il était trop tard. Déjà, les poings étaient levés, les esprits échauffés, les regards défiants. Le Topapa de Noël lança les règles : "Et celui qui fait Feuille avant que je dise Mi a perdu !"</p>
-<p>Explication du jeu : Simple chifoumi. Vous mettez 5 points par manche gagnée. En cas d’égalité, on recommence la manche. Au bout de 20 manches, le jeu s’arrête. Vous n’avez le droit qu’à 3 essais pour améliorer votre score. Que le plus chanceux avec Math.random l’emporte. 
-</p>
+        <!-- Story text content -->
     </div>
 
     <div id="userStatus"></div>
@@ -170,7 +158,7 @@
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 userId = user.uid;
-                document.getElementById('userStatus').innerText = Bienvenue : ${user.email};
+                document.getElementById('userStatus').innerText = `Bienvenue : ${user.email}`;
 
                 const userRef = doc(db, 'users', userId);
                 const docSnap = await getDoc(userRef);
@@ -197,7 +185,7 @@
             const computerChoice = getComputerChoice();
             const result = determineWinner(userChoice, computerChoice);
 
-            computerChoiceDisplay.innerText = Choix de l'ordinateur : ${computerChoice};
+            computerChoiceDisplay.innerText = `Choix de l'ordinateur : ${computerChoice}`;
 
             if (result === 'win') {
                 score += 5;
@@ -210,10 +198,10 @@
 
             if (result !== 'draw') {
                 rounds += 1;
-                roundsDisplay.innerText = Manches jouées: ${rounds};
+                roundsDisplay.innerText = `Manches jouées: ${rounds}`;
             }
 
-            scoreDisplay.innerText = Score actuel: ${score};
+            scoreDisplay.innerText = `Score actuel: ${score}`;
 
             if (rounds >= 20) {
                 resultMessageDisplay.innerText = "Le jeu est terminé !";
