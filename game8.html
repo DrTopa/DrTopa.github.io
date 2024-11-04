@@ -179,7 +179,7 @@
             gravityInterval = setInterval(() => velocity += 0.5, 30); // Slower gravity for easier gameplay
 
             // Generate obstacles every 1 second (increased frequency)
-            obstacleInterval = setInterval(createObstacle, 1000);
+            obstacleInterval = setInterval(createDoubleObstacle, 500);
         }
 
         function updateGame() {
@@ -201,10 +201,10 @@
         function createObstacle() {
             const randomValue = Math.random();
 
-            if (randomValue < 0.001) {
+            if (randomValue < 0) {
                 // Create a top obstacle
                 createSingleObstacle('top');
-            } else if (randomValue < 0.002) {
+            } else if (randomValue < 0.) {
                 // Create a bottom obstacle
                 createSingleObstacle('bottom');
             } else {
