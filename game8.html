@@ -251,6 +251,7 @@ function createDoubleObstacle() {
 
     const gameAreaHeight = gameArea.offsetHeight;
     const minSpace = gameAreaHeight / 4;
+    const minHeight = 50;
 
     const maxTopObstacleHeight = gameAreaHeight - minSpace - minHeight; // Adjusted max height for top obstacle
     const topObstacleHeight = Math.random() * (maxTopObstacleHeight - minHeight) + minHeight;
