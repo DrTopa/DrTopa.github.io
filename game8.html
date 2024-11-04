@@ -143,6 +143,7 @@
         const startButton = document.getElementById('start-btn');
         let birdY = 200;
         let velocity = 0;
+        let obstacleSpeed = 3; // Initial speed for obstacles
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
@@ -168,6 +169,7 @@
             birdY = 200;
             velocity = 0;
             bird.style.top = `${birdY}px`;
+            obstacleSpeed = 3; // Reset obstacle speed
             scoreDisplay.innerText = `Score: ${score}`;
             startButton.style.display = 'none';
 
@@ -182,6 +184,9 @@
         function updateGame() {
             birdY += velocity;
             bird.style.top = `${birdY}px`;
+
+            // Increase obstacle speed based on score
+            obstacleSpeed = 3 + (score / 1000) * 3; // Increases speed from 3 to 6 based on score
 
             // Check if bird hits top or bottom boundaries
             if (birdY <= 0 || birdY >= gameArea.offsetHeight - bird.offsetHeight || checkCollision()) {
@@ -217,7 +222,7 @@
                     gameArea.removeChild(obstacle);
                     clearInterval(moveInterval);
                 } else {
-                    obstacle.style.left = `${obstacleLeft - 3}px`;
+                    obstacle.style.left = `${obstacleLeft - obstacleSpeed}px`; // Use the variable speed
                 }
             }, 20);
         }
