@@ -183,7 +183,7 @@
 
         function updateGame() {
             birdY += velocity;
-            bird.style.top = ${birdY}px;
+            bird.style.top = `${birdY}px`;
 
             // Increase obstacle speed based on score
             obstacleSpeed = 3 + (score / 1000) * 3; // Increases speed from 3 to 6 based on score
@@ -236,63 +236,59 @@
                     gameArea.removeChild(obstacle);
                     clearInterval(moveInterval);
                 } else {
-                    obstacle.style.left = ${obstacleLeft - obstacleSpeed}px;
+                    obstacle.style.left = `${obstacleLeft - obstacleSpeed}px`;
                 }
             }, 20);
         }
 
-function createDoubleObstacle() {
-    const topObstacle = document.createElement('div');
-    const bottomObstacle = document.createElement('div');
+        function createDoubleObstacle() {
+            const topObstacle = document.createElement('div');
+            const bottomObstacle = document.createElement('div');
 
-    topObstacle.classList.add('obstacle');
-    bottomObstacle.classList.add('obstacle');
+            topObstacle.classList.add('obstacle');
+            bottomObstacle.classList.add('obstacle');
 
-    const gameAreaHeight = gameArea.offsetHeight;
-    const minSpace = gameAreaHeight / 6;
+            const gameAreaHeight = gameArea.offsetHeight;
+            const minSpace = gameAreaHeight / 6;
 
-    const topObstacleHeight = Math.random() * (gameAreaHeight - minSpace) + minSpace; // Ensure enough space for the bottom obstacle
-    const bottomObstacleHeight = gameAreaHeight - topObstacleHeight - minSpace; // Calculate height for bottom obstacle to maintain space
+            const obstacleHeight = Math.random() * (gameAreaHeight - minSpace - 100) + 100; // Random height for top obstacle
+            const gapHeight = Math.random() * minSpace + minSpace; // Gap height between top and bottom obstacle
 
-    topObstacle.style.height = `${topObstacleHeight}px`;
-    bottomObstacle.style.height = `${bottomObstacleHeight}px`;
-    topObstacle.style.width = '30px';
-    bottomObstacle.style.width = '30px';
-    topObstacle.style.left = `${gameArea.offsetWidth}px`;
-    bottomObstacle.style.left = `${gameArea.offsetWidth}px`;
+            topObstacle.style.height = `${obstacleHeight}px`;
+            bottomObstacle.style.height = `${gameAreaHeight - obstacleHeight - gapHeight}px`;
+            topObstacle.style.width = bottomObstacle.style.width = '30px';
+            topObstacle.style.left = bottomObstacle.style.left = `${gameArea.offsetWidth}px`;
+            topObstacle.style.top = '0';
+            bottomObstacle.style.bottom = '0';
 
-    topObstacle.style.top = '0';
-    bottomObstacle.style.bottom = '0';
+            gameArea.appendChild(topObstacle);
+            gameArea.appendChild(bottomObstacle);
 
-    gameArea.appendChild(topObstacle);
-    gameArea.appendChild(bottomObstacle);
-
-    const moveInterval = setInterval(() => {
-        const topObstacleLeft = parseInt(topObstacle.style.left, 10);
-        const bottomObstacleLeft = parseInt(bottomObstacle.style.left, 10);
-        if (topObstacleLeft < -30) {
-            gameArea.removeChild(topObstacle);
-            gameArea.removeChild(bottomObstacle);
-            clearInterval(moveInterval);
-        } else {
-            topObstacle.style.left = ${topObstacleLeft - obstacleSpeed}px;
-            bottomObstacle.style.left = ${bottomObstacleLeft - obstacleSpeed}px;
+            const moveInterval = setInterval(() => {
+                const topObstacleLeft = parseInt(topObstacle.style.left, 10);
+                const bottomObstacleLeft = parseInt(bottomObstacle.style.left, 10);
+                if (topObstacleLeft < -30) {
+                    gameArea.removeChild(topObstacle);
+                    gameArea.removeChild(bottomObstacle);
+                    clearInterval(moveInterval);
+                } else {
+                    topObstacle.style.left = `${topObstacleLeft - obstacleSpeed}px`;
+                    bottomObstacle.style.left = `${bottomObstacleLeft - obstacleSpeed}px`;
+                }
+            }, 20);
         }
-    }, 20);
-}
 
         function checkCollision() {
-            const obstacles = document.getElementsByClassName('obstacle');
-            for (let obstacle of obstacles) {
-                const birdRect = bird.getBoundingClientRect();
+            const obstacles = document.querySelectorAll('.obstacle');
+            const birdRect = bird.getBoundingClientRect();
+
+            for (const obstacle of obstacles) {
                 const obstacleRect = obstacle.getBoundingClientRect();
 
-                if (
-                    birdRect.right > obstacleRect.left &&
-                    birdRect.left < obstacleRect.right &&
-                    birdRect.bottom > obstacleRect.top &&
-                    birdRect.top < obstacleRect.bottom
-                ) {
+                if (obstacleRect.left < birdRect.right &&
+                    obstacleRect.right > birdRect.left &&
+                    obstacleRect.top < birdRect.bottom &&
+                    obstacleRect.bottom > birdRect.top) {
                     return true;
                 }
             }
@@ -308,24 +304,21 @@ function createDoubleObstacle() {
             startButton.style.display = 'block';
         }
 
-        async function saveScore(currentScore) {
-            try {
-                const gameData = { score: currentScore, timestamp: new Date() };
-                await addDoc(collection(db, 'users', userId, 'Game8'), gameData);
-
-                if (currentScore > highestScore) {
-                    highestScore = currentScore;
-                    await updateDoc(doc(db, 'users', userId), { highestScoreGame8: highestScore });
-                }
-            } catch (error) {
-                console.error("Erreur en sauvegardant le score:", error);
-            }
+        async function saveScore(score) {
+            const userRef = doc(db, 'users', userId);
+            await updateDoc(userRef, {
+                totalPlayCountGame8: firebase.firestore.FieldValue.increment(1),
+                highestScoreGame8: Math.max(score, highestScore)
+            });
         }
 
-        startButton.addEventListener('click', startGame);
+        document.getElementById('start-btn').addEventListener('click', startGame);
 
-        window.addEventListener('keydown', (e) => {
-            if (e.code === 'Space') velocity = -6; // Press space to make bird jump
+        // Optional: Listen for space key to make the bird jump
+        window.addEventListener('keydown', (event) => {
+            if (event.code === 'Space') {
+                velocity = -10; // Negative value to jump up
+            }
         });
     </script>
 </body>
