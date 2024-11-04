@@ -252,13 +252,17 @@ function createDoubleObstacle() {
     const gameAreaHeight = gameArea.offsetHeight;
     const minSpace = gameAreaHeight / 4;
 
-    const topObstacleHeight = Math.random() * (gameAreaHeight) - minSpace ; // Ensure enough space for the bottom obstacle
-    const bottomObstacleHeight = gameAreaHeight - topObstacleHeight - minSpace; // Calculate height for bottom obstacle to maintain space
+    const maxTopObstacleHeight = gameAreaHeight - minSpace - minHeight; // Adjusted max height for top obstacle
+    const topObstacleHeight = Math.random() * (maxTopObstacleHeight - minHeight) + minHeight;
+
+    // Calculate height for the bottom obstacle so that both have enough space and respect the minimum height constraint
+    const bottomObstacleHeight = gameAreaHeight - topObstacleHeight - minSpace;
+
 
     topObstacle.style.height = `${topObstacleHeight}px`;
     bottomObstacle.style.height = `${bottomObstacleHeight}px`;
-    topObstacle.style.width = '30px';
-    bottomObstacle.style.width = '30px';
+    topObstacle.style.width = '10px';
+    bottomObstacle.style.width = '10px';
     topObstacle.style.left = `${gameArea.offsetWidth}px`;
     bottomObstacle.style.left = `${gameArea.offsetWidth}px`;
 
