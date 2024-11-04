@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuiVaLaManger ? - Jeu 7</title>
+    <style>
+        /* General body styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #ffebcd;
+            background-image: url('https://www.transparenttextures.com/patterns/snow.png');
+            margin: 0;
+        }
+
+        /* Title styling */
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #d32f2f;
+            font-family: 'Comic Sans MS', cursive;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        /* User status */
+        #userStatus {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.2em;
+            color: #a23636;
+        }
+
+        /* Instructions */
+        #instructions {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            text-align: center;
+            max-width: 1000px;
+            font-size: 1.2em;
+            color: #333;
+        }
+
+        /* Game area */
+        #gameArea {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 2px solid #b71c1c;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Button styles */
+        .choice-btn {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 1.5em;
+            cursor: pointer;
+            background-color: #388e3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .choice-btn:hover {
+            background-color: #2e7d32;
+        }
+
+        /* Score and rounds display */
+        #score, #rounds {
+            font-size: 1.8em;
+            margin: 15px;
+            color: #1565c0;
+        }
+    </style>
+</head>
+<body>
+    <h1>QuiVaLaManger ? - Jeu 7</h1>
+
+    <div id="instructions">
+        <p>Bienvenue dans le jeu Pierre-Papier-Ciseaux ! Choisissez "Pierre", "Feuille" ou "Ciseaux" pour jouer contre l'ordinateur.</p>
+        <p>Si vous gagnez, votre score augmente de 5 points. Si vous perdez, votre score reste le même. Le jeu s'arrête après 20 manches.</p>
+        <p>Bons jeux !</p>
+    </div>
+
+    <div id="userStatus"></div>
+    <div id="gameArea">
+        <button class="choice-btn" id="btnPierre">Pierre</button>
+        <button class="choice-btn" id="btnFeuille">Feuille</button>
+        <button class="choice-btn" id="btnCiseaux">Ciseaux</button>
+        <div id="score">Score actuel: 0</div>
+        <div id="rounds">Manches jouées: 0</div>
+    </div>
+
+    <script defer type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyC4bjg7lVwd8FU8MREaPhBsBENv5qmiYYM",
+            authDomain: "calendrier-de-l-avent-54e3a.firebaseapp.com",
+            databaseURL: "https://calendrier-de-l-avent-54e3a-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "calendrier-de-l-avent-54e3a",
+            storageBucket: "calendrier-de-l-avent-54e3a.appspot.com",
+            messagingSenderId: "850639567855",
+            appId: "1:850639567855:web:0d799a1ecca005fcff141a",
+            measurementId: "G-PC1W7RYVEH"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let userId = '';
+        let score = 0;
+        let rounds = 0;
+        let totalPlayCountGame7 = 0;
+        let highestScore = 0;
+
+        const scoreDisplay = document.getElementById('score');
+        const roundsDisplay = document.getElementById('rounds');
+
+        const choices = ['Pierre', 'Feuille', 'Ciseaux'];
+
+        function getComputerChoice() {
+            return choices[Math.floor(Math.random() * choices.length)];
+        }
+
+        function determineWinner(userChoice, computerChoice) {
+            if (userChoice === computerChoice) return 'draw';
+            if (
+                (userChoice === 'Pierre' && computerChoice === 'Ciseaux') ||
+                (userChoice === 'Ciseaux' && computerChoice === 'Feuille') ||
+                (userChoice === 'Feuille' && computerChoice === 'Pierre')
+            ) return 'win';
+            return 'lose';
+        }
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                userId = user.uid;
+                document.getElementById('userStatus').innerText = `Bienvenue : ${user.email}`;
+
+                const userRef = doc(db, 'users', userId);
+                const docSnap = await getDoc(userRef);
+
+                if (!docSnap.exists()) {
+                    await setDoc(userRef, { userId: userId, totalPlayCountGame7: 0, highestScoreGame7: 0 });
+                } else {
+                    const userData = docSnap.data();
+                    totalPlayCountGame7 = userData.totalPlayCountGame7 || 0;
+                    highestScore = userData.highestScoreGame7 || 0;
+                }
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
+        document.getElementById('btnPierre').addEventListener('click', () => playGame('Pierre'));
+        document.getElementById('btnFeuille').addEventListener('click', () => playGame('Feuille'));
+        document.getElementById('btnCiseaux').addEventListener('click', () => playGame('Ciseaux'));
+
+        async function playGame(userChoice) {
+            if (rounds >= 20) return;
+
+            const computerChoice = getComputerChoice();
+            const result = determineWinner(userChoice, computerChoice);
+
+            if (result === 'win') {
+                score += 5;
+            }
+
+            if (result !== 'draw') {
+                rounds += 1;
+                roundsDisplay.innerText = `Manches jouées: ${rounds}`;
+            }
+            
+            scoreDisplay.innerText = `Score actuel: ${score}`;
+            
+            if (rounds >= 20) {
+                await saveScore(score);
+            }
+        }
+
+        async function saveScore(finalScore) {
+            try {
+                const gameData = { score: finalScore, playCount: totalPlayCountGame7 + 1, timestamp: new Date() };
+                await addDoc(collection(db, 'users', userId, 'Game7'), gameData);
+
+                const userRef = doc(db, 'users', userId);
+                if (finalScore > highestScore) {
+                    highestScore = finalScore;
+                    await updateDoc(userRef, { highestScoreGame7: highestScore });
+                }
+
+                totalPlayCountGame7 += 1;
+                await updateDoc(userRef, { totalPlayCountGame7 });
+            } catch (error) {
+                console.error("Erreur en sauvegardant le score :", error);
+            }
+        }
+    </script>
+</body>
+</html>
