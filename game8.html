@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuiVaLaManger - Game 8</title>
+    <style>
+        /* General body styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #e6f7ff;
+            margin: 0;
+        }
+
+        /* Title styling */
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #1b5e20;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        /* User status */
+        #userStatus {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.2em;
+            color: #a23636;
+        }
+
+        /* Instructions */
+        #instructions {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            max-width: 600px;
+            font-size: 1.2em;
+            color: #333;
+        }
+
+        /* Game Area */
+        #gameArea {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            height: 400px;
+            background-color: #fff;
+            border: 2px solid #b71c1c;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        /* Bird and lines */
+        .bird {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: #ff5722;
+            border-radius: 50%;
+        }
+
+        .line {
+            position: absolute;
+            width: 100%;
+            height: 5px;
+            background-color: #00695c;
+        }
+
+        /* Score */
+        #score {
+            font-size: 1.5em;
+            margin: 10px;
+            color: #1b5e20;
+        }
+    </style>
+</head>
+<body>
+    <h1>QuiVaLaManger 🐦</h1>
+
+    <!-- Instructions -->
+    <div id="instructions">
+        <p>Bienvenue dans le jeu QuiVaLaManger !</p>
+        <p>Utilisez la barre d'espace pour faire voler l'oiseau entre les lignes. Si l'oiseau touche une ligne, le ciel ou le sol, vous perdez. Essayez de battre votre meilleur score !</p>
+    </div>
+
+    <div id="userStatus"></div>
+    <div id="score">Score: 0</div>
+    <div id="gameArea">
+        <div id="bird" class="bird"></div>
+    </div>
+
+    <script defer type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyC4bjg7lVwd8FU8MREaPhBsBENv5qmiYYM",
+            authDomain: "calendrier-de-l-avent-54e3a.firebaseapp.com",
+            databaseURL: "https://calendrier-de-l-avent-54e3a-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "calendrier-de-l-avent-54e3a",
+            storageBucket: "calendrier-de-l-avent-54e3a.appspot.com",
+            messagingSenderId: "850639567855",
+            appId: "1:850639567855:web:0d799a1ecca005fcff141a",
+            measurementId: "G-PC1W7RYVEH"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let userId = '';
+        let score = 0;
+        let highestScore = 0;
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                userId = user.uid;
+                document.getElementById('userStatus').innerText = `Bienvenue : ${user.email}`;
+
+                const userRef = doc(db, 'users', userId);
+                const docSnap = await getDoc(userRef);
+
+                if (!docSnap.exists()) {
+                    await setDoc(userRef, { userId: userId, totalPlayCountGame8: 0, highestScoreGame8: 0 });
+                } else {
+                    const userData = docSnap.data();
+                    highestScore = userData.highestScoreGame8 || 0;
+                }
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
+        const bird = document.getElementById('bird');
+        const gameArea = document.getElementById('gameArea');
+        const scoreDisplay = document.getElementById('score');
+        let gameInterval, gravityInterval;
+        let birdY = 200;
+        let velocity = 0;
+
+        function startGame() {
+            score = 0;
+            birdY = 200;
+            velocity = 0;
+            bird.style.top = `${birdY}px`;
+            gameInterval = setInterval(updateGame, 20);
+            gravityInterval = setInterval(() => velocity += 1, 20);
+        }
+
+        function updateGame() {
+            birdY += velocity;
+            bird.style.top = `${birdY}px`;
+
+            if (birdY <= 0 || birdY >= gameArea.offsetHeight - bird.offsetHeight || checkCollision()) {
+                endGame();
+            } else {
+                score += 1;
+                scoreDisplay.innerText = `Score: ${score}`;
+            }
+        }
+
+        function checkCollision() {
+            // Check for collision with lines
+            const lines = document.getElementsByClassName('line');
+            for (let line of lines) {
+                if (bird.offsetTop < line.offsetTop + line.offsetHeight &&
+                    bird.offsetTop + bird.offsetHeight > line.offsetTop) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function endGame() {
+            clearInterval(gameInterval);
+            clearInterval(gravityInterval);
+            saveScore(score);
+            alert(`Partie terminée! Votre score: ${score}`);
+        }
+
+        async function saveScore(currentScore) {
+            try {
+                const gameData = { score: currentScore, timestamp: new Date() };
+                await addDoc(collection(db, 'users', userId, 'Game8'), gameData);
+
+                if (currentScore > highestScore) {
+                    highestScore = currentScore;
+                    await updateDoc(doc(db, 'users', userId), { highestScoreGame8: highestScore });
+                }
+            } catch (error) {
+                console.error("Erreur en sauvegardant le score:", error);
+            }
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') velocity = -8;
+        });
+
+        startGame();
+    </script>
+</body>
+</html>
