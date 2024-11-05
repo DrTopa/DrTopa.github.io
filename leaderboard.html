@@ -199,11 +199,12 @@
 
             // Render the ranking table
             const rankingTable = document.getElementById('rankingTable').getElementsByTagName('tbody')[0];
-            userScores.forEach((user, index) => {
-                const rankDisplay = user.totalScore === minScore ? 'Bobby' : index + 1; // Check if user's score is the minimum
-                const row = document.createElement('tr');
-                row.innerHTML = `<td>${index + 1}</td><td>${user.email}</td><td>${user.totalScore}</td>`;
-                rankingTable.appendChild(row);
+        userScores.forEach((user, index) => {
+        // Check if the user's score is the minimum score
+        const rankDisplay = user.totalScore === minScore ? 'Bobby' : index + 1; // Update rankDisplay logic
+        const row = document.createElement('tr');
+        row.innerHTML = `<td>${rankDisplay}</td><td>${user.email}</td><td>${user.totalScore}</td>`;
+        rankingTable.appendChild(row);
             });
         }
 
