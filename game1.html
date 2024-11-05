@@ -190,6 +190,7 @@
                     totalPlayCountGame1 = userData.totalPlayCountGame1 || 0;
                     highestScore = userData.highestScoreGame1 || 0;
                     playCount = totalPlayCountGame1 + 1;
+                    UserEmail: user.email
                     
                     highestScoreDisplay.innerText = `Meilleur score: ${highestScore}`;
                     totalPlayCountDisplay.innerText = `Jeux joués: ${totalPlayCountGame1}`;
