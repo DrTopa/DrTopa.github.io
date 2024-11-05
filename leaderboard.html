@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -71,11 +70,6 @@
             margin-top: 20px;
         }
 
-         /* Centering the ranking table */
-        #rankingTable {
-            margin: 0 auto; /* Center the ranking table */
-        }
-
         /* Responsive design */
         @media (max-width: 600px) {
             table {
@@ -90,7 +84,7 @@
         <table id="userScoresTable">
             <thead>
                 <tr>
-                    <th> Email</th>
+                    <th>User Email</th>
                     <!-- Change "Highest Score Game X" to "Game X" -->
                     <th>Game 1</th>
                     <th>Game 2</th>
@@ -122,12 +116,12 @@
             </tbody>
         </table>
 
-        <h2>Classement Total</h2>
+        <h2>Overall Ranking</h2>
         <table id="rankingTable">
             <thead>
                 <tr>
-                    <th>Classement</th>
-                    <th> Email</th>
+                    <th>Rank</th>
+                    <th>User Email</th>
                     <th>Total Score</th>
                 </tr>
             </thead>
@@ -152,37 +146,36 @@
             appId: "1:850639567855:web:0d799a1ecca005fcff141a",
             measurementId: "G-PC1W7RYVEH"
         };
-        
+
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-       async function fetchUserScores() {
-    const usersCollection = collection(db, 'users');
-    const userDocs = await getDocs(usersCollection);
-    const userScores = [];
+        async function fetchUserScores() {
+            const usersCollection = collection(db, 'users');
+            const userDocs = await getDocs(usersCollection);
+            const userScores = [];
 
-    userDocs.forEach((doc) => {
-        const userData = doc.data();
-        const userId = doc.id;
-        const userEmail = userData.UserEmail || 'Unknown'; // Corrected key here
-        const scores = [];
-        let totalScore = 0;
+            userDocs.forEach((doc) => {
+                const userData = doc.data();
+                const userId = doc.id;
+                const userEmail = userData.UserEmail || 'Unknown'; // Corrected key here
+                const scores = [];
+                let totalScore = 0;
 
-        // Retrieve scores for each game or set default to 0
-        for (let i = 1; i <= 24; i++) {
-            const score = userData[`Game${i}`] || 0;
-            scores.push(score);
-            totalScore += score;
+                // Retrieve scores for each game or set default to 0
+                for (let i = 1; i <= 24; i++) {
+                    const score = userData[`Game${i}`] || 0; // Change to "Game X"
+                    scores.push(score);
+                    totalScore += score;
+                }
+
+                userScores.push({ email: userEmail, scores, totalScore });
+                console.log(`User ID: ${userId}, Email: ${userEmail}, Scores:`, scores); // Log each user’s email and scores
+            });
+
+            return userScores;
         }
-
-        userScores.push({ email: userEmail, scores, totalScore });
-        console.log(`User ID: ${userId}, Email: ${userEmail}, Scores:`, scores); // Log each user’s email and scores
-    });
-
-    return userScores;
-}
-
 
         async function renderTables() {
             const userScores = await fetchUserScores();
