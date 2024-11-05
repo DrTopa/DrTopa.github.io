@@ -330,11 +330,11 @@ function createDoubleObstacle() {
             return false;
         }
 
-        function endGame() {
+       async function endGame() {
             clearInterval(gameInterval);
             clearInterval(gravityInterval);
             clearInterval(obstacleInterval);
-            saveScore(score);
+            await saveScore(score);
             alert(`Partie terminée! Votre score: ${score}`);
             startButton.style.display = 'block';
         }
@@ -343,7 +343,8 @@ function createDoubleObstacle() {
             try {
                 const gameData = { score: currentScore,playCount: totalPlayCountGame8 + 1, timestamp: new Date() };
                 await addDoc(collection(db, 'users', userId, 'Game8'), gameData);
-
+                const userRef = doc(db, 'users', userId);
+                
                 if (totalPlayCountGame8 < 15 && currentScore > highestScore) {
                    highestScore = Math.ceil(currentScore / 50);
                     await updateDoc(doc(db, 'users', userId), { highestScoreGame8: highestScore });
