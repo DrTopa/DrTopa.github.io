@@ -121,7 +121,8 @@
                 const userData = doc.data();
                 userEmails[doc.id] = userData.email || 'Unknown'; // doc.id represents userId
             });
-
+            
+    console.log("User Emails Mapping:", userEmails); // Log userEmails mapping
     return userEmails;
 }
 
@@ -145,6 +146,7 @@
                 }
 
                 userScores.push({ email: userEmail, scores, totalScore });
+                console.log(`User ID: ${userId}, Email: ${userEmail}, Scores:`, scores); // Log each user’s email and scores
             });
 
             return userScores;
