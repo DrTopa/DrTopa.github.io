@@ -140,7 +140,7 @@
 
 
         async function renderTables() {
-            const userScores = await fetchUserScores(userEmails);
+            const userScores = await fetchUserScores();
 
             // Render the first table
             const userScoresTable = document.getElementById('userScoresTable').getElementsByTagName('tbody')[0];
