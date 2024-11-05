@@ -43,7 +43,7 @@
             font-size: 1.2em;
             color: #333;
             overflow-y: auto; 
-            max-height: 300px; /* Set a maximum height */
+            max-height: 400px; /* Set a maximum height */
         }
         #gameArea {
             display: flex;
@@ -114,9 +114,9 @@
 <p>Soudain, on entendit la porte de la cave claquer une nouvelle fois, avec un écho sonore qui résonna dans toute la pièce.</p>
 <p>Topapa, pas découragé pour autant, lança une nouvelle suggestion : « Bon, d'accord, un petit Word Search ? Promis, il est hyper facile, vraiment nul. »</p>
 <p>Et alors, il entendit Grinchémie ouvrir la porte de sa chambre. </p>
-<p>Explication du jeu : Vous disposez de 5 minutes pour trouver le maximum de mots dans cette grille parmi les 20 présents. Ecrivez le nom du mot et si c'est juste, vous gagnez 5 points. </p>
+<p>Explication du jeu : Vous disposez de 10 minutes pour trouver le maximum de mots dans cette grille parmi les 20 présents. Ecrivez le nom du mot et si c'est juste, vous gagnez 5 points. </p>
 <p>Les mots peuvent être placés de manière horizontale, verticale ou en diagonale. Et  ils peuvent se lire de gauche à droite comme de droite à gauche. De haut en bas comme de.. Bref vous avez capté. Ils se cachent les fourbes. </p>
- <p> Au passage, il existe des mots "Genre REMORD" ligne 1 qui sont là mais pas placés volontairement, donc ça ne marche pas. Mais les mots à chercher seront moins random que remord. Un petit message en dessous du bouton "Soumettre" vousindiquent si vous avez trouvé le bon mot. Vous n'avez qu'un seul essai, alors attention avant de cliquer sur démarrer </p>       
+ <p> Au passage, il existe des mots "Genre REMORD" ligne 1 qui sont là mais pas placés volontairement, donc ça ne marche pas. Mais les mots à chercher seront moins random que remord. Un petit message en dessous du bouton "Soumettre" vous indiquent si vous avez trouvé le bon mot. Vous n'avez qu'un seul essai, alors attention avant de cliquer sur démarrer </p>       
  <p>Possible sur PC comme sur Smartphone mais c'est probablement plus facile sur PC avec la taille de l'écran. </p>
     </div>
     <div id="gameArea">
@@ -154,7 +154,7 @@
         let highestScoreGame4 = 0;
         let score = 0;
         let timer;
-        let timeLeft = 300;
+        let timeLeft = 600;
 
         const staticGrid = [
     ["E", "K", "M", "R", "E", "M", "O", "R", "D", "N", "I", "L", "A", "P", "J", "O", "G", "Z", "U", "F"],
@@ -235,7 +235,7 @@
         }
 
         function startTimer() {
-            timeLeft = 300; // Set timer to 300 seconds
+            timeLeft = 600; // Set timer to 600 seconds
             timerDisplay.innerText = `Temps restant : ${timeLeft}s`;
             timer = setInterval(() => {
                 timeLeft--;
