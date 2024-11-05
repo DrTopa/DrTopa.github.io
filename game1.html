@@ -184,7 +184,7 @@
                 const docSnap = await getDoc(userRef);
 
                 if (!docSnap.exists()) {
-                    await setDoc(userRef, { userId: userId, totalPlayCountGame1: 0, highestScoreGame1: 0 });
+                    await setDoc(userRef, { userId: userId, totalPlayCountGame1: 0, highestScoreGame1: 0, UserEmail: user.email });
                 } else {
                     const userData = docSnap.data();
                     totalPlayCountGame1 = userData.totalPlayCountGame1 || 0;
