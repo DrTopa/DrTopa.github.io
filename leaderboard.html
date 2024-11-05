@@ -1,1 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard and Scores</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        table {
+            border-collapse: collapse;
+            margin: 20px 0;
+            width: 90%;
+            max-width: 800px;
+            border: 1px solid #ddd;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f4f4f4;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Leaderboard and User Scores</h1>
+
+    <table id="userScoresTable">
+        <thead>
+            <tr>
+                <th>User Email</th>
+                <th>Highest Score Game 1</th>
+                <th>Highest Score Game 2</th>
+                <th>Highest Score Game 3</th>
+                <!-- Continue for all games -->
+                <th>Highest Score Game 24</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+    <h2>Overall Ranking</h2>
+    <table id="rankingTable">
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>User Email</th>
+                <th>Total Score</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+    <script defer type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyC4bjg7lVwd8FU8MREaPhBsBENv5qmiYYM",
+            authDomain: "calendrier-de-l-avent-54e3a.firebaseapp.com",
+            databaseURL: "https://calendrier-de-l-avent-54e3a-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "calendrier-de-l-avent-54e3a",
+            storageBucket: "calendrier-de-l-avent-54e3a.appspot.com",
+            messagingSenderId: "850639567855",
+            appId: "1:850639567855:web:0d799a1ecca005fcff141a",
+            measurementId: "G-PC1W7RYVEH"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        async function fetchUserScores() {
+            const usersCollection = collection(db, 'users');
+            const userDocs = await getDocs(usersCollection);
+            const userScores = [];
+
+            userDocs.forEach((doc) => {
+                const userData = doc.data();
+                const userEmail = userData.email || 'Unknown';
+                const scores = [];
+                let totalScore = 0;
+
+                // Retrieve scores for each game or set default to 0
+                for (let i = 1; i <= 24; i++) {
+                    const score = userData[`highestScoreGame${i}`] || 0;
+                    scores.push(score);
+                    totalScore += score;
+                }
+
+                userScores.push({ email: userEmail, scores, totalScore });
+            });
+
+            return userScores;
+        }
+
+        async function renderTables() {
+            const userScores = await fetchUserScores();
+
+            // Render the first table
+            const userScoresTable = document.getElementById('userScoresTable').getElementsByTagName('tbody')[0];
+            userScores.forEach((user) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td>${user.email}</td>` + user.scores.map(score => `<td>${score}</td>`).join('');
+                userScoresTable.appendChild(row);
+            });
+
+            // Sort users by total score for ranking
+            userScores.sort((a, b) => b.totalScore - a.totalScore);
+
+            // Render the ranking table
+            const rankingTable = document.getElementById('rankingTable').getElementsByTagName('tbody')[0];
+            userScores.forEach((user, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td>${index + 1}</td><td>${user.email}</td><td>${user.totalScore}</td>`;
+                rankingTable.appendChild(row);
+            });
+        }
+
+        renderTables();
+    </script>
+</body>
+</html>
 
