@@ -69,6 +69,9 @@
             text-align: center;
             margin-top: 20px;
         }
+                /* Centering the ranking table */
+        #rankingTable {
+            margin: 0 auto; /* Center the ranking table */
 
         /* Responsive design */
         @media (max-width: 600px) {
@@ -84,7 +87,7 @@
         <table id="userScoresTable">
             <thead>
                 <tr>
-                    <th>User Email</th>
+                    <th> Email</th>
                     <!-- Change "Highest Score Game X" to "Game X" -->
                     <th>Game 1</th>
                     <th>Game 2</th>
@@ -120,9 +123,9 @@
         <table id="rankingTable">
             <thead>
                 <tr>
-                    <th>Rank</th>
-                    <th>User Email</th>
-                    <th>Total Score</th>
+                    <th>Classement</th>
+                    <th>Email</th>
+                    <th>Score Total</th>
                 </tr>
             </thead>
             <tbody>
@@ -195,6 +198,7 @@
             const rankingTable = document.getElementById('rankingTable').getElementsByTagName('tbody')[0];
             userScores.forEach((user, index) => {
                 const row = document.createElement('tr');
+                const rankDisplay = index === userScores.length - 1 ? 'Bobby' : index + 1;
                 row.innerHTML = `<td>${index + 1}</td><td>${user.email}</td><td>${user.totalScore}</td>`;
                 rankingTable.appendChild(row);
             });
