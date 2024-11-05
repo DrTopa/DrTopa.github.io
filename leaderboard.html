@@ -5,24 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Leaderboard</title>
     <style>
+        /* General body styling */
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            margin: 20px;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #ffebcd;
+            background-image: url('https://www.transparenttextures.com/patterns/snow.png');
+            margin: 0;
         }
 
+        /* Christmas themed title */
         h1 {
-            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #d32f2f;
+            font-family: 'Comic Sans MS', cursive;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
         }
 
+        /* User status */
+        #userStatus {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.2em;
+            color: #a23636;
+        }
+
+        /* Table styles */
         table {
             border-collapse: collapse;
             margin: 20px 0;
             width: 90%;
             max-width: 800px;
             border: 1px solid #ddd;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
         }
 
         table, th, td {
@@ -30,66 +53,82 @@
         }
 
         th, td {
-            padding: 8px;
+            padding: 10px;
             text-align: center;
         }
 
         th {
             background-color: #f4f4f4;
             font-weight: bold;
+            color: #b71c1c;
+        }
+
+        /* Overall ranking section */
+        h2 {
+            color: #d32f2f;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        /* Responsive design */
+        @media (max-width: 600px) {
+            table {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
     <h1>Tableau des scores</h1>
-<div style="overflow-x: auto; width: 100%;">
-    <table id="userScoresTable">
-        <thead>
-    <tr>
-        <th>User Email</th>
-        <th>Highest Score Game 1</th>
-        <th>Highest Score Game 2</th>
-        <th>Highest Score Game 3</th>
-        <th>Highest Score Game 4</th>
-        <th>Highest Score Game 5</th>
-        <th>Highest Score Game 6</th>
-        <th>Highest Score Game 7</th>
-        <th>Highest Score Game 8</th>
-        <th>Highest Score Game 9</th>
-        <th>Highest Score Game 10</th>
-        <th>Highest Score Game 11</th>
-        <th>Highest Score Game 12</th>
-        <th>Highest Score Game 13</th>
-        <th>Highest Score Game 14</th>
-        <th>Highest Score Game 15</th>
-        <th>Highest Score Game 16</th>
-        <th>Highest Score Game 17</th>
-        <th>Highest Score Game 18</th>
-        <th>Highest Score Game 19</th>
-        <th>Highest Score Game 20</th>
-        <th>Highest Score Game 21</th>
-        <th>Highest Score Game 22</th>
-        <th>Highest Score Game 23</th>
-        <th>Highest Score Game 24</th>
-    </tr>
-</thead>
+    <div style="overflow-x: auto; width: 100%;">
+        <table id="userScoresTable">
+            <thead>
+                <tr>
+                    <th>User Email</th>
+                    <!-- Change "Highest Score Game X" to "Game X" -->
+                    <th>Game 1</th>
+                    <th>Game 2</th>
+                    <th>Game 3</th>
+                    <th>Game 4</th>
+                    <th>Game 5</th>
+                    <th>Game 6</th>
+                    <th>Game 7</th>
+                    <th>Game 8</th>
+                    <th>Game 9</th>
+                    <th>Game 10</th>
+                    <th>Game 11</th>
+                    <th>Game 12</th>
+                    <th>Game 13</th>
+                    <th>Game 14</th>
+                    <th>Game 15</th>
+                    <th>Game 16</th>
+                    <th>Game 17</th>
+                    <th>Game 18</th>
+                    <th>Game 19</th>
+                    <th>Game 20</th>
+                    <th>Game 21</th>
+                    <th>Game 22</th>
+                    <th>Game 23</th>
+                    <th>Game 24</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
 
-        <tbody>
-        </tbody>
-    </table>
-
-    <h2>Overall Ranking</h2>
-    <table id="rankingTable">
-        <thead>
-            <tr>
-                <th>Rank</th>
-                <th>User Email</th>
-                <th>Total Score</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
+        <h2>Overall Ranking</h2>
+        <table id="rankingTable">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>User Email</th>
+                    <th>Total Score</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
 
     <script defer type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
