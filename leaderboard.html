@@ -70,6 +70,11 @@
             margin-top: 20px;
         }
 
+         /* Centering the ranking table */
+        #rankingTable {
+            margin: 0 auto; /* Center the ranking table */
+        }
+
         /* Responsive design */
         @media (max-width: 600px) {
             table {
@@ -84,7 +89,7 @@
         <table id="userScoresTable">
             <thead>
                 <tr>
-                    <th>User Email</th>
+                    <th> Email</th>
                     <!-- Change "Highest Score Game X" to "Game X" -->
                     <th>Game 1</th>
                     <th>Game 2</th>
@@ -116,12 +121,12 @@
             </tbody>
         </table>
 
-        <h2>Overall Ranking</h2>
+        <h2>Classement Total</h2>
         <table id="rankingTable">
             <thead>
                 <tr>
-                    <th>Rank</th>
-                    <th>User Email</th>
+                    <th>Classement</th>
+                    <th> Email</th>
                     <th>Total Score</th>
                 </tr>
             </thead>
@@ -165,7 +170,7 @@
 
         // Retrieve scores for each game or set default to 0
         for (let i = 1; i <= 24; i++) {
-            const score = userData[`highestScoreGame${i}`] || 0;
+            const score = userData[`Game${i}`] || 0;
             scores.push(score);
             totalScore += score;
         }
