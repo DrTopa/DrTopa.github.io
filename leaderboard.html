@@ -112,14 +112,28 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        async function fetchUserScores() {
+        async function fetchUserEmails() {
+            const usersCollection = collection(db, 'users');
+            const userDocs = await getDocs(usersCollection);
+            const userEmails = {};
+        
+            userDocs.forEach((doc) => {
+                const userData = doc.data();
+                userEmails[doc.id] = userData.email || 'Unknown'; // doc.id represents userId
+            });
+
+    return userEmails;
+}
+
+        async function fetchUserScores(userEmails) {
             const usersCollection = collection(db, 'users');
             const userDocs = await getDocs(usersCollection);
             const userScores = [];
 
             userDocs.forEach((doc) => {
                 const userData = doc.data();
-                const userEmail = userData.email || 'Unknown';
+                const userId = doc.id;
+                const userEmail = userEmails[userId] || 'Unknown';
                 const scores = [];
                 let totalScore = 0;
 
@@ -137,7 +151,8 @@
         }
 
         async function renderTables() {
-            const userScores = await fetchUserScores();
+            const userEmails = await fetchUserEmails();
+            const userScores = await fetchUserScores(userEmails);
 
             // Render the first table
             const userScoresTable = document.getElementById('userScoresTable').getElementsByTagName('tbody')[0];
