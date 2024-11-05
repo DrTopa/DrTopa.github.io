@@ -153,9 +153,10 @@
     <div id="instructions">
         <p>Alors que les bébés Romain prenaient une pause bien méritée, riant et jouant à comparer leur taille de chaussures, Topapa de Noël fit irruption dans l'atelier.« Les nains, il est temps de s’occuper des rênes de Noël ! » annonça-t-il en pointant du doigt les quatre rênes qui grelotaient dehors enroulés dans 2 plaids : Loris, Artaban, Phasme et RaseToiLaMoustache.</p>
         <p>Bébé Romain se précipita vers le frigo, décidé à rassembler les ingrédients nécessaires pour nourrir les rênes affamées. « Du blanc de poulet et du riz, ça devrait leur plaire, » murmura-t-il en fouillant dans les tiroirs.</p>
-        <p>Puis il servit aux rênes la meilleur biosson du monde, une bonne gamelle d’eau fraîche. Mais attention, il avait entendu les instructions de Topapa : «  Les bougs sont très exigeants sur la quantité d’eau ». Avec précaution, il ajusta le niveau de l’eau, un regard concentré sur son travail, comme un scientifique en train de réaliser du bon vieux polyurée.</p>
-        <p>Explication du jeu : Vous devez remplir les formes au plus près du pourcentage cible. Le pourcentage s’exprime en volume de la forme. Attention aux volumes plus complexes. Chaque différence entre le pourcentage réel et la cible retire des points à votre score (qui commence à 100). Vous avez 10 essais pour améliorer votre score. Le jeu est encore disponible après mais le meilleur score ne sera pas amélioré. 
-</p>
+        <p>Puis il servit aux rênes la meilleur boisson du monde, une bonne gamelle d’eau fraîche. Mais attention, il avait entendu les instructions de Topapa : «  Les bougs sont très exigeants sur la quantité d’eau ». Avec précaution, il ajusta le niveau de l’eau, un regard concentré sur son travail, comme un scientifique en train de réaliser du bon vieux polyurée.</p>
+        <p>Explication du jeu : Vous devez remplir les formes au plus près du pourcentage cible. Le pourcentage s’exprime en volume de la forme. Attention aux volumes plus complexes. Chaque différence entre le pourcentage réel et la cible retire des points à votre score (qui commence à 100). Vous avez 10 essais pour améliorer votre score. Le jeu est encore disponible après mais le meilleur score ne sera pas amélioré.</p> 
+        <p>Jeu impossible sur Smartphone
+        </p>
     </div>
     <div id="christmas-lights">
         <div class="light"></div>
@@ -393,7 +394,7 @@ function calculateFillPercentage(fillHeight) {
                 await addDoc(collection(db, 'users', userId, 'Game3'), gameData);
 
                 const userRef = doc(db, 'users', userId);
-                if (totalPlayCountGame3 <= 3 && finalScore > highestScoreGame3) {
+                if (totalPlayCountGame3 <= 10 && finalScore > highestScoreGame3) {
                     highestScoreGame3 = finalScore;
                     await updateDoc(userRef, { highestScoreGame3 : finalScore});
                     document.getElementById('highestScoreDisplay').innerText = `Meilleur Score : ${highestScoreGame3}`; // Update display
