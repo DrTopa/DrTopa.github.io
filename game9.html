@@ -173,26 +173,26 @@
 
             switch (edgeStart) {
                 case 0: // Bottom-left: move up-right
-                    xPos = circle.offsetHeight/2;
-                    yPos = gameArea.offsetHeight - circle.offsetHeight/2;
+                    xPos = circle.offsetHeight;
+                    yPos = gameArea.offsetHeight - circle.offsetHeight;
                     xDirection = 16;
                     yDirection = -16;
                     break;
                 case 1: // Bottom-right: move up-left
-                    xPos = gameArea.offsetWidth - circle.offsetWidth/2;
-                    yPos = gameArea.offsetHeight - circle.offsetHeight/2;
+                    xPos = gameArea.offsetWidth - circle.offsetWidth;
+                    yPos = gameArea.offsetHeight - circle.offsetHeight;
                     xDirection = -16;
                     yDirection = -16;
                     break;
                 case 2: // Top-left: move down-right
-                    xPos = circle.offsetHeight/2;
-                    yPos = circle.offsetHeight/2;
+                    xPos = circle.offsetHeight;
+                    yPos = circle.offsetHeight;
                     xDirection = 16;
                     yDirection = 16;
                     break;
                 case 3: // Top-right: move down-left
-                    xPos = gameArea.offsetWidth - circle.offsetWidth/2;
-                    yPos = circle.offsetHeight/2;
+                    xPos = gameArea.offsetWidth - circle.offsetWidth;
+                    yPos = circle.offsetHeight;
                     xDirection = -16;
                     yDirection = 16;
                     break;
