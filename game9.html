@@ -174,26 +174,26 @@
                 case 0: // Bottom-left: move up-right
                     xPos = 0;
                     yPos = gameArea.offsetHeight - circle.offsetHeight;
-                    xDirection = 8;
-                    yDirection = -8;
+                    xDirection = 16;
+                    yDirection = -16;
                     break;
                 case 1: // Bottom-right: move up-left
                     xPos = gameArea.offsetWidth - circle.offsetWidth;
                     yPos = gameArea.offsetHeight - circle.offsetHeight;
-                    xDirection = -8;
-                    yDirection = -8;
+                    xDirection = -16;
+                    yDirection = -16;
                     break;
                 case 2: // Top-left: move down-right
                     xPos = 0;
                     yPos = 0;
-                    xDirection = 8;
-                    yDirection = 8;
+                    xDirection = 16;
+                    yDirection = 16;
                     break;
                 case 3: // Top-right: move down-left
                     xPos = gameArea.offsetWidth - circle.offsetWidth;
                     yPos = 0;
-                    xDirection = -8;
-                    yDirection = 8;
+                    xDirection = -16;
+                    yDirection = 16;
                     break;
             }
 
