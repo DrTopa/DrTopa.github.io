@@ -156,7 +156,7 @@ async function saveScore(score) {
                 if (totalPlayCountGame9 <= 15 && score > highestScoreGame9) {
                     highestScore = score;
                     await updateDoc(userRef, { highestScoreGame9: highestScore });
-                    highestScoreDisplay.innerText = `Meilleur score: ${highestScore}`; // Update display for highest score
+                    document.getElementById('highestScoreDisplay').innerText = `Meilleur score: ${highestScore}`;
                 }
             } catch (error) {
                 console.error("Error saving score:", error);
@@ -207,15 +207,15 @@ async function saveScore(score) {
                 });
 
                 setTimeout(() => {
-                    if (gameArea.contains(circle)) {
-                        clearInterval(intervalId);
-                        score = 0;
-                        saveScore(score);
-                        gameArea.removeChild(circle);
-                          document.getElementById("gameMessage").innerText = `Temps écoulé! Distance du centre : - , Score de la partie : ${score}`;
+    if (gameArea.contains(circle)) {
+        clearInterval(intervalId);
+        score = 0;
+        saveScore(score);
+        gameArea.removeChild(circle);
+        document.getElementById("gameMessage").innerText = `Temps écoulé! Distance du centre : - , Score de la partie : ${score}`;
     }
-                    }
-                }, 2000); // Circle appears for 2 seconds max
+}, 2000); // Circle appears for 2 seconds max
+
 
             }, Math.random() * 13000 + 7000); // Random delay between 7 and 20 seconds
         }
