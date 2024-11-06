@@ -153,7 +153,7 @@ async function saveScore(score) {
                 document.getElementById('playCountDisplay').innerText = `Nombre de jeux : ${totalPlayCountGame9}`;
 
                 
-                if (totalPlayCountGame9 <= 15 && score > highestScoreGame9) {
+                if (totalPlayCountGame9 <= 15 && score > highestScore) {
                     highestScore = score;
                     await updateDoc(userRef, { highestScoreGame9: highestScore });
                     document.getElementById('highestScoreDisplay').innerText = `Meilleur score: ${highestScore}`;
@@ -194,38 +194,32 @@ async function saveScore(score) {
                     if (y <= 0 || y >= gameArea.offsetHeight - 20) dy *= -1;
                 }, 5);
 
-                document.body.addEventListener("keydown", (e) => {
+   document.body.addEventListener("keydown", (e) => {
     if (e.code === "Space") {
         clearInterval(intervalId);
 
-        // Get the bounding box of the circle
+        // Get the game area's bounding rectangle
+        const gameAreaRect = gameArea.getBoundingClientRect();
+
+        // Get the circle's bounding rectangle relative to the viewport
         const rect = circle.getBoundingClientRect();
 
-        // Debugging: log the position and distance
-        console.log("Circle Position: ", rect.left, rect.top);
-        console.log("Center Position: ", centerX, centerY);
+        // Calculate the circle's position relative to the game area
+        const circleX = rect.left - gameAreaRect.left + 10;  // Add 10 for the circle's radius
+        const circleY = rect.top - gameAreaRect.top + 10;    // Add 10 for the circle's radius
 
         // Calculate the distance from the center of the game area
-        const distance = Math.hypot(rect.left + 10 - centerX, rect.top + 10 - centerY);
-        
-        // Log the calculated distance
-        console.log("Calculated Distance: ", distance);
+        const distance = Math.hypot(circleX - centerX, circleY - centerY);
 
-        // Calculate the score based on the distance
+        // Update the score based on the distance
         score = Math.max(0, 100 - Math.round(distance));
-
-        // Log the score
-        console.log("Score: ", score);
-
-        // Save the score
+        
+        // Save the score and update the UI
         saveScore(score);
-
-        // Remove the circle and display the message
         gameArea.removeChild(circle);
         document.getElementById("gameMessage").innerText = `Distance du centre : ${Math.round(distance)} px, Score de la partie : ${score}`;
     }
 });
-
 
                 setTimeout(() => {
     if (gameArea.contains(circle)) {
