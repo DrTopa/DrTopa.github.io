@@ -154,6 +154,7 @@
 
             setTimeout(() => {
                 circle.style.display = 'block';
+                setRandomStartPosition();
                 setRandomDirection();
 
                 gameInterval = setInterval(moveCircle, 20);
@@ -163,6 +164,35 @@
         // Move circle in a diagonal direction
         let xDirection = 0;
         let yDirection = 0;
+        let xPos = 0;
+        let yPos = 0;
+
+        function setRandomStartPosition() {
+            const edgeStart = Math.floor(Math.random() * 4);
+
+            switch (edgeStart) {
+                case 0: // Top edge
+                    xPos = Math.random() * (gameArea.offsetWidth - circle.offsetWidth);
+                    yPos = 0;
+                    break;
+                case 1: // Right edge
+                    xPos = gameArea.offsetWidth - circle.offsetWidth;
+                    yPos = Math.random() * (gameArea.offsetHeight - circle.offsetHeight);
+                    break;
+                case 2: // Bottom edge
+                    xPos = Math.random() * (gameArea.offsetWidth - circle.offsetWidth);
+                    yPos = gameArea.offsetHeight - circle.offsetHeight;
+                    break;
+                case 3: // Left edge
+                    xPos = 0;
+                    yPos = Math.random() * (gameArea.offsetHeight - circle.offsetHeight);
+                    break;
+            }
+
+            // Set circle position
+            circle.style.left = `${xPos}px`;
+            circle.style.top = `${yPos}px`;
+        }
 
         function setRandomDirection() {
             const directions = [
@@ -177,12 +207,14 @@
         }
 
         function moveCircle() {
+            xPos += xDirection;
+            yPos += yDirection;
+
+            circle.style.left = `${xPos}px`;
+            circle.style.top = `${yPos}px`;
+
             const circleRect = circle.getBoundingClientRect();
             const gameAreaRect = gameArea.getBoundingClientRect();
-
-            // Update circle position
-            circle.style.left = `${circle.offsetLeft + xDirection}px`;
-            circle.style.top = `${circle.offsetTop + yDirection}px`;
 
             // Check boundaries
             if (
