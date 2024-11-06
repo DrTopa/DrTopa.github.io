@@ -16,12 +16,14 @@
             margin: 0;
             overflow-y: auto;
         }
+
         h1 {
             font-size: 2.5em;
             margin-bottom: 20px;
             color: #1b5e20;
             text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
         }
+
         #userStatus {
             position: absolute;
             top: 10px;
@@ -29,6 +31,7 @@
             font-size: 1.2em;
             color: #a23636;
         }
+
         #instructions {
             background: rgba(255, 255, 255, 0.9);
             padding: 15px;
@@ -39,27 +42,31 @@
             font-size: 1.2em;
             color: #333;
         }
+
         #gameArea {
             position: relative;
-            width: 100%;
-            max-width: 600px;
-            height: 400px;
+            width: 400px;
+            height: 400px; /* Square shape */
             background-color: #fff;
             border: 2px solid #b71c1c;
             border-radius: 12px;
         }
+
         .circle {
             position: absolute;
             width: 30px;
             height: 30px;
             background-color: #ff5722;
             border-radius: 50%;
+            display: none; /* Initially hidden until start */
         }
+
         #score {
             font-size: 1.5em;
             margin: 10px;
             color: #1b5e20;
         }
+
         #start-btn {
             padding: 10px 20px;
             font-size: 1em;
@@ -68,8 +75,8 @@
             color: white;
             border: none;
             border-radius: 5px;
-            transition: background-color 0.3s;
         }
+        
         #start-btn:hover {
             background-color: #2e7d32;
         }
@@ -77,13 +84,17 @@
 </head>
 <body>
     <h1>PluieEtoilée 🌟</h1>
+
     <div id="instructions">
-        <p>Appuyez sur "Commencer le jeu" pour débuter. Une fois le jeu lancé, un cercle apparaîtra aléatoirement après quelques secondes et traversera la zone de jeu. Appuyez sur la barre Espace pour arrêter le cercle et enregistrer sa position.</p>
+        <p>Appuyez sur "Commencer le jeu" pour débuter. Lorsque le cercle apparaît, appuyez sur "Espace" pour l'arrêter et voir ses coordonnées.</p>
     </div>
+
     <div id="userStatus"></div>
-    <div id="score">Score: 10</div>
+    <div id="score">Score: 0</div>
     <button id="start-btn">Commencer le jeu</button>
-    <div id="gameArea"></div>
+    <div id="gameArea">
+        <div id="circle" class="circle"></div>
+    </div>
 
     <script defer type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
@@ -93,10 +104,12 @@
         const firebaseConfig = {
             apiKey: "AIzaSyC4bjg7lVwd8FU8MREaPhBsBENv5qmiYYM",
             authDomain: "calendrier-de-l-avent-54e3a.firebaseapp.com",
+            databaseURL: "https://calendrier-de-l-avent-54e3a-default-rtdb.europe-west1.firebasedatabase.app",
             projectId: "calendrier-de-l-avent-54e3a",
             storageBucket: "calendrier-de-l-avent-54e3a.appspot.com",
             messagingSenderId: "850639567855",
-            appId: "1:850639567855:web:0d799a1ecca005fcff141a"
+            appId: "1:850639567855:web:0d799a1ecca005fcff141a",
+            measurementId: "G-PC1W7RYVEH"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -104,14 +117,16 @@
         const db = getFirestore(app);
 
         let userId = '';
-        let score = 10;
+        let score = 10; // Default score of 10
         let highestScore = 0;
         let totalPlayCountGame9 = 0;
-        let circleInterval;
+        let gameInterval;
+        const circle = document.getElementById('circle');
         const gameArea = document.getElementById('gameArea');
         const scoreDisplay = document.getElementById('score');
         const startButton = document.getElementById('start-btn');
-        
+
+        // Authentication and data fetch
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 userId = user.uid;
@@ -132,43 +147,64 @@
             }
         });
 
+        // Start game logic
         function startGame() {
-            score = 10;
             scoreDisplay.innerText = `Score: ${score}`;
             startButton.style.display = 'none';
 
-            setTimeout(createMovingCircle, Math.random() * (20000 - 7000) + 7000);
+            setTimeout(() => {
+                circle.style.display = 'block';
+                setRandomDirection();
+
+                gameInterval = setInterval(moveCircle, 20);
+            }, Math.random() * (20000 - 7000) + 7000); // Delay between 7 and 20 seconds
         }
 
-        function createMovingCircle() {
-            const circle = document.createElement('div');
-            circle.classList.add('circle');
-            gameArea.appendChild(circle);
+        // Move circle in a diagonal direction
+        let xDirection = 0;
+        let yDirection = 0;
 
-            let xPos = 0;
-            let yPos = 0;
-            const direction = Math.random() > 0.5 ? 1 : -1;
-            circleInterval = setInterval(() => {
-                xPos += direction * 2;
-                yPos += direction * 2;
-
-                if (xPos > gameArea.offsetWidth - circle.offsetWidth || yPos > gameArea.offsetHeight - circle.offsetHeight) {
-                    endGame(circle);
-                } else {
-                    circle.style.left = `${xPos}px`;
-                    circle.style.top = `${yPos}px`;
-                }
-            }, 10);
+        function setRandomDirection() {
+            const directions = [
+                { x: 2, y: 2 },   // down-right
+                { x: -2, y: 2 },  // down-left
+                { x: 2, y: -2 },  // up-right
+                { x: -2, y: -2 }  // up-left
+            ];
+            const randomIndex = Math.floor(Math.random() * directions.length);
+            xDirection = directions[randomIndex].x;
+            yDirection = directions[randomIndex].y;
         }
 
-        async function endGame(circle) {
-            clearInterval(circleInterval);
-            gameArea.removeChild(circle);
+        function moveCircle() {
+            const circleRect = circle.getBoundingClientRect();
+            const gameAreaRect = gameArea.getBoundingClientRect();
+
+            // Update circle position
+            circle.style.left = `${circle.offsetLeft + xDirection}px`;
+            circle.style.top = `${circle.offsetTop + yDirection}px`;
+
+            // Check boundaries
+            if (
+                circleRect.left <= gameAreaRect.left ||
+                circleRect.right >= gameAreaRect.right ||
+                circleRect.top <= gameAreaRect.top ||
+                circleRect.bottom >= gameAreaRect.bottom
+            ) {
+                endGame();
+            }
+        }
+
+        // End game logic
+        async function endGame() {
+            clearInterval(gameInterval);
             await saveScore(score);
-            alert(`Partie terminée! Votre score: ${score}`);
+            alert(`Partie terminée! Score: ${score}`);
             startButton.style.display = 'block';
+            circle.style.display = 'none';
         }
 
+        // Save score to Firebase
         async function saveScore(currentScore) {
             try {
                 const gameData = { score: currentScore, playCount: totalPlayCountGame9 + 1, timestamp: new Date() };
@@ -186,20 +222,18 @@
             }
         }
 
-        startButton.addEventListener('click', startGame);
-
+        // Listen for space key to stop the circle
         window.addEventListener('keydown', (e) => {
-            if (e.code === 'Space') {
-                const circle = document.querySelector('.circle');
-                if (circle) {
-                    const circleRect = circle.getBoundingClientRect();
-                    const gameAreaRect = gameArea.getBoundingClientRect();
-                    clearInterval(circleInterval);
-                    alert(`Position arrêtée - X: ${circleRect.left - gameAreaRect.left}, Y: ${circleRect.top - gameAreaRect.top}`);
-                    endGame(circle);
-                }
+            if (e.code === 'Space' && circle.style.display === 'block') {
+                clearInterval(gameInterval);
+                const x = circle.offsetLeft;
+                const y = circle.offsetTop;
+                alert(`Coordonnées arrêtées : (${x}, ${y})`);
+                endGame();
             }
         });
+
+        startButton.addEventListener('click', startGame);
     </script>
 </body>
 </html>
