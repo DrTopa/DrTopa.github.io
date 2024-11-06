@@ -172,26 +172,26 @@ function setStartPositionAndDirection() {
 
     switch (edgeStart) {
         case 0: // Bottom-left: move up-right
-            xPos = 0;
-            yPos = gameArea.offsetHeight;  // Start from the bottom-left corner
+            xPos = 10;
+            yPos = gameArea.offsetHeight-10;  // Start from the bottom-left corner
             xDirection = 16;
             yDirection = -16;
             break;
         case 1: // Bottom-right: move up-left
-            xPos = gameArea.offsetWidth;
-            yPos = gameArea.offsetHeight;  // Start from the bottom-right corner
+            xPos = gameArea.offsetWidth-10;
+            yPos = gameArea.offsetHeight-10;  // Start from the bottom-right corner
             xDirection = -16;
             yDirection = -16;
             break;
         case 2: // Top-left: move down-right
-            xPos = 0;
-            yPos = 0;  // Start from the top-left corner
+            xPos = 10;
+            yPos = 10;  // Start from the top-left corner
             xDirection = 16;
             yDirection = 16;
             break;
         case 3: // Top-right: move down-left
-            xPos = gameArea.offsetWidth;
-            yPos = 0;  // Start from the top-right corner
+            xPos = gameArea.offsetWidth-10;
+            yPos = 10;  // Start from the top-right corner
             xDirection = -16;
             yDirection = 16;
             break;
