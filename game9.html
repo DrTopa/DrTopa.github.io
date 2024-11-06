@@ -154,56 +154,51 @@
 
             setTimeout(() => {
                 circle.style.display = 'block';
-                setRandomStartPosition();
-                setRandomDirection();
+                setStartPositionAndDirection();
 
                 gameInterval = setInterval(moveCircle, 20);
             }, Math.random() * (20000 - 7000) + 7000); // Delay between 7 and 20 seconds
         }
 
-        // Move circle in a diagonal direction
+        // Movement direction variables
         let xDirection = 0;
         let yDirection = 0;
         let xPos = 0;
         let yPos = 0;
 
-        function setRandomStartPosition() {
+        function setStartPositionAndDirection() {
             const edgeStart = Math.floor(Math.random() * 4);
 
             switch (edgeStart) {
-                case 0: // Top edge
-                    xPos = Math.random() * (gameArea.offsetWidth - circle.offsetWidth);
-                    yPos = 0;
-                    break;
-                case 1: // Right edge
-                    xPos = gameArea.offsetWidth - circle.offsetWidth;
-                    yPos = Math.random() * (gameArea.offsetHeight - circle.offsetHeight);
-                    break;
-                case 2: // Bottom edge
-                    xPos = Math.random() * (gameArea.offsetWidth - circle.offsetWidth);
-                    yPos = gameArea.offsetHeight - circle.offsetHeight;
-                    break;
-                case 3: // Left edge
+                case 0: // Bottom-left: move up-right
                     xPos = 0;
-                    yPos = Math.random() * (gameArea.offsetHeight - circle.offsetHeight);
+                    yPos = gameArea.offsetHeight - circle.offsetHeight;
+                    xDirection = 2;
+                    yDirection = -2;
+                    break;
+                case 1: // Bottom-right: move up-left
+                    xPos = gameArea.offsetWidth - circle.offsetWidth;
+                    yPos = gameArea.offsetHeight - circle.offsetHeight;
+                    xDirection = -2;
+                    yDirection = -2;
+                    break;
+                case 2: // Top-left: move down-right
+                    xPos = 0;
+                    yPos = 0;
+                    xDirection = 2;
+                    yDirection = 2;
+                    break;
+                case 3: // Top-right: move down-left
+                    xPos = gameArea.offsetWidth - circle.offsetWidth;
+                    yPos = 0;
+                    xDirection = -2;
+                    yDirection = 2;
                     break;
             }
 
             // Set circle position
             circle.style.left = `${xPos}px`;
             circle.style.top = `${yPos}px`;
-        }
-
-        function setRandomDirection() {
-            const directions = [
-                { x: 2, y: 2 },   // down-right
-                { x: -2, y: 2 },  // down-left
-                { x: 2, y: -2 },  // up-right
-                { x: -2, y: -2 }  // up-left
-            ];
-            const randomIndex = Math.floor(Math.random() * directions.length);
-            xDirection = directions[randomIndex].x;
-            yDirection = directions[randomIndex].y;
         }
 
         function moveCircle() {
