@@ -119,10 +119,12 @@
     <!-- Game instructions -->
     <div id="instructions">
         <p>Décembre est enfin là, et cela ne peut signifier qu’une chose : l’atelier du Père Noël Adrien, que tout le monde appelle Topapa, est en effervescence. Fidèle à sa réputation, Topapa s’enfile une grande tasse de café. "Elle a meilleur goût quand c'est l'autre Dudley qui me la prépare" se dit-il et puis il s'élance dans l’atelier pour réveiller ses lutins. Ces derniers, encore en pyjama, s’étirent maladroitement alors que Topapa secoue une vieille ceinture de cuir devant eux.</p>
-        <p>« Allez, allez ! Au boulot, petits fainéants ! » dit-il d’une voix joviale.</p>
-        <p>Soudain, un cri fluet se fait entendre : « Graoumpf… » Les bébés Romain, encore enroulés dans leurs couvertures, ouvrent un œil en fronçant leur gros sourcil, perturbés dans leur douce sieste. Tout endormis, ils tentent d’appuyer en vain sur le bouton Snooze de leur réveil, espérant grappiller quelques minutes de sommeil supplémentaires. Mais leurs petites mains glissent et ratent à chaque tentative, provoquant des petits bruits de frustration.</p>
+        <p>« Allez, allez ! Au boulot, petits fainéants ! » dit-il d’une voix joviale. Mais il sentit que les lutins de Noël traînaient au lit, bien décidés à ne pas se lever. Devant leur obstination, il comprit qu'il allait devoir employer les grands moyens. Il retira son bonnet avec un sourire déterminé, et d'un seul coup, un éclat lumineux envahit la pièce. La surface lisse et parfaitement polie de son crâne chauve reflétait le moindre rayon de lumière qui passait à travers le rideau, transformant la pièce en un véritable phare. 
+        « Merci pour la technique, Zizou », se dit-il, ravi du résultat.
+        </p>
+        <p>Soudain, un cri fluet se fait entendre : « Graoumpf… » Les bébés Romain, aveuglés par cette lumière divine et encore enroulés dans leurs couvertures, ouvraient un œil en fronçant leur gros sourcil, perturbés dans leur douce sieste. Tout endormis, ils tentent d’appuyer en vain sur le bouton Snooze de leur réveil, espérant grappiller quelques minutes de sommeil supplémentaires. Mais leurs petites mains glissent et ratent à chaque tentative, provoquant des petits bruits de frustration.</p>
         <p>Topapa, amusé, décide d'intervenir pour motiver ses petits nains : « Allez, allez, les nains ! On enfile les chaussures de sécurité. Décembre ne va pas attendre que vous vous réveilliez ! »</p>
-        <p>Explication jeu : Vous disposez de  7 essais pour améliorer votre score. Après avoir lancé le jeu, appuyer sur le bouton Snooze le plus de fois possibles en 10 secondes. Après 7 essais, vous pourrez toujours jouer à ce jeu passionnant.</p>
+        <p>Explication jeu : Vous disposez de  5 essais pour améliorer votre score. Après avoir lancé le jeu, appuyer sur le bouton Snooze le plus de fois possibles en 10 secondes. Après 7 essais, vous pourrez toujours jouer à ce jeu passionnant.</p>
         <p>Déconseillé sur Smartphone.</p>
     </div>
 
@@ -236,7 +238,7 @@
                 await addDoc(collection(db, 'users', userId, 'Game1'), gameData);
 
                 const userRef = doc(db, 'users', userId);
-                if (totalPlayCountGame1 <= 7 && score > highestScore) {
+                if (totalPlayCountGame1 <= 5 && score > highestScore) {
                     highestScore = score;
                     await updateDoc(userRef, { highestScoreGame1: highestScore });
                     highestScoreDisplay.innerText = `Meilleur score: ${highestScore}`; // Update display for highest score
