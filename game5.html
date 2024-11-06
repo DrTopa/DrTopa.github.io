@@ -12,7 +12,6 @@
             justify-content: center;
             align-items: center;
             flex-direction: column;
-            height: 100vh;
             background-color: #ffebcd;
             background-image: url('https://www.transparenttextures.com/patterns/snow.png');
             margin: 0;
@@ -48,7 +47,7 @@
             font-size: 1.2em;
             color: #333;
             overflow-y: auto;
-            max-height: 300px;
+            max-height: 400px;
         }
 
         /* Game area */
@@ -99,12 +98,25 @@
     <div id="instructions">
         <p>Toc Toc ? Encore ?</p>
 <p>Topapa de Noël, qui appréciait la tranquillité de son atelier, soupira en se rendant compte que, depuis deux jours, celui-ci ressemblait au foie de Loris un jeudi soir, grouillant d’agitation. Le charismatique héros ouvrit la porte, s’attendant à voir une tête familière, mais il ne vit rien. « Serait-ce une blague ? » se demanda-t-il, perplexe.</p>
-<p>En baissant les yeux, il aperçut alors un tout petit bébé, un gamin aux joues rebondies, qui se tenait là, le regard pétillant de défi. « Hey le noob ! » lança le bébé d’un ton provocateur, bien qu'il semblait plutôt être un garçon mal aimé.</p>
+<p>En baissant les yeux, il aperçut alors un tout petit bébé, un gamin qui n'avait pas fait sa sieste, qui se tenait là, le regard pétillant de défi. « Hey le noob ! » lança le bébé d’un ton provocateur, bien qu'il semblait plutôt être un garçon mal aimé.</p>
 <p>Topapa se mit à sourire, intrigué par la façon dont une voix aussi forte pouvait sortir d’un si petit corps. « Intéressant, » pensa-t-il, amusé, « comme sa voix ne colle pas du tout avec sa taille. »</p>
-<p>« Écoute, vieux, l’année dernière je n’ai eu que 56 cadeaux, c’était vraiment un Noël bien guez, » continua le bébé, croisant les bras avec un air déterminé. « Alors cette année, si tu ne veux pas que je te footstep, tu as intérêt à atteindre la soixantaine, comme ton âge. Compris, fossile ? »</p>
+<p>« Écoute, vieux, l’année dernière je n’ai eu que 56 cadeaux, c’était vraiment un Noël bien guez, » continua le bébé, croisant les bras avec un air déterminé. </p>
+<p>Topapa prit sa liste des cadeaux de l’année dernière et dit : «  57, 58,59 et 60 » Tu en as eu 60 des cadeaux l’année dernière . Le compte est bon. 
+<p>« Alors, t’as bien reçu Le Nain ? »</p>
+<p>Dudley leva les yeux aux ciels. Topapa ajouta : « Je t’arrête, Le Nain est un banger, ce jeu est même devenu une légende dans Elbofos. »</p>
+<p>« Et Bandido, ça aussi c’est confirmé ? »</p>
+<p>Dudley fronça les sourcils. « Bandido ? Non, j’ai jamais reçu ça, moi. »</p>
+<p>Topapa hésita, puis aperçut une astérisque à sa liste indiquant « Bandido retiré pour manque d’esprit. » « Ah ok, my baaad ! » dit-il en levant les mains au ciel.</p>
+<p>Topapa continua. « Et les chaussettes design, là, tu ne les comptes pas ? »</p>
+<p>Topapa fit un hochement de tête approbateur. « Tu imagines bien, bravo. »</p>
+<p>Il continua sa liste, puis hésita en lisant une mention particulière : « Oh, et cette journée spéciale avec Moman, Locklear et Squeezie sur Mario Party Jamboreeee en mode IRL, ça, c’est confirmé ? »</p>
+<p>Dudley écarquilla les yeux. « Attends, c’est quoi cette journée IRL avec mes stars et mes modèles de vie? »</p>
+<p>Topapa, se rendant compte de sa boulette, fit une grimace. « Ah... my baaad, c’était ton cadeau pour cette année. Bon, bah, c’est spoilé. Je vais devoir l’offrir à un autre gamin, plus méritant. »</p>
+<p>Dudley lança un regard désespéré. « Sérieusement ? Alors cette année, si tu ne veux pas que je te footstep, tu as intérêt à atteindre la soixantaine, comme ton âge. Compris, fossile ? »</p>
+
 <p>Topapa, bien qu’accoutumé aux Dudley avec leurs piques habituelles, sentit un léger agacement à l’idée d’être traité de vieux. « Écoute, gamin, » rétorqua-t-il d’un ton ferme mais amusé, « je te propose un petit défi. On va faire des jeux de réflexe, et on verra bien qui est le vieux ici. »</p>
 <p>Malheureusement, il se souvint avec un soupir que la WII était hors service, et donc pas de « photo d’ovni » à l'horizon. « Mais pas de souci, j’ai d’autres idées en tête. » Un sourire malicieux se dessina sur ses lèvres alors qu’il commençait à réfléchir aux différentes manières de défier ce petit insolent.</p>
-<p>Explication du jeu : Vous devez recopier le plus de mots possibles en 1 minute. Chaque mot augmente votre score de 1 mais un mot mal orthographié le réduit de 0.5. A la fin, votre score total est mulitiplié par 2. Vous avez maximum 10 essais pour améliorer votre meilleur score. </p>
+<p>Explication du jeu : Vous devez recopier le plus de mots possibles en 1 minute. Chaque mot augmente votre score de 1 mais un mot mal orthographié le réduit de 0.5. A la fin, votre score total est mulitiplié par 2. Vous avez maximum 15 essais pour améliorer votre meilleur score. </p>
 <p>Possible sur Smartphone (bonus pour le correcteur orthographique) comme sur clavier (bonus pour la dextérité des doigts). 
 </p>
     </div>
@@ -391,7 +403,7 @@
                 await addDoc(collection(db, 'users', userId, 'Game5'), gameData);
 
                 const userRef = doc(db, 'users', userId);
-                if (totalPlayCountGame5 <= 10 && score > highestScore) {
+                if (totalPlayCountGame5 <= 15 && score > highestScore) {
                     highestScore = score;
                     await updateDoc(userRef, { highestScoreGame5: highestScore });
                 }
