@@ -73,17 +73,17 @@
 </head>
 <body>
     <h1>PluieEtoilée 🌟</h1>
-    <div id="userStatus">Statut: Non connecté</div>
+    <div id="userStatus"></div>
     <div id="instructions">Instructions: Appuyez sur le bouton "Commencer le jeu" pour démarrer. Appuyez sur la barre d'espace lorsque le cercle apparaît.</div>
     <button id="startButton">Commencer le jeu</button>
     <div id="gameArea"></div>
 
     <script defer type="module">
-        // Firebase configuration and connection
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
-        import { getFirestore, collection, addDoc, doc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
+        // Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyC4bjg7lVwd8FU8MREaPhBsBENv5qmiYYM",
             authDomain: "calendrier-de-l-avent-54e3a.firebaseapp.com",
@@ -94,31 +94,36 @@
             appId: "1:850639567855:web:0d799a1ecca005fcff141a",
             measurementId: "G-PC1W7RYVEH"
         };
-        
+
         const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
         const db = getFirestore(app);
-        const auth = getAuth();
 
         let userId = null;
         let highestScore = 0;
         let score = 100;
 
-        onAuthStateChanged(auth, async (user) => {
+           onAuthStateChanged(auth, async (user) => {
             if (user) {
                 userId = user.uid;
-                document.getElementById('userStatus').textContent = `Statut: Connecté en tant que ${user.displayName || 'Utilisateur'}`;
+                document.getElementById('userStatus').innerText = `Welcome: ${user.email}`;
 
-                const userDocRef = doc(db, "Game9", userId);
-                const userDoc = await getDoc(userDocRef);
+                const userRef = doc(db, 'users', userId);
+                const docSnap = await getDoc(userRef);
 
-                if (userDoc.exists()) {
-                    highestScore = userDoc.data().HighestScoreGame9 || 0;
+                if (!docSnap.exists()) {
+                    await setDoc(userRef, { userId: userId, totalPlayCountGame9: 0, highestScoreGame9: 0 });
+                    console.log("User document created with initial values.");
+                } else {
+                    const userData = docSnap.data();
+                    totalPlayCountGame9 = userData.totalPlayCountGame9 || 0;
+                    highestScore = userData.highestScoreGame9 || 0;
+                    console.log(`Loaded totalPlayCountGame9: ${totalPlayCountGame9}, highestScore: ${highestScore}`);
                 }
             } else {
-                document.getElementById('userStatus').textContent = 'Statut: Non connecté';
+                window.location.href = 'login.html';
             }
         });
-
         async function saveScore(newScore) {
             if (!userId) return;
 
@@ -180,7 +185,7 @@
                         gameArea.removeChild(circle);
                         alert("Temps écoulé! Votre score est 0.");
                     }
-                }, 2000); // Circle appears for 2 seconds max
+                }, 500); // Circle appears for 2 seconds max
 
             }, Math.random() * 13000 + 7000); // Random delay between 7 and 20 seconds
         }
