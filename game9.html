@@ -163,40 +163,66 @@ async function saveScore(score) {
             }
         }
 
-        document.getElementById("startButton").addEventListener("click", startGame);
+document.getElementById("startButton").addEventListener("click", startGame);
 
-        function startGame() {
-            score = 100;
-            const gameArea = document.getElementById("gameArea");
-            const centerX = gameArea.offsetWidth / 2;
-            const centerY = gameArea.offsetHeight / 2;
+function startGame() {
+    // Reset score and prepare the game area
+    score = 100;
+    const gameArea = document.getElementById("gameArea");
+    const centerX = gameArea.offsetWidth / 2;
+    const centerY = gameArea.offsetHeight / 2;
 
-            document.getElementById("gameMessage").innerText = "Le jeu commence! Préparez-vous...";
+    // Clear any previous circle if present
+    const existingCircle = document.querySelector(".circle");
+    if (existingCircle) {
+        gameArea.removeChild(existingCircle);
+    }
 
-            setTimeout(() => {
-                const circle = document.createElement("div");
-                circle.classList.add("circle");
+    document.getElementById("gameMessage").innerText = "Le jeu commence! Préparez-vous...";
 
-                let direction = Math.random() < 0.5;
-                let x = direction ? 0 : gameArea.offsetWidth - 20;
-                let y = direction ? 0 : gameArea.offsetHeight - 20;
-                let dx = direction ? 3 : -3;
-                let dy = direction ? 3 : -3;
-                gameArea.appendChild(circle);
+    // Random delay before the circle appears
+    setTimeout(() => {
+        // Create a new circle element
+        const circle = document.createElement("div");
+        circle.classList.add("circle");
 
-                let intervalId = setInterval(() => {
-                    x += dx;
-                    y += dy;
-                    circle.style.left = `${x}px`;
-                    circle.style.top = `${y}px`;
+        let direction = Math.random() < 0.5;
+        let x = direction ? 0 : gameArea.offsetWidth - 20;
+        let y = direction ? 0 : gameArea.offsetHeight - 20;
+        let dx = direction ? 3 : -3;
+        let dy = direction ? 3 : -3;
+        gameArea.appendChild(circle);
 
-                    if (x <= 0 || x >= gameArea.offsetWidth - 20) dx *= -1;
-                    if (y <= 0 || y >= gameArea.offsetHeight - 20) dy *= -1;
-                }, 5);
+        // Start moving the circle
+        let intervalId = setInterval(() => {
+            x += dx;
+            y += dy;
+            circle.style.left = `${x}px`;
+            circle.style.top = `${y}px`;
 
-   document.body.addEventListener("keydown", (e) => {
+            // Bounce the circle off the edges
+            if (x <= 0 || x >= gameArea.offsetWidth - 20) dx *= -1;
+            if (y <= 0 || y >= gameArea.offsetHeight - 20) dy *= -1;
+        }, 5);
+
+        // Handle the timeout to clear the game when time is up
+        setTimeout(() => {
+            if (gameArea.contains(circle)) {
+                clearInterval(intervalId);  // Stop the circle movement if time runs out
+                score = 0;  // Set score to 0 if time runs out
+                saveScore(score);  // Save score
+                gameArea.removeChild(circle);  // Remove circle from game area
+                document.getElementById("gameMessage").innerText = `Temps écoulé! Distance du centre : - , Score de la partie : ${score}`;
+            }
+        }, 2000); // Circle appears for 2 seconds max
+
+    }, Math.random() * 13000 + 7000); // Random delay between 7 and 20 seconds
+}
+
+
+document.body.addEventListener("keydown", (e) => {
     if (e.code === "Space") {
-        clearInterval(intervalId);
+        clearInterval(intervalId); // Stop the circle's movement
 
         // Get the game area's bounding rectangle
         const gameAreaRect = gameArea.getBoundingClientRect();
@@ -218,24 +244,13 @@ async function saveScore(score) {
         
         // Save the score and update the UI
         saveScore(score);
-        gameArea.removeChild(circle);
+        
+        // Display the message
         document.getElementById("gameMessage").innerText = `Distance du centre : ${Math.round(distance)} px, Score de la partie : ${score}`;
     }
 });
 
-                setTimeout(() => {
-    if (gameArea.contains(circle)) {
-        clearInterval(intervalId);
-        score = 0;
-        saveScore(score);
-        gameArea.removeChild(circle);
-        document.getElementById("gameMessage").innerText = `Temps écoulé! Distance du centre : - , Score de la partie : ${score}`;
-    }
-}, 2000); // Circle appears for 2 seconds max
 
-
-            }, Math.random() * 13000 + 7000); // Random delay between 7 and 20 seconds
-        }
     </script>
 </body>
 </html>
