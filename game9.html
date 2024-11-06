@@ -111,6 +111,8 @@
         let score = 100;
         let intervalId = null;
         let circle = null;
+        let centerX = 0;
+        let centerY = 0;
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
@@ -164,8 +166,8 @@
             // Reset score and prepare the game area
             score = 100;
             const gameArea = document.getElementById("gameArea");
-            const centerX = gameArea.offsetWidth / 2;
-            const centerY = gameArea.offsetHeight / 2;
+            centerX = gameArea.offsetWidth / 2;
+            centerY = gameArea.offsetHeight / 2;
 
             // Clear any previous circle if present
             if (circle) {
@@ -243,7 +245,6 @@
                 document.getElementById("gameMessage").innerText = `Distance du centre : ${Math.round(distance)} px, Score de la partie : ${score}`;
             }
         });
-
     </script>
 </body>
 </html>
