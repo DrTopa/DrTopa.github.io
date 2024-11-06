@@ -173,13 +173,13 @@
             switch (edgeStart) {
                 case 0: // Bottom-left: move up-right
                     xPos = 0;
-                    yPos = gameArea.offsetHeight - circle.offsetHeight;
+                    yPos = gameArea.offsetHeight;
                     xDirection = 16;
                     yDirection = -16;
                     break;
                 case 1: // Bottom-right: move up-left
-                    xPos = gameArea.offsetWidth - circle.offsetWidth;
-                    yPos = gameArea.offsetHeight - circle.offsetHeight;
+                    xPos = gameArea.offsetWidth;
+                    yPos = gameArea.offsetHeight;
                     xDirection = -16;
                     yDirection = -16;
                     break;
