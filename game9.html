@@ -109,6 +109,8 @@
         let userId = null;
         let highestScore = 0;
         let score = 100;
+        let intervalId = null;
+        let circle = null;
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
@@ -121,25 +123,19 @@
                 if (!docSnap.exists()) {
                     await setDoc(userRef, { userId: userId, totalPlayCountGame9: 0, highestScoreGame9: 0 });
                     console.log("User document created with initial values.");
-                        const userData = docSnap.data();
-                        highestScore = userData.highestScoreGame9 || 0;
-                        const totalPlayCountGame9 = userData.totalPlayCountGame9 || 0;
-                     document.getElementById('playCountDisplay').innerText = `Nombre de jeux : ${totalPlayCountGame9}`;
-                    document.getElementById('highestScoreDisplay').innerText = `Meilleur score : ${highestScore}`;
-
-
-                    
                 } else {
                     const userData = docSnap.data();
                     highestScore = userData.highestScoreGame9 || 0;
-                    console.log(`Loaded highestScore: ${highestScore}`);
+                    const totalPlayCountGame9 = userData.totalPlayCountGame9 || 0;
+                    document.getElementById('playCountDisplay').innerText = `Nombre de jeux : ${totalPlayCountGame9}`;
+                    document.getElementById('highestScoreDisplay').innerText = `Meilleur score : ${highestScore}`;
                 }
             } else {
                 window.location.href = 'login.html';
             }
         });
 
-async function saveScore(score) {
+        async function saveScore(score) {
             try {
                 const gameData = { score: score, timestamp: new Date() };
                 await addDoc(collection(db, 'users', userId, 'Game9'), gameData);
@@ -148,11 +144,10 @@ async function saveScore(score) {
                 let userDoc = await getDoc(userRef);
                 let totalPlayCountGame9 = userDoc.data().totalPlayCountGame9 || 0;
                 totalPlayCountGame9 += 1;
-                 await updateDoc(userRef, { totalPlayCountGame9: totalPlayCountGame9 });
+                await updateDoc(userRef, { totalPlayCountGame9: totalPlayCountGame9 });
 
                 document.getElementById('playCountDisplay').innerText = `Nombre de jeux : ${totalPlayCountGame9}`;
 
-                
                 if (totalPlayCountGame9 <= 15 && score > highestScore) {
                     highestScore = score;
                     await updateDoc(userRef, { highestScoreGame9: highestScore });
@@ -163,93 +158,91 @@ async function saveScore(score) {
             }
         }
 
-document.getElementById("startButton").addEventListener("click", startGame);
+        document.getElementById("startButton").addEventListener("click", startGame);
 
-function startGame() {
-    // Reset score and prepare the game area
-    score = 100;
-    const gameArea = document.getElementById("gameArea");
-    const centerX = gameArea.offsetWidth / 2;
-    const centerY = gameArea.offsetHeight / 2;
+        function startGame() {
+            // Reset score and prepare the game area
+            score = 100;
+            const gameArea = document.getElementById("gameArea");
+            const centerX = gameArea.offsetWidth / 2;
+            const centerY = gameArea.offsetHeight / 2;
 
-    // Clear any previous circle if present
-    const existingCircle = document.querySelector(".circle");
-    if (existingCircle) {
-        gameArea.removeChild(existingCircle);
-    }
-
-    document.getElementById("gameMessage").innerText = "Le jeu commence! Préparez-vous...";
-
-    // Random delay before the circle appears
-    setTimeout(() => {
-        // Create a new circle element
-        const circle = document.createElement("div");
-        circle.classList.add("circle");
-
-        let direction = Math.random() < 0.5;
-        let x = direction ? 0 : gameArea.offsetWidth - 20;
-        let y = direction ? 0 : gameArea.offsetHeight - 20;
-        let dx = direction ? 3 : -3;
-        let dy = direction ? 3 : -3;
-        gameArea.appendChild(circle);
-
-        // Start moving the circle
-        let intervalId = setInterval(() => {
-            x += dx;
-            y += dy;
-            circle.style.left = `${x}px`;
-            circle.style.top = `${y}px`;
-
-            // Bounce the circle off the edges
-            if (x <= 0 || x >= gameArea.offsetWidth - 20) dx *= -1;
-            if (y <= 0 || y >= gameArea.offsetHeight - 20) dy *= -1;
-        }, 5);
-
-        // Handle the timeout to clear the game when time is up
-        setTimeout(() => {
-            if (gameArea.contains(circle)) {
-                clearInterval(intervalId);  // Stop the circle movement if time runs out
-                score = 0;  // Set score to 0 if time runs out
-                saveScore(score);  // Save score
-                gameArea.removeChild(circle);  // Remove circle from game area
-                document.getElementById("gameMessage").innerText = `Temps écoulé! Distance du centre : - , Score de la partie : ${score}`;
+            // Clear any previous circle if present
+            if (circle) {
+                gameArea.removeChild(circle);
+                clearInterval(intervalId); // Stop the circle's movement
             }
-        }, 2000); // Circle appears for 2 seconds max
 
-    }, Math.random() * 13000 + 7000); // Random delay between 7 and 20 seconds
-}
+            document.getElementById("gameMessage").innerText = "Le jeu commence! Préparez-vous...";
 
+            // Random delay before the circle appears
+            setTimeout(() => {
+                // Create a new circle element
+                circle = document.createElement("div");
+                circle.classList.add("circle");
 
-document.body.addEventListener("keydown", (e) => {
-    if (e.code === "Space") {
-        clearInterval(intervalId); // Stop the circle's movement
+                let direction = Math.random() < 0.5;
+                let x = direction ? 0 : gameArea.offsetWidth - 20;
+                let y = direction ? 0 : gameArea.offsetHeight - 20;
+                let dx = direction ? 3 : -3;
+                let dy = direction ? 3 : -3;
+                gameArea.appendChild(circle);
 
-        // Get the game area's bounding rectangle
-        const gameAreaRect = gameArea.getBoundingClientRect();
+                // Start moving the circle
+                intervalId = setInterval(() => {
+                    x += dx;
+                    y += dy;
+                    circle.style.left = `${x}px`;
+                    circle.style.top = `${y}px`;
 
-        // Get the circle's bounding rectangle relative to the viewport
-        const rect = circle.getBoundingClientRect();
+                    // Bounce the circle off the edges
+                    if (x <= 0 || x >= gameArea.offsetWidth - 20) dx *= -1;
+                    if (y <= 0 || y >= gameArea.offsetHeight - 20) dy *= -1;
+                }, 5);
 
-        // Calculate the circle's position relative to the game area
-        const circleX = rect.left - gameAreaRect.left + 10;  // Add 10 for the circle's radius
-        const circleY = rect.top - gameAreaRect.top + 10;    // Add 10 for the circle's radius
-        console.log("Circle Position: ", rect.left, rect.top);
-        console.log("Center Position: ", centerX, centerY);
+                // Handle the timeout to clear the game when time is up
+                setTimeout(() => {
+                    if (gameArea.contains(circle)) {
+                        clearInterval(intervalId);  // Stop the circle movement if time runs out
+                        score = 0;  // Set score to 0 if time runs out
+                        saveScore(score);  // Save score
+                        gameArea.removeChild(circle);  // Remove circle from game area
+                        document.getElementById("gameMessage").innerText = `Temps écoulé! Distance du centre : - , Score de la partie : ${score}`;
+                    }
+                }, 2000); // Circle appears for 2 seconds max
 
-        // Calculate the distance from the center of the game area
-        const distance = Math.hypot(circleX - centerX, circleY - centerY);
+            }, Math.random() * 13000 + 7000); // Random delay between 7 and 20 seconds
+        }
 
-        // Update the score based on the distance
-        score = Math.max(0, 100 - Math.round(distance));
-        
-        // Save the score and update the UI
-        saveScore(score);
-        
-        // Display the message
-        document.getElementById("gameMessage").innerText = `Distance du centre : ${Math.round(distance)} px, Score de la partie : ${score}`;
-    }
-});
+        document.body.addEventListener("keydown", (e) => {
+            if (e.code === "Space" && circle) {
+                clearInterval(intervalId); // Stop the circle's movement
 
+                // Get the game area's bounding rectangle
+                const gameAreaRect = gameArea.getBoundingClientRect();
+
+                // Get the circle's bounding rectangle relative to the viewport
+                const rect = circle.getBoundingClientRect();
+
+                // Calculate the circle's position relative to the game area
+                const circleX = rect.left - gameAreaRect.left + 10;  // Add 10 for the circle's radius
+                const circleY = rect.top - gameAreaRect.top + 10;    // Add 10 for the circle's radius
+                console.log("Circle Position: ", rect.left, rect.top);
+                console.log("Center Position: ", centerX, centerY);
+
+                // Calculate the distance from the center of the game area
+                const distance = Math.hypot(circleX - centerX, circleY - centerY);
+
+                // Update the score based on the distance
+                score = Math.max(0, 100 - Math.round(distance));
+
+                // Save the score and update the UI
+                saveScore(score);
+
+                // Display the message
+                document.getElementById("gameMessage").innerText = `Distance du centre : ${Math.round(distance)} px, Score de la partie : ${score}`;
+            }
+        });
 
     </script>
 </body>
