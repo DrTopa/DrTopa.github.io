@@ -167,47 +167,48 @@
         let xPos = 0;
         let yPos = 0;
 
-        function setStartPositionAndDirection() {
-            const edgeStart = Math.floor(Math.random() * 4);
+function setStartPositionAndDirection() {
+    const edgeStart = Math.floor(Math.random() * 4);
 
-            switch (edgeStart) {
-                case 0: // Bottom-left: move up-right
-                    xPos = 0;
-                    yPos = gameArea.offsetHeight;
-                    xDirection = 16;
-                    yDirection = -16;
-                    break;
-                case 1: // Bottom-right: move up-left
-                    xPos = gameArea.offsetWidth;
-                    yPos = gameArea.offsetHeight;
-                    xDirection = -16;
-                    yDirection = -16;
-                    break;
-                case 2: // Top-left: move down-right
-                    xPos = 0;
-                    yPos = 0;
-                    xDirection = 16;
-                    yDirection = 16;
-                    break;
-                case 3: // Top-right: move down-left
-                    xPos = gameArea.offsetWidth;
-                    yPos = 0;
-                    xDirection = -16;
-                    yDirection = 16;
-                    break;
-            }
+    switch (edgeStart) {
+        case 0: // Bottom-left: move up-right
+            xPos = 0;
+            yPos = gameArea.offsetHeight;  // Start from the bottom-left corner
+            xDirection = 16;
+            yDirection = -16;
+            break;
+        case 1: // Bottom-right: move up-left
+            xPos = gameArea.offsetWidth;
+            yPos = gameArea.offsetHeight;  // Start from the bottom-right corner
+            xDirection = -16;
+            yDirection = -16;
+            break;
+        case 2: // Top-left: move down-right
+            xPos = 0;
+            yPos = 0;  // Start from the top-left corner
+            xDirection = 16;
+            yDirection = 16;
+            break;
+        case 3: // Top-right: move down-left
+            xPos = gameArea.offsetWidth;
+            yPos = 0;  // Start from the top-right corner
+            xDirection = -16;
+            yDirection = 16;
+            break;
+    }
 
-            // Set circle position
-            circle.style.left = `${xPos}px`;
-            circle.style.top = `${yPos}px`;
-        }
+    // Set circle position with center offset (start from the center of the edges)
+    circle.style.left = `${xPos - circle.offsetWidth / 2}px`;  // Adjust the starting position to the center of the edge
+    circle.style.top = `${yPos - circle.offsetHeight / 2}px`;   // Same for the vertical axis
+}
+
 
         function moveCircle() {
             xPos += xDirection;
             yPos += yDirection;
 
-            circle.style.left = `${xPos}px`;
-            circle.style.top = `${yPos}px`;
+    circle.style.left = `${xPos - circle.offsetWidth / 2}px`;  // Adjust to keep the circle centered
+    circle.style.top = `${yPos - circle.offsetHeight / 2}px`;
 
             const circleRect = circle.getBoundingClientRect();
             const gameAreaRect = gameArea.getBoundingClientRect();
