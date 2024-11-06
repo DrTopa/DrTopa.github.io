@@ -199,8 +199,8 @@
             }
 
             // Set circle position
-    circle.style.left = `${xPos - circle.offsetWidth / 2}px`; // Adjust to center of circle
-    circle.style.top = `${yPos - circle.offsetHeight / 2}px`;
+    circle.style.left = `${xPos}px`; // Adjust to center of circle
+    circle.style.top = `${yPos}px`;
         }
 
         function moveCircle() {
@@ -255,8 +255,8 @@
         window.addEventListener('keydown', (e) => {
             if (e.code === 'Space' && circle.style.display === 'block') {
                 clearInterval(gameInterval);
-                const x = circle.offsetLeft + circle.offsetWidth / 2;
-                const y = circle.offsetTop + circle.offsetHeight / 2;
+                const x = circle.offsetLeft;
+                const y = circle.offsetTop ;
 
                  // Coordinates of the center of the square
         const centerX = 250;
