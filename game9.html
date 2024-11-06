@@ -45,8 +45,8 @@
 
         #gameArea {
             position: relative;
-            width: 400px;
-            height: 400px; /* Square shape */
+            width: 500px; /* Updated to 500px */
+            height: 500px; /* Updated to 500px */
             background-color: #fff;
             border: 2px solid #b71c1c;
             border-radius: 12px;
@@ -54,8 +54,8 @@
 
         .circle {
             position: absolute;
-            width: 30px;
-            height: 30px;
+            width: 15px; /* Updated radius (half of 30px) */
+            height: 15px; /* Updated radius (half of 30px) */
             background-color: #ff5722;
             border-radius: 50%;
             display: none; /* Initially hidden until start */
@@ -154,62 +154,50 @@
 
             setTimeout(() => {
                 circle.style.display = 'block';
-                setStartPositionAndDirection();
+                setInitialDirection();
 
                 gameInterval = setInterval(moveCircle, 20);
             }, Math.random() * (20000 - 7000) + 7000); // Delay between 7 and 20 seconds
         }
 
-        // Movement direction variables
+        // Initial movement direction
         let xDirection = 0;
         let yDirection = 0;
-        let xPos = 0;
-        let yPos = 0;
 
-        function setStartPositionAndDirection() {
-            const edgeStart = Math.floor(Math.random() * 4);
+        function setInitialDirection() {
+            const directions = [
+                { x: 6, y: -6 },  // up-left
+                { x: 6, y: 6 },   // down-left
+                { x: -6, y: -6 }, // up-right
+                { x: -6, y: 6 }   // down-right
+            ];
+            const randomIndex = Math.floor(Math.random() * directions.length);
+            xDirection = directions[randomIndex].x;
+            yDirection = directions[randomIndex].y;
 
-            switch (edgeStart) {
-                case 0: // Bottom-left: move up-right
-                    xPos = 0;
-                    yPos = gameArea.offsetHeight - circle.offsetHeight;
-                    xDirection = 2;
-                    yDirection = -2;
-                    break;
-                case 1: // Bottom-right: move up-left
-                    xPos = gameArea.offsetWidth - circle.offsetWidth;
-                    yPos = gameArea.offsetHeight - circle.offsetHeight;
-                    xDirection = -2;
-                    yDirection = -2;
-                    break;
-                case 2: // Top-left: move down-right
-                    xPos = 0;
-                    yPos = 0;
-                    xDirection = 2;
-                    yDirection = 2;
-                    break;
-                case 3: // Top-right: move down-left
-                    xPos = gameArea.offsetWidth - circle.offsetWidth;
-                    yPos = 0;
-                    xDirection = -2;
-                    yDirection = 2;
-                    break;
+            // Initialize the circle position
+            if (xDirection === 6 && yDirection === -6) {
+                circle.style.left = '0px';  // Start from bottom-left
+                circle.style.top = '500px'; // Start from bottom-left
+            } else if (xDirection === 6 && yDirection === 6) {
+                circle.style.left = '0px';  // Start from bottom-left
+                circle.style.top = '500px'; // Start from bottom-left
+            } else if (xDirection === -6 && yDirection === -6) {
+                circle.style.left = '500px';  // Start from top-right
+                circle.style.top = '0px';     // Start from top-right
+            } else if (xDirection === -6 && yDirection === 6) {
+                circle.style.left = '500px';  // Start from top-right
+                circle.style.top = '0px';     // Start from top-right
             }
-
-            // Set circle position
-            circle.style.left = `${xPos}px`;
-            circle.style.top = `${yPos}px`;
         }
 
         function moveCircle() {
-            xPos += xDirection;
-            yPos += yDirection;
-
-            circle.style.left = `${xPos}px`;
-            circle.style.top = `${yPos}px`;
-
             const circleRect = circle.getBoundingClientRect();
             const gameAreaRect = gameArea.getBoundingClientRect();
+
+            // Update circle position
+            circle.style.left = `${circle.offsetLeft + xDirection}px`;
+            circle.style.top = `${circle.offsetTop + yDirection}px`;
 
             // Check boundaries
             if (
@@ -218,48 +206,14 @@
                 circleRect.top <= gameAreaRect.top ||
                 circleRect.bottom >= gameAreaRect.bottom
             ) {
-                endGame();
+                clearInterval(gameInterval); // Stop the game
+                alert('Game Over!');
+                startButton.style.display = 'block'; // Show the start button again
+                gameInterval = null; // Reset game interval
             }
         }
 
-        // End game logic
-        async function endGame() {
-            clearInterval(gameInterval);
-            await saveScore(score);
-            alert(`Partie terminée! Score: ${score}`);
-            startButton.style.display = 'block';
-            circle.style.display = 'none';
-        }
-
-        // Save score to Firebase
-        async function saveScore(currentScore) {
-            try {
-                const gameData = { score: currentScore, playCount: totalPlayCountGame9 + 1, timestamp: new Date() };
-                await addDoc(collection(db, 'users', userId, 'Game9'), gameData);
-                const userRef = doc(db, 'users', userId);
-                
-                if (currentScore > highestScore) {
-                    highestScore = currentScore;
-                    await updateDoc(userRef, { highestScoreGame9: highestScore });
-                }
-                totalPlayCountGame9 += 1;
-                await updateDoc(userRef, { totalPlayCountGame9 });
-            } catch (error) {
-                console.error("Erreur en sauvegardant le score:", error);
-            }
-        }
-
-        // Listen for space key to stop the circle
-        window.addEventListener('keydown', (e) => {
-            if (e.code === 'Space' && circle.style.display === 'block') {
-                clearInterval(gameInterval);
-                const x = circle.offsetLeft;
-                const y = circle.offsetTop;
-                alert(`Coordonnées arrêtées : (${x}, ${y})`);
-                endGame();
-            }
-        });
-
+        // Start button click event
         startButton.addEventListener('click', startGame);
     </script>
 </body>
