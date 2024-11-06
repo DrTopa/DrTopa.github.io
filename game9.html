@@ -81,6 +81,8 @@
     <div id="instructions">Instructions: Appuyez sur le bouton "Commencer le jeu" pour démarrer. Appuyez sur la barre d'espace lorsque le cercle apparaît.</div>
     <button id="startButton">Commencer le jeu</button>
     <div id="gameMessage"></div>
+    <div id="playCountDisplay">Nombre de jeux : 0</div>
+    <div id="highestScoreDisplay">Meilleur score : 0</div>
     <div id="gameArea"></div>
 
     <script defer type="module">
@@ -119,6 +121,14 @@
                 if (!docSnap.exists()) {
                     await setDoc(userRef, { userId: userId, totalPlayCountGame9: 0, highestScoreGame9: 0 });
                     console.log("User document created with initial values.");
+                        const userData = docSnap.data();
+                        highestScore = userData.highestScoreGame9 || 0;
+                        const totalPlayCountGame9 = userData.totalPlayCountGame9 || 0;
+                     document.getElementById('playCountDisplay').innerText = `Nombre de jeux : ${totalPlayCountGame9}`;
+                    document.getElementById('highestScoreDisplay').innerText = `Meilleur score : ${highestScore}`;
+
+
+                    
                 } else {
                     const userData = docSnap.data();
                     highestScore = userData.highestScoreGame9 || 0;
@@ -135,6 +145,14 @@ async function saveScore(score) {
                 await addDoc(collection(db, 'users', userId, 'Game9'), gameData);
 
                 const userRef = doc(db, 'users', userId);
+                let userDoc = await getDoc(userRef);
+                let totalPlayCountGame9 = userDoc.data().totalPlayCountGame9 || 0;
+                totalPlayCountGame9 += 1;
+                 await updateDoc(userRef, { totalPlayCountGame9: totalPlayCountGame9 });
+
+                document.getElementById('playCountDisplay').innerText = `Nombre de jeux : ${totalPlayCountGame9}`;
+
+                
                 if (totalPlayCountGame9 <= 15 && score > highestScoreGame9) {
                     highestScore = score;
                     await updateDoc(userRef, { highestScoreGame9: highestScore });
@@ -184,17 +202,18 @@ async function saveScore(score) {
                         score = Math.max(0, 100 - Math.round(distance));
                         saveScore(score);
                         gameArea.removeChild(circle);
-                        alert(`Votre score: ${score}`);
-                        document.getElementById("gameMessage").innerText = "";
+                        document.getElementById("gameMessage").innerText = `Distance du centre : ${Math.round(distance)} px, Score de la partie : ${score}`;
                     }
                 });
 
                 setTimeout(() => {
                     if (gameArea.contains(circle)) {
                         clearInterval(intervalId);
+                        score = 0;
                         saveScore(score);
                         gameArea.removeChild(circle);
-                        document.getElementById("gameMessage").innerText = "";
+                          document.getElementById("gameMessage").innerText = `Temps écoulé! Distance du centre : - , Score de la partie : ${score}`;
+    }
                     }
                 }, 2000); // Circle appears for 2 seconds max
 
