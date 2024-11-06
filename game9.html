@@ -195,16 +195,37 @@ async function saveScore(score) {
                 }, 5);
 
                 document.body.addEventListener("keydown", (e) => {
-                    if (e.code === "Space") {
-                        clearInterval(intervalId);
-                        const rect = circle.getBoundingClientRect();
-                        const distance = Math.hypot(rect.left + 10 - centerX, rect.top + 10 - centerY);
-                        score = Math.max(0, 100 - Math.round(distance));
-                        saveScore(score);
-                        gameArea.removeChild(circle);
-                        document.getElementById("gameMessage").innerText = `Distance du centre : ${Math.round(distance)} px, Score de la partie : ${score}`;
-                    }
-                });
+    if (e.code === "Space") {
+        clearInterval(intervalId);
+
+        // Get the bounding box of the circle
+        const rect = circle.getBoundingClientRect();
+
+        // Debugging: log the position and distance
+        console.log("Circle Position: ", rect.left, rect.top);
+        console.log("Center Position: ", centerX, centerY);
+
+        // Calculate the distance from the center of the game area
+        const distance = Math.hypot(rect.left + 10 - centerX, rect.top + 10 - centerY);
+        
+        // Log the calculated distance
+        console.log("Calculated Distance: ", distance);
+
+        // Calculate the score based on the distance
+        score = Math.max(0, 100 - Math.round(distance));
+
+        // Log the score
+        console.log("Score: ", score);
+
+        // Save the score
+        saveScore(score);
+
+        // Remove the circle and display the message
+        gameArea.removeChild(circle);
+        document.getElementById("gameMessage").innerText = `Distance du centre : ${Math.round(distance)} px, Score de la partie : ${score}`;
+    }
+});
+
 
                 setTimeout(() => {
     if (gameArea.contains(circle)) {
