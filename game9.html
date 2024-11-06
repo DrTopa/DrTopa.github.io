@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -167,48 +168,47 @@
         let xPos = 0;
         let yPos = 0;
 
-function setStartPositionAndDirection() {
-    const edgeStart = Math.floor(Math.random() * 4);
+        function setStartPositionAndDirection() {
+            const edgeStart = Math.floor(Math.random() * 4);
 
-    switch (edgeStart) {
-        case 0: // Bottom-left: move up-right
-            xPos = 10;
-            yPos = gameArea.offsetHeight-10;  // Start from the bottom-left corner
-            xDirection = 16;
-            yDirection = -16;
-            break;
-        case 1: // Bottom-right: move up-left
-            xPos = gameArea.offsetWidth-10;
-            yPos = gameArea.offsetHeight-10;  // Start from the bottom-right corner
-            xDirection = -16;
-            yDirection = -16;
-            break;
-        case 2: // Top-left: move down-right
-            xPos = 10;
-            yPos = 10;  // Start from the top-left corner
-            xDirection = 16;
-            yDirection = 16;
-            break;
-        case 3: // Top-right: move down-left
-            xPos = gameArea.offsetWidth-10;
-            yPos = 10;  // Start from the top-right corner
-            xDirection = -16;
-            yDirection = 16;
-            break;
-    }
+            switch (edgeStart) {
+                case 0: // Bottom-left: move up-right
+                    xPos = circle.offsetHeight;
+                    yPos = gameArea.offsetHeight - circle.offsetHeight;
+                    xDirection = 16;
+                    yDirection = -16;
+                    break;
+                case 1: // Bottom-right: move up-left
+                    xPos = gameArea.offsetWidth - circle.offsetWidth;
+                    yPos = gameArea.offsetHeight - circle.offsetHeight;
+                    xDirection = -16;
+                    yDirection = -16;
+                    break;
+                case 2: // Top-left: move down-right
+                    xPos = circle.offsetHeight;
+                    yPos = circle.offsetHeight;
+                    xDirection = 16;
+                    yDirection = 16;
+                    break;
+                case 3: // Top-right: move down-left
+                    xPos = gameArea.offsetWidth - circle.offsetWidth;
+                    yPos = circle.offsetHeight;
+                    xDirection = -16;
+                    yDirection = 16;
+                    break;
+            }
 
-    // Set circle position with center offset (start from the center of the edges)
-    circle.style.left = `${xPos - circle.offsetWidth / 2}px`;  // Adjust the starting position to the center of the edge
-    circle.style.top = `${yPos - circle.offsetHeight / 2}px`;   // Same for the vertical axis
-}
-
+            // Set circle position
+            circle.style.left = `${xPos}px`;
+            circle.style.top = `${yPos}px`;
+        }
 
         function moveCircle() {
             xPos += xDirection;
             yPos += yDirection;
 
-    circle.style.left = `${xPos - circle.offsetWidth / 2}px`;  // Adjust to keep the circle centered
-    circle.style.top = `${yPos - circle.offsetHeight / 2}px`;
+            circle.style.left = `${xPos}px`;
+            circle.style.top = `${yPos}px`;
 
             const circleRect = circle.getBoundingClientRect();
             const gameAreaRect = gameArea.getBoundingClientRect();
