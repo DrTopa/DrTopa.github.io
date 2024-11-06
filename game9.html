@@ -207,6 +207,8 @@ async function saveScore(score) {
         // Calculate the circle's position relative to the game area
         const circleX = rect.left - gameAreaRect.left + 10;  // Add 10 for the circle's radius
         const circleY = rect.top - gameAreaRect.top + 10;    // Add 10 for the circle's radius
+        console.log("Circle Position: ", rect.left, rect.top);
+        console.log("Center Position: ", centerX, centerY);
 
         // Calculate the distance from the center of the game area
         const distance = Math.hypot(circleX - centerX, circleY - centerY);
