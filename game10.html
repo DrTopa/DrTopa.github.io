@@ -286,6 +286,9 @@
                 9: ['MAP', 'NAP', 'TONE', 'STONE', 'APPLE'],
                 10: ['PEAR', 'CAT', 'POT', 'TOP', 'POTATO'],
             };
+            Object.keys(wordLists).forEach(round => {
+            console.log(`Round ${round} has ${wordLists[round].length} terms.`);
+        });
 
             return wordLists[round] || [];
         }
