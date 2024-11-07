@@ -243,7 +243,7 @@
 
         async function saveScore(currentScore) {
             try {
-                const gameData = { score: currentScore,playCount: totalPlayCountGame10 + 1, timestamp: new Date() };
+                const gameData = { score: currentScore, timestamp: new Date() };
                 await addDoc(collection(db, 'users', userId, 'Game8'), gameData);
                 const userRef = doc(db, 'users', userId);
                 
