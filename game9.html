@@ -175,18 +175,27 @@
                     yPos = gameArea.offsetHeight - (2*circle.offsetHeight);
                     xDirection = 16;
                     yDirection = -16;
+                                // Set circle position
+    circle.style.left = `${xPos- circle.offsetWidth / 2}px`; // Adjust to center of circle
+    circle.style.top = `${yPos+ circle.offsetWidth / 2}px`;
                     break;
                 case 1: // Bottom-right: move up-left
                     xPos = gameArea.offsetWidth - (2*circle.offsetWidth);
                     yPos = gameArea.offsetHeight - (2*circle.offsetHeight);
                     xDirection = -16;
                     yDirection = -16;
+                                // Set circle position
+    circle.style.left = `${xPos+ circle.offsetWidth / 2}px`; // Adjust to center of circle
+    circle.style.top = `${yPos+ circle.offsetWidth / 2}px`;
                     break;
                 case 2: // Top-left: move down-right
                     xPos = 2*circle.offsetHeight;
                     yPos = 2*circle.offsetHeight;
                     xDirection = 16;
                     yDirection = 16;
+                                // Set circle position
+    circle.style.left = `${xPos- circle.offsetWidth / 2}px`; // Adjust to center of circle
+    circle.style.top = `${yPos- circle.offsetWidth / 2}px`;
                     break;
                 case 3: // Top-right: move down-left
                     xPos = gameArea.offsetWidth - (2*circle.offsetWidth);
@@ -194,11 +203,11 @@
                     xDirection = -16;
                     yDirection = 16;
                     break;
+                                // Set circle position
+    circle.style.left = `${xPos+ circle.offsetWidth / 2}px`; // Adjust to center of circle
+    circle.style.top = `${yPos- circle.offsetWidth / 2}px`;
             }
 
-            // Set circle position
-    circle.style.left = `${xPos- circle.offsetWidth / 2}px`; // Adjust to center of circle
-    circle.style.top = `${yPos- circle.offsetWidth / 2}px`;
         }
 
         function moveCircle() {
