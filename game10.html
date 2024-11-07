@@ -179,7 +179,7 @@
         let round = 0;
         let letters = [];
         let roundWords = [];
-        let gameTime = 120;  // 2 minutes per round
+        let gameTime = 5;  // 2 minutes per round
         let timerInterval;
 
         const userStatus = document.getElementById('userStatus');
@@ -239,7 +239,7 @@
             roundWords = generateWordsForRound(round);
 
             lettersDisplay.innerText = `Lettres: ${letters.join(', ')}`;
-            gameTime = 120;
+            gameTime = 5;
             timerDisplay.innerText = `Temps restant: ${gameTime}s`;
 
             clearInterval(timerInterval);
