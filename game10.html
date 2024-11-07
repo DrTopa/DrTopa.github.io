@@ -315,12 +315,14 @@
                 await addDoc(collection(db, 'users', userId, 'Game10'), gameData);
                 const userRef = doc(db, 'users', userId);
                 
+            totalPlayCountGame10 += 1;
+            await updateDoc(userRef, { totalPlayCountGame10 });
+                
                 if (totalPlayCountGame10 < 2 && totalScore > highestScore) {
                    highestScore = totalScore;
                     await updateDoc(doc(db, 'users', userId), { highestScoreGame10: highestScore });
                 }
-            totalPlayCountGame10 += 1;
-            await updateDoc(userRef, { totalPlayCountGame10 });
+
             } catch (error) {
                 console.error("Erreur en sauvegardant le score:", error);
             }
