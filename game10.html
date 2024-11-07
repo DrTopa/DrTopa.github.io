@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LES COMPTES SONT PAS BONS KEVIN - Jeu 10 😊</title>
+    <style>
+        /* General body styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            background-color: #ffebcd;
+            background-image: url('https://www.transparenttextures.com/patterns/snow.png');
+            margin: 0;
+            overflow-y: auto;
+        }
+
+        /* Title styling */
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #1b5e20;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        /* User status */
+        #userStatus {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.2em;
+            color: #a23636;
+        }
+
+        /* Instructions */
+        #instructions {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            max-width: 1000px;
+            text-align: center;
+            font-size: 1.2em;
+            color: #333;
+            overflow-y: auto; 
+            max-height: 400px;
+        }
+
+        /* Game Area */
+        #gameArea {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            height: 400px;
+            background-color: #fff;
+            border: 2px solid #b71c1c;
+            border-radius: 12px;
+        }
+
+        /* Score */
+        #score {
+            font-size: 1.5em;
+            margin: 10px;
+            color: #1b5e20;
+        }
+
+        /* Start Button */
+        #start-btn {
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            background-color: #388e3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        #start-btn:hover {
+            background-color: #2e7d32;
+        }
+    </style>
+</head>
+<body>
+    <h1>LES COMPTES SONT PAS BONS KEVIN - Jeu 10 😊</h1>
+
+    <!-- Instructions -->
+    <div id="instructions">
+        <p>Le but de ce jeu est d'écrire des mots à partir de lettres données.</p>
+        <p>Vous avez 8 tours pour écrire des mots en utilisant uniquement les lettres affichées.</p>
+        <p>Chaque mot correct augmente votre score en fonction de son nombre de lettres.</p>
+        <p>Si vous tapez un mot plus long que le précédent, votre score augmentera!</p>
+        <p>Vous avez 2 minutes pour chaque tour. Bonne chance!</p>
+    </div>
+
+    <div id="userStatus"></div>
+    <div id="score">Score total: 0</div>
+    <div id="roundScore">Score du tour: 0</div>
+    <div id="roundNumber">Tour: 1/8</div>
+    <button id="start-btn">Commencer le jeu</button>
+    <div id="gameArea"></div>
+
+    <script defer type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyC4bjg7lVwd8FU8MREaPhBsBENv5qmiYYM",
+            authDomain: "calendrier-de-l-avent-54e3a.firebaseapp.com",
+            databaseURL: "https://calendrier-de-l-avent-54e3a-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "calendrier-de-l-avent-54e3a",
+            storageBucket: "calendrier-de-l-avent-54e3a.appspot.com",
+            messagingSenderId: "850639567855",
+            appId: "1:850639567855:web:0d799a1ecca005fcff141a",
+            measurementId: "G-PC1W7RYVEH"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let userId = '';
+        let totalScore = 0;
+        let roundScore = 0;
+        let highestScore = 0;
+        let round = 0;
+        let letters = [];
+        let roundWords = [];
+        let gameInterval, timerInterval;
+        let gameTime = 120;  // 2 minutes for each round
+
+        const userStatus = document.getElementById('userStatus');
+        const scoreDisplay = document.getElementById('score');
+        const roundScoreDisplay = document.getElementById('roundScore');
+        const roundNumberDisplay = document.getElementById('roundNumber');
+        const startButton = document.getElementById('start-btn');
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                userId = user.uid;
+                userStatus.innerText = `Bienvenue: ${user.email}`;
+
+                const userRef = doc(db, 'users', userId);
+                const docSnap = await getDoc(userRef);
+
+                if (!docSnap.exists()) {
+                    await setDoc(userRef, { userId: userId, totalPlayCount10: 0, highestScoreGame10: 0 });
+                } else {
+                    const userData = docSnap.data();
+                    totalPlayCount = userData.totalPlayCount10 || 0;
+                    highestScore = userData.highestScoreGame10 || 0;
+                }
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
+        function startGame() {
+            totalScore = 0;
+            round = 1;
+            roundScore = 0;
+            scoreDisplay.innerText = `Score total: ${totalScore}`;
+            roundScoreDisplay.innerText = `Score du tour: ${roundScore}`;
+            roundNumberDisplay.innerText = `Tour: ${round}/8`;
+            startButton.style.display = 'none';
+
+            nextRound();
+        }
+
+        async function nextRound() {
+            if (round > 8) {
+                await saveScore();
+                alert(`Jeu terminé! Votre score final est ${totalScore}`);
+                startButton.style.display = 'block';
+                return;
+            }
+
+            roundScore = 0;
+            roundScoreDisplay.innerText = `Score du tour: ${roundScore}`;
+            roundNumberDisplay.innerText = `Tour: ${round}/8`;
+
+            letters = generateLetters();
+            roundWords = generateWordsForRound(round);
+
+            gameTime = 120;
+            const timerDisplay = document.createElement('div');
+            document.body.appendChild(timerDisplay);
+
+            timerInterval = setInterval(() => {
+                gameTime--;
+                timerDisplay.innerText = `Temps restant: ${gameTime}s`;
+                if (gameTime <= 0) {
+                    clearInterval(timerInterval);
+                    nextRound();
+                }
+            }, 1000);
+        }
+
+        function generateLetters() {
+        const letterSets = {
+            1: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'],
+            2: ['K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T'],
+            3: ['U', 'V', 'W', 'X', 'Y', 'Z', 'A', 'B', 'C', 'D'],
+            4: ['E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'],
+            5: ['O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X'],
+            6: ['Y', 'Z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'],
+            7: ['I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'],
+            8: ['S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'A', 'B']
+        };
+
+            return letterSets[round - 1] || ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
+        }
+
+        function generateWordsForRound(round) {
+            const wordLists = {
+                1: ['CAT', 'BAT', 'TIGER', 'COW', 'EAR'],
+                2: ['MAP', 'NAP', 'TONE', 'STONE', 'APPLE'],
+                3: ['PEAR', 'CAT', 'POT', 'TOP', 'POTATO'],
+                4: ['CAT', 'BAT', 'TIGER', 'COW', 'EAR'],
+                5: ['MAP', 'NAP', 'TONE', 'STONE', 'APPLE'],
+                6: ['PEAR', 'CAT', 'POT', 'TOP', 'POTATO'],
+                7: ['PEAR', 'CAT', 'POT', 'TOP', 'POTATO'],
+                8: ['CAT', 'BAT', 'TIGER', 'COW', 'EAR'],
+                9: ['MAP', 'NAP', 'TONE', 'STONE', 'APPLE'],
+                10: ['PEAR', 'CAT', 'POT', 'TOP', 'POTATO'],
+            };
+
+            return wordLists[round] || [];
+        }
+
+        function checkWordInput(userInput) {
+            if (roundWords.includes(userInput.toUpperCase())) {
+                roundScore += userInput.length;
+                roundScoreDisplay.innerText = `Score du tour: ${roundScore}`;
+                totalScore += userInput.length;
+                scoreDisplay.innerText = `Score total: ${totalScore}`;
+            }
+        }
+
+        async function saveScore(currentScore) {
+            try {
+                const gameData = { score: currentScore,playCount: totalPlayCountGame10 + 1, timestamp: new Date() };
+                await addDoc(collection(db, 'users', userId, 'Game8'), gameData);
+                const userRef = doc(db, 'users', userId);
+                
+                if (totalPlayCountGame8 < 2 && totalScore > highestScore) {
+                   highestScore = totalScore;
+                    await updateDoc(doc(db, 'users', userId), { highestScoreGame10: highestScore });
+                }
+            totalPlayCountGame10 += 1;
+            await updateDoc(userRef, { totalPlayCountGame10 });
+            } catch (error) {
+                console.error("Erreur en sauvegardant le score:", error);
+            }
+        }
+
+        startButton.addEventListener('click', startGame);
+    </script>
+</body>
+</html>
