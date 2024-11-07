@@ -182,29 +182,29 @@
                 case 0: // Bottom-left: move up-right
                     xPos = 2*circle.offsetHeight-1;
                     yPos = gameArea.offsetHeight - (2*circle.offsetHeight)-2;
-                    xDirection = 4;
-                    yDirection = -4;
+                    xDirection = 5;
+                    yDirection = -5;
                                 
                     break;
                 case 1: // Bottom-right: move up-left
                     xPos = gameArea.offsetWidth - (2*circle.offsetWidth);
                     yPos = gameArea.offsetHeight - (2*circle.offsetHeight);
-                    xDirection = -3;
-                    yDirection = -3;
+                    xDirection = -4;
+                    yDirection = -4;
 
                     break;
                 case 2: // Top-left: move down-right
                     xPos = 2*circle.offsetHeight;
                     yPos = 2*circle.offsetHeight;
-                    xDirection = 2;
-                    yDirection = 2;
+                    xDirection = 3;
+                    yDirection = 3;
                     
                     break;
                 case 3: // Top-right: move down-left
                     xPos = gameArea.offsetWidth - (2*circle.offsetWidth)-1;
                     yPos = 2*circle.offsetHeight-2;
-                    xDirection = -3;
-                    yDirection = 3;
+                    xDirection = -4;
+                    yDirection = 4;
 
                     break;
 
@@ -234,6 +234,7 @@
                 circleRect.top <= gameAreaRect.top ||
                 circleRect.bottom >= gameAreaRect.bottom
             ) {
+                score =0;
                 endGame();
             }
         }
@@ -279,7 +280,7 @@
         // Calculate the distance from the center (250, 250) to the circle's position (x, y)
         const distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2));
 
-        score = Math.max(0, 100 - Math.floor(distance)); // Ensure score is not negative
+        score = Math.max(0, 100 - Math.floor(distance/2)); // Ensure score is not negative
         
         // Alert with coordinates and the calculated distance
         alert(`Coordonnées arrêtées : (${x}, ${y})\nDistance au centre (250, 250) : ${distance.toFixed(2)} pixels`);
