@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PluieEtoilée 🌟</title>
+    <title>Photo de Pluie Etoilée 🌟</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, sans-serif;
@@ -41,6 +41,8 @@
             text-align: center;
             font-size: 1.2em;
             color: #333;
+            max-heigth: 400px;
+            overflow-y: auto;
         }
 
         #gameArea {
@@ -83,7 +85,7 @@
     </style>
 </head>
 <body>
-    <h1>PluieEtoilée 🌟</h1>
+    <h1>Photo de Pluie Etoilée 🌟</h1>
 
     <div id="instructions">
         <p>Appuyez sur "Commencer le jeu" pour débuter. Lorsque le cercle apparaît, appuyez sur "Espace" pour l'arrêter et voir ses coordonnées.</p>
@@ -91,6 +93,10 @@
 
     <div id="userStatus"></div>
     <div id="score">Score: 0</div>
+    <div id="gameStats">
+        <p>Nombre de parties: <span id="totalPlayCount">0</span></p>
+        <p>Meilleur Score: <span id="highScore">0</span></p>
+    </div>
     <button id="start-btn">Commencer le jeu</button>
     <div id="gameArea">
         <div id="circle" class="circle"></div>
@@ -125,6 +131,8 @@
         const gameArea = document.getElementById('gameArea');
         const scoreDisplay = document.getElementById('score');
         const startButton = document.getElementById('start-btn');
+        const totalPlayCountDisplay = document.getElementById('totalPlayCount');
+        const highScoreDisplay = document.getElementById('highScore');
 
         // Authentication and data fetch
         onAuthStateChanged(auth, async (user) => {
@@ -141,6 +149,8 @@
                     const userData = docSnap.data();
                     totalPlayCountGame9 = userData.totalPlayCountGame9 || 0;
                     highestScore = userData.highestScoreGame9 || 0;
+                    totalPlayCountDisplay.innerText = totalPlayCountGame9;
+                    highScoreDisplay.innerText = highestScore;
                 }
             } else {
                 window.location.href = 'login.html';
@@ -269,6 +279,8 @@
         
         // Calculate the distance from the center (250, 250) to the circle's position (x, y)
         const distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2));
+
+        score = Math.max(0, 100 - Math.floor(distance)); // Ensure score is not negative
         
         // Alert with coordinates and the calculated distance
         alert(`Coordonnées arrêtées : (${x}, ${y})\nDistance au centre (250, 250) : ${distance.toFixed(2)} pixels`);
