@@ -110,6 +110,19 @@
         #submitWord:hover {
             background-color: #2e7d32;
         }
+       /* Timer display */
+        #timer {
+            font-size: 1.5em;
+            margin-top: 20px;
+            color: #1b5e20;
+        }
+        
+        /* Feedback message */
+        #feedback {
+            font-size: 1.2em;
+            color: #d32f2f;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -124,16 +137,18 @@
         <p>Vous avez 2 minutes pour chaque tour. Bonne chance!</p>
     </div>
 
-<div id="userStatus"></div>
+    <div id="userStatus"></div>
     <div id="score">Score total: 0</div>
     <div id="roundScore">Score du tour: 0</div>
     <div id="roundNumber">Tour: 1/8</div>
+    <div id="timer">Temps restant: 120s</div>
     <button id="start-btn">Commencer le jeu</button>
 
     <div id="gameArea">
         <div id="lettersDisplay">Lettres: </div>
         <input type="text" id="wordInput" placeholder="Entrez un mot" />
         <button id="submitWord">Valider</button>
+        <div id="feedback"></div> <!-- Feedback message display -->
     </div>
 
     <script defer type="module">
@@ -175,6 +190,8 @@
         const startButton = document.getElementById('start-btn');
         const wordInput = document.getElementById('wordInput');
         const submitWord = document.getElementById('submitWord');
+        const feedbackDisplay = document.getElementById('feedback');
+        const timerDisplay = document.getElementById('timer');
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
@@ -223,10 +240,12 @@
 
             lettersDisplay.innerText = `Lettres: ${letters.join(', ')}`;
             gameTime = 120;
+            timerDisplay.innerText = `Temps restant: ${gameTime}s`;
 
             clearInterval(timerInterval);
             timerInterval = setInterval(() => {
                 gameTime--;
+                timerDisplay.innerText = `Temps restant: ${gameTime}s`;
                 if (gameTime <= 0) {
                     clearInterval(timerInterval);
                     round++;
@@ -234,18 +253,18 @@
                 }
             }, 1000);
         }
-        
+
         function generateLetters() {
-        const letterSets = {
-            1: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'],
-            2: ['K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T'],
-            3: ['U', 'V', 'W', 'X', 'Y', 'Z', 'A', 'B', 'C', 'D'],
-            4: ['E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'],
-            5: ['O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X'],
-            6: ['Y', 'Z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'],
-            7: ['I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'],
-            8: ['S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'A', 'B']
-        };
+            const letterSets = {
+                1: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'],
+                2: ['K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T'],
+                3: ['U', 'V', 'W', 'X', 'Y', 'Z', 'A', 'B', 'C', 'D'],
+                4: ['E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'],
+                5: ['O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X'],
+                6: ['Y', 'Z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'],
+                7: ['I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'],
+                8: ['S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'A', 'B']
+            };
 
             return letterSets[round] || [];
         }
@@ -267,17 +286,22 @@
             return wordLists[round] || [];
         }
 
-             submitWord.addEventListener('click', () => {
-            const userInput = wordInput.value.trim().toUpperCase();
-            if (roundWords.includes(userInput)) {
-                roundScore += userInput.length;
-                totalScore += userInput.length;
-                scoreDisplay.innerText = `Score total: ${totalScore}`;
-                roundScoreDisplay.innerText = `Score du tour: ${roundScore}`;
-            }
-            wordInput.value = ''; // Clear input field
-        });
+        function handleSubmitWord() {
+            const userWord = wordInput.value.toUpperCase().trim();
+            if (!userWord) return;
 
+            wordInput.value = '';
+
+            if (roundWords.includes(userWord)) {
+                roundScore += userWord.length;
+                totalScore += userWord.length;
+                roundScoreDisplay.innerText = `Score du tour: ${roundScore}`;
+                scoreDisplay.innerText = `Score total: ${totalScore}`;
+                feedbackDisplay.innerText = 'Mot existant';
+            } else {
+                feedbackDisplay.innerText = 'Mot inexistant';
+            }
+        }
 
         async function saveScore(currentScore) {
             try {
@@ -296,7 +320,9 @@
             }
         }
 
+        submitWord.addEventListener('click', handleSubmitWord);
         startButton.addEventListener('click', startGame);
+        
     </script>
 </body>
 </html>
