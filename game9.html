@@ -172,24 +172,24 @@
             switch (edgeStart) {
                 case 0: // Bottom-left: move up-right
                     xPos = 2*circle.offsetHeight;
-                    yPos = gameArea.offsetHeight - circle.offsetHeight;
+                    yPos = gameArea.offsetHeight - (2*circle.offsetHeight);
                     xDirection = 16;
                     yDirection = -16;
                     break;
                 case 1: // Bottom-right: move up-left
-                    xPos = gameArea.offsetWidth - circle.offsetWidth;
-                    yPos = gameArea.offsetHeight - circle.offsetHeight;
+                    xPos = gameArea.offsetWidth - (2*circle.offsetWidth);
+                    yPos = gameArea.offsetHeight - (2*circle.offsetHeight);
                     xDirection = -16;
                     yDirection = -16;
                     break;
                 case 2: // Top-left: move down-right
-                    xPos = circle.offsetHeight;
-                    yPos = circle.offsetHeight;
+                    xPos = 2*circle.offsetHeight;
+                    yPos = 2*circle.offsetHeight;
                     xDirection = 16;
                     yDirection = 16;
                     break;
                 case 3: // Top-right: move down-left
-                    xPos = gameArea.offsetWidth - (circle.offsetWidth);
+                    xPos = gameArea.offsetWidth - (2*circle.offsetWidth);
                     yPos = 2*circle.offsetHeight;
                     xDirection = -16;
                     yDirection = 16;
@@ -197,8 +197,8 @@
             }
 
             // Set circle position
-    circle.style.left = `${xPos}px`; // Adjust to center of circle
-    circle.style.top = `${yPos}px`;
+    circle.style.left = `${xPos- circle.offsetWidth / 2}px`; // Adjust to center of circle
+    circle.style.top = `${yPos- circle.offsetWidth / 2}px`;
         }
 
         function moveCircle() {
@@ -253,8 +253,8 @@
         window.addEventListener('keydown', (e) => {
             if (e.code === 'Space' && circle.style.display === 'block') {
                 clearInterval(gameInterval);
-                const x = circle.offsetLeft;
-                const y = circle.offsetTop ;
+        const x = circle.offsetLeft + circle.offsetWidth / 2;
+        const y = circle.offsetTop + circle.offsetHeight / 2;
 
                  // Coordinates of the center of the square
         const centerX = 250;
