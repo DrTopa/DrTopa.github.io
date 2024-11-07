@@ -204,7 +204,7 @@
                     await setDoc(userRef, { userId, totalPlayCountGame10: 0, highestScoreGame10: 0 });
                 } else {
                     const userData = docSnap.data();
-                    totalPlayCount = userData.totalPlayCountGame10 || 0;
+                    totalPlayCountGame10 = userData.totalPlayCountGame10 || 0;
                     highestScore = userData.highestScoreGame10 || 0;
                 }
             } else {
