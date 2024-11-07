@@ -124,7 +124,7 @@
         <p>Vous avez 2 minutes pour chaque tour. Bonne chance!</p>
     </div>
 
-    <div id="userStatus"></div>
+<div id="userStatus"></div>
     <div id="score">Score total: 0</div>
     <div id="roundScore">Score du tour: 0</div>
     <div id="roundNumber">Tour: 1/8</div>
@@ -137,10 +137,9 @@
     </div>
 
     <script defer type="module">
-                import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
         import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
-
         
         const firebaseConfig = {
             apiKey: "AIzaSyC4bjg7lVwd8FU8MREaPhBsBENv5qmiYYM",
@@ -165,30 +164,10 @@
         let round = 0;
         let letters = [];
         let roundWords = [];
-        let gameInterval, timerInterval;
-        let gameTime = 120;  // 2 minutes for each round
+        let gameTime = 120;  // 2 minutes per round
+        let timerInterval;
 
         const userStatus = document.getElementById('userStatus');
-        const scoreDisplay = document.getElementById('score');
-        const roundScoreDisplay = document.getElementById('roundScore');
-        const roundNumberDisplay = document.getElementById('roundNumber');
-        const startButton = document.getElementById('start-btn');
-
-     const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
-        let userId = '';
-        let totalScore = 0;
-        let roundScore = 0;
-        let highestScore = 0;
-        let totalPlayCount = 0;
-        let round = 0;
-        let letters = [];
-        let roundWords = [];
-        let timerInterval;
-        let gameTime = 120;
-
         const scoreDisplay = document.getElementById('score');
         const roundScoreDisplay = document.getElementById('roundScore');
         const roundNumberDisplay = document.getElementById('roundNumber');
@@ -207,7 +186,7 @@
                     await setDoc(userRef, { userId, totalPlayCountGame10: 0, highestScoreGame10: 0 });
                 } else {
                     const userData = docSnap.data();
-                    totalPlayCount = userData.totalPlayCount10 || 0;
+                    totalPlayCount = userData.totalPlayCountGame10 || 0;
                     highestScore = userData.highestScoreGame10 || 0;
                 }
             } else {
@@ -288,7 +267,7 @@
             return wordLists[round] || [];
         }
 
-     submitWord.addEventListener('click', () => {
+             submitWord.addEventListener('click', () => {
             const userInput = wordInput.value.trim().toUpperCase();
             if (roundWords.includes(userInput)) {
                 roundScore += userInput.length;
@@ -299,15 +278,14 @@
             wordInput.value = ''; // Clear input field
         });
 
-        startButton.addEventListener('click', startGame);
 
         async function saveScore(currentScore) {
             try {
                 const gameData = { score: totalScore, timestamp: new Date() };
-                await addDoc(collection(db, 'users', userId, 'Game8'), gameData);
+                await addDoc(collection(db, 'users', userId, 'Game10'), gameData);
                 const userRef = doc(db, 'users', userId);
                 
-                if (totalPlayCountGame8 < 2 && totalScore > highestScore) {
+                if (totalPlayCountGame10 < 2 && totalScore > highestScore) {
                    highestScore = totalScore;
                     await updateDoc(doc(db, 'users', userId), { highestScoreGame10: highestScore });
                 }
