@@ -270,7 +270,7 @@
                 await addDoc(collection(db, 'users', userId, 'Game9'), gameData);
                 const userRef = doc(db, 'users', userId);
                 
-                if (currentScore > highestScore) {
+                if (totalPlayCountGame9<15&&currentScore > highestScore) {
                     highestScore = currentScore;
                     await updateDoc(userRef, { highestScoreGame9: highestScore });
                 }
