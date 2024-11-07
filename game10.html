@@ -289,14 +289,19 @@
         function handleSubmitWord() {
             const userWord = wordInput.value.toUpperCase().trim();
             if (!userWord) return;
-
+        
             wordInput.value = '';
-
+        
             if (roundWords.includes(userWord)) {
-                roundScore += userWord.length;
-                totalScore += userWord.length;
-                roundScoreDisplay.innerText = `Score du tour: ${roundScore}`;
-                scoreDisplay.innerText = `Score total: ${totalScore}`;
+                const wordLength = userWord.length;
+        
+                if (wordLength > roundScore) {
+                    totalScore += wordLength - roundScore; // Add the difference (if any) to totalScore
+                    roundScore = wordLength;  // Update the round score to the length of the longest word found
+        
+                    scoreDisplay.innerText = `Score total: ${totalScore}`;
+                    roundScoreDisplay.innerText = `Score du tour: ${roundScore}`;
+                }
                 feedbackDisplay.innerText = 'Mot existant';
             } else {
                 feedbackDisplay.innerText = 'Mot inexistant';
