@@ -85,10 +85,25 @@
     </style>
 </head>
 <body>
-    <h1>Photo de Pluie Etoilée 🌟</h1>
+    <h1>Photo de Pluie Etoilée 🌟- Jeu 9 </h1>
 
     <div id="instructions">
-        <p>Appuyez sur "Commencer le jeu" pour débuter. Lorsque le cercle apparaît, appuyez sur "Espace" pour l'arrêter et voir ses coordonnées.</p>
+        <p>En sortant de la salle, les protagonistes prirent soin de bien refermer la porte derrière eux. Pour la première fois depuis le début de cette aventure, ils affichaient tous un sourire sincère. Ils avaient bien ri ensemble, se lançant des piques et partageant des fous rires.</p>
+ <p>« C’était plutôt sympa, mais heureusement que Topapa a carry l’équipe, » lança Dudley avec une tape dans le dos de son mentor.</p>
+ <p>Grinchémie acquiesça d’un signe de tête approbateur. « Faut avouer, lui et RaseToiLaMoustache sont vraiment les plus forts, surtout pour tenir la pression ! »</p>
+ <p>Bébé Romain renchérit: « Mais avantage pour Topapa, quand même, il sait mieux communiquer que l’autre, » dit-il en jetant un regard amusé vers RaseToiLaMoustache.</p>
+ <p>RaseToiLaMoustache hocha la tête, humble. « C’est vrai, Topapa est meilleur que moi aux jeux. Il faut savoir reconnaître les grands. »</p>
+ <p>Mais alors qu’il entendait RaseToiLaMoustache parler, Topapa comprit qu’il rêvait. Ouvrant les yeux, il se retrouva étendu dans un champ sous un ciel étoilé, avec l’écho lointain du paysan allemand murmurant dans son sommeil : « Ich bin ein Kartoffelsalat… »</p>
+ <p>Topapa s’étira, encore un peu confus, et leva les yeux vers le ciel. Soudain, il aperçut une étoile filante, puis une deuxième. C’était une véritable pluie d’étoiles. Il ne put s’empêcher de secouer ses camarades pour leur montrer le spectacle.</p>
+ <p>« POURQUOI TU ME RÉVEILLES ? JE SUIS SÛR QU’IL N’EST MÊME PAS MIDI ! » grogna Bébé Romain, encore ensommeillé. Topapa pointa le ciel du doigt, et tous levèrent les yeux, captivés.</p>
+ <p>« Wow… il y a presque autant d’étoiles que mes victoires aux Richesses du Monde ! » se vanta Dudley.</p>
+ <p>« Non, » temporisa Topapa, « il y a presque autant d’étoiles que nos victoires à Overcooked. »</p>
+ <p>Grinchémie leva un sourcil. « Ouais, enfin, à Overcooked, on pourrait en avoir encore plus, tu vois ce que je veux dire »</p>
+ <p>Topapa lança une idée : « OK, faisons un jeu ! Celui qui prend la plus belle photo d’étoile filante a gagné. »</p>
+ <p>Les autres acquiescèrent, en sortant leurs téléphones et s’allongeant dans l’herbe pour immortaliser le moment. Les étoiles filantes traversaient le ciel comme des traits de lumière, chacun essayant de capturer le cliché parfait.</p>
+ <p>Dans l’obscurité du champ, leurs éclats de rire et leurs compétitions amicales se fondaient avec la magie de la nuit étoilée. Mais le plus heureux des sourires se cachait au loin, celui de la ceinture magique de Noël. </p>
+ <p>Explication du jeu : Le jeu ressemble à photo d’Ovni, version Wish. Un cercle part d’un sommet de l’aire de jeu et le traverse en diagonale à un moment random. Vous devez appuyer sur la barre espace pour arrêter le cercle au plus près du centre du carré. Préparez-vous le cercle est rapide. On retire la moitié de la distance entre la position du cercle et la postion du centre à votre score initial qui est de 100 points.
+</p>
     </div>
 
     <div id="userStatus"></div>
@@ -182,15 +197,15 @@
                 case 0: // Bottom-left: move up-right
                     xPos = 2*circle.offsetHeight-1;
                     yPos = gameArea.offsetHeight - (2*circle.offsetHeight)-2;
-                    xDirection = 5;
-                    yDirection = -5;
+                    xDirection = 3;
+                    yDirection = -3;
                                 
                     break;
                 case 1: // Bottom-right: move up-left
                     xPos = gameArea.offsetWidth - (2*circle.offsetWidth);
                     yPos = gameArea.offsetHeight - (2*circle.offsetHeight);
-                    xDirection = -4;
-                    yDirection = -4;
+                    xDirection = -3;
+                    yDirection = -3;
 
                     break;
                 case 2: // Top-left: move down-right
@@ -203,8 +218,8 @@
                 case 3: // Top-right: move down-left
                     xPos = gameArea.offsetWidth - (2*circle.offsetWidth)-1;
                     yPos = 2*circle.offsetHeight-2;
-                    xDirection = -4;
-                    yDirection = 4;
+                    xDirection = -3;
+                    yDirection = 3;
 
                     break;
 
