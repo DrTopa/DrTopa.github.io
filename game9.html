@@ -213,6 +213,10 @@
 
             circle.style.left = `${xPos- circle.offsetWidth / 2}px`;
             circle.style.top = `${yPos- circle.offsetWidth / 2}px`;
+            
+            // Log the current position of the circle
+            console.log(`Circle Center Position - x: ${circle.offsetLeft + circle.offsetWidth / 2}, y: ${circle.offsetTop + circle.offsetHeight / 2}`);
+
 
             const circleRect = circle.getBoundingClientRect();
             const gameAreaRect = gameArea.getBoundingClientRect();
