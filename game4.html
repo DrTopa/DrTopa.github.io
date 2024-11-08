@@ -295,31 +295,21 @@
             }
         }
 
-       function endGame() {
+      async function endGame() {
             clearInterval(timer);
             startBtn.disabled = false;
             guessInput.disabled = true;
             hint.innerText = `Temps écoulé! Votre score final est : ${score}`;
-            saveScore ()
- 
-        }
-
-        async function saveScore() {
-            try {
-                const gameData = { score: score, timestamp: new Date() };
-                await addDoc(collection(db, 'users', userId, 'Game1'), gameData);
-
-                const userRef = doc(db, 'users', userId);
-                if (totalPlayCountGame4 < 2 && score > highestScoreGame4) {
+            if (totalPlayCountGame4 < 2 && score > highestScoreGame4) {
                     highestScoreGame4 = score;
                     await updateDoc(userRef, { highestScoreGame4: highestScoreGame4 });
                     
                 }
                  await updateDoc(userRef, { totalPlayCountGame4: totalPlayCountGame4 });
-            } catch (error) {
-                console.error("Error saving score:", error);
-            }
+ 
         }
+
+   
     </script>
 </body>
 </html>
