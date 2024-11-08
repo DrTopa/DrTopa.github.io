@@ -229,8 +229,12 @@
                         for (let y = -1; y <= 1; y++) {
                             const newRow = row + x;
                             const newCol = col + y;
+                            // Check if the new cell is within bounds and hasn't been revealed
                             if (newRow >= 0 && newRow < gridSize && newCol >= 0 && newCol < gridSize) {
-                                revealCell(newRow, newCol);
+                                // Only reveal if it isn't already revealed or flagged
+                                if (!grid[newRow][newCol].revealed && !grid[newRow][newCol].flagged) {
+                                    revealCell(newRow, newCol);
+                                }
                             }
                         }
                     }
