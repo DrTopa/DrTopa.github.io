@@ -320,7 +320,7 @@ function startTimer() {
     let timeLeft = 30; // Set time left for each question
     timerDisplay.innerText = `Temps restant: ${timeLeft}s`;
 
-    const timer = setInterval(() => {
+    let timer = setInterval(() => {
         timeLeft -= 1;
         timerDisplay.innerText = `Temps restant: ${timeLeft}s`;
 
