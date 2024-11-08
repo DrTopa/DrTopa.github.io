@@ -81,25 +81,8 @@
             width: 50px;
         }
       
-        /* Snowflake styles */
-        .snowflake {
-            position: absolute;
-            top: -10px;
-            color: white;
-            font-size: 1em; /* Adjust the size of the snowflakes */
-            pointer-events: none;
-            opacity: 0.8;
-            animation: fall linear infinite;
-        }
+      
 
-        @keyframes fall {
-            0% {
-                transform: translateY(0);
-            }
-            100% {
-                transform: translateY(100vh);
-            }
-        }
     </style>
 </head>
 <body>
@@ -118,7 +101,7 @@
 <p>Deux heures plus tard, il émergea de sa plongée nostalgique, se rappelant soudain qu’il était là pour retrouver les Nathan. Il ouvrit à nouveau les cartons, jusqu’à dénicher deux vieux lutins poussiéreux. « Nathan ? » demanda-t-il. « Non, moi c’est Yoshi, et lui c’est Dod », répondit l’un d’eux. « Ah, ok, c’est ciao », dit Bébé Romain en refermant le carton.</p>
 <p>Enfin, après plusieurs cartons retournés, il tomba sur les fameux cahiers Nathan, le Graal ultime. Il se rappela que c'était lui-même qui les avait confectionnés, année après année. Il pouffa de rire : « Des cahiers de vacances pour Noël, sérieux ! Qui ferait ça ? Non je déconne … Mais imagine quand même» Il ouvrit alors les annales pour comparer les questions de 2010 et de 2024.</p>
 
-        <p>Explication du jeu : Simple quizz de maths. Réponds par A,B,C ou D à chaque question. Tu disposes de 15 secondes par question et chaque bonne réponse vaut 5 points.</p>
+        <p>Explication du jeu : Simple quizz de maths. Réponds par A,B,C ou D en appuyant sur entrée (majuscule ou minuscule) à chaque question. Tu disposes de 30 secondes par question et chaque bonne réponse vaut 5 points.</p>
         <p>Les 10 premières questions sont issues de diverses interros en 2024 et les 10 dernières d’interro en 2010. Il est possible de refaire le quizz mais seul le premier score est pris en compte. Possible sur Smartphone.
 </p>
     </div>
@@ -166,22 +149,6 @@
         const optionsDisplay = document.getElementById('options');
         const inputField = document.getElementById('input');
 
-        
-            // Create falling snowflakes
-        function createSnowflakes() {
-            const snowflakeCount = 100; // Number of snowflakes to create
-            for (let i = 0; i < snowflakeCount; i++) {
-                const snowflake = document.createElement('div');
-                snowflake.className = 'snowflake';
-                snowflake.innerText = '❄️'; // Snowflake character
-                snowflake.style.left = Math.random() * 100 + 'vw'; // Random horizontal position
-                snowflake.style.animationDuration = Math.random() * 3 + 2 + 's'; // Random fall speed
-                snowflake.style.opacity = Math.random(); // Random opacity
-                document.body.appendChild(snowflake);
-            }
-        }
-
-        createSnowflakes(); // Call the function to create snowflakes
 
         const questions = [
             {
@@ -329,7 +296,7 @@
             let questionIndex = 0;
             showQuestion(questionIndex);
 
-            const timerDuration = 15;
+            const timerDuration = 30;
             let timeLeft;
 
             function startTimer() {
@@ -378,7 +345,7 @@
             const question = questions[index];
             questionDisplay.innerText = question.question;
             optionsDisplay.innerHTML = question.options.join('<br>');
-            timerDisplay.innerText = `Temps restant : 15s`;
+            timerDisplay.innerText = `Temps restant : 30s`;
             inputField.disabled = false;
             inputField.focus();
         }
