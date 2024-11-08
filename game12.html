@@ -197,58 +197,57 @@
         }
 
         // Reveal a cell and its neighbors
-// Reveal a cell and its neighbors
-function revealCell(row, col) {
-    // Prevent out-of-bounds or already revealed/flagged cells
-    if (row < 0 || row >= gridSize || col < 0 || col >= gridSize) return;
-    if (grid[row][col].revealed || grid[row][col].flagged) return;
+        function revealCell(row, col) {
+            // Prevent out-of-bounds or already revealed/flagged cells
+            if (row < 0 || row >= gridSize || col < 0 || col >= gridSize) return;
+            if (grid[row][col].revealed || grid[row][col].flagged) return;
 
-    // Reveal the cell
-    grid[row][col].revealed = true;
-    const cell = gridContainer.querySelector(`[data-row='${row}'][data-col='${col}']`);
-    cell.classList.add('revealed');
+            // Reveal the cell
+            grid[row][col].revealed = true;
+            const cell = gridContainer.querySelector(`[data-row='${row}'][data-col='${col}']`);
+            cell.classList.add('revealed');
 
-    if (grid[row][col].mine) {
-        // Game over if it's a mine
-        cell.classList.add('mine');
-        gameOver = true;
-        statusDiv.textContent = "Game Over! You hit a mine!";
-        clearInterval(timer); // Stop the timer
-        revealAllMines();
-    } else {
-        // Show number of adjacent mines
-        if (grid[row][col].adjacentMines > 0) {
-            cell.textContent = grid[row][col].adjacentMines;
-            cell.classList.add('number');
-        }
+            if (grid[row][col].mine) {
+                // Game over if it's a mine
+                cell.classList.add('mine');
+                gameOver = true;
+                statusDiv.textContent = "Game Over! You hit a mine!";
+                clearInterval(timer); // Stop the timer
+                revealAllMines();
+            } else {
+                // Show number of adjacent mines
+                if (grid[row][col].adjacentMines > 0) {
+                    cell.textContent = grid[row][col].adjacentMines;
+                    cell.classList.add('number');
+                }
 
-        // Increase revealed count
-        revealedCount++;
-        if (revealedCount === gridSize * gridSize - mineCount) {
-            gameOver = true;
-            statusDiv.textContent = "Congratulations! You've cleared the minefield!";
-            clearInterval(timer); // Stop timer
-        }
+                // Increase revealed count
+                revealedCount++;
+                if (revealedCount === gridSize * gridSize - mineCount) {
+                    gameOver = true;
+                    statusDiv.textContent = "Congratulations! You've cleared the minefield!";
+                    clearInterval(timer); // Stop timer
+                }
 
-        // Chain reaction for empty cells (adjacentMines === 0)
-        if (grid[row][col].adjacentMines === 0) {
-            // Loop through neighbors to reveal them recursively
-            for (let x = -1; x <= 1; x++) {
-                for (let y = -1; y <= 1; y++) {
-                    const newRow = row + x;
-                    const newCol = col + y;
+                // Chain reaction for empty cells (adjacentMines === 0)
+                if (grid[row][col].adjacentMines === 0) {
+                    // Loop through neighbors to reveal them recursively
+                    for (let x = -1; x <= 1; x++) {
+                        for (let y = -1; y <= 1; y++) {
+                            const newRow = row + x;
+                            const newCol = col + y;
 
-                    // Ensure newRow, newCol are within bounds and avoid revisiting cells
-                    if (newRow >= 0 && newRow < gridSize && newCol >= 0 && newCol < gridSize) {
-                        if (!grid[newRow][newCol].revealed && !grid[newRow][newCol].flagged) {
-                            revealCell(newRow, newCol);
+                            // Ensure newRow, newCol are within bounds and avoid revisiting cells
+                            if (newRow >= 0 && newRow < gridSize && newCol >= 0 && newCol < gridSize) {
+                                if (!grid[newRow][newCol].revealed && !grid[newRow][newCol].flagged) {
+                                    revealCell(newRow, newCol);  // Recursive call
+                                }
+                            }
                         }
                     }
                 }
             }
         }
-    }
-}
 
         // Flag or unflag a cell
         function toggleFlag(row, col) {
