@@ -164,7 +164,7 @@
         let highestScore = 0;
           
         let userId = '';
-        const gridSize = 10;
+        const gridSize = 4;
         const mineCount = 1;
         let grid = [];
         let mines = [];
@@ -382,8 +382,8 @@
 
                 const userRef = doc(db, 'users', userId);
 
-                totalPlayCountGame11 += 1;
-                await updateDoc(userRef, { totalPlayCountGame11 });
+
+                await updateDoc(userRef, { totalPlayCountGame11: playCount });
                 if (totalPlayCountGame11 <= 5 && score > highestScore) {
                     highestScore = score;
                     await updateDoc(userRef, { highestScoreGame11: highestScore });
