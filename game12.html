@@ -214,9 +214,8 @@ function revealCell(row, col) {
         statusDiv.textContent = "Game Over! You hit a mine!";
         clearInterval(timer); // Stop the timer
         revealAllMines();
-        return; // Stop further processing after game over
     } else {
-        // Show number of adjacent mines
+        // Show number of adjacent mines if there are any
         if (grid[row][col].adjacentMines > 0) {
             cell.textContent = grid[row][col].adjacentMines;
             cell.classList.add('number');
@@ -238,12 +237,11 @@ function revealCell(row, col) {
                     const newRow = row + x;
                     const newCol = col + y;
 
-                    // Ensure newRow, newCol are within bounds
+                    // Ensure newRow, newCol are within bounds and avoid revisiting cells
                     if (newRow >= 0 && newRow < gridSize && newCol >= 0 && newCol < gridSize) {
-                        // Ensure that the neighbor is not revealed or flagged
+                        // Ensure that the neighboring cell is not already revealed or flagged
                         if (!grid[newRow][newCol].revealed && !grid[newRow][newCol].flagged) {
-                            // Recursively reveal the neighbor
-                            revealCell(newRow, newCol);
+                            revealCell(newRow, newCol);  // Recursive call
                         }
                     }
                 }
