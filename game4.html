@@ -134,10 +134,11 @@
         <button id="start-btn">Commencer le Jeu</button>
         <div id="timer"></div>
         <div id="score">Score : 0</div>
+        <small id="hint"></small>
         <div id="totalPlayCountDisplay">Total des Parties : 0</div>
         <div id="grid"></div>
         <input type="text" id="guess" placeholder="Entrez un mot ici" />
-        <small id="hint"></small>
+        
     </div>
 
     <script defer type="module">
@@ -242,7 +243,6 @@
             createGrid();
             startTimer();
             startBtn.disabled = true;
-            submitBtn.disabled = false;
             hint.innerText = '';
         }
 
