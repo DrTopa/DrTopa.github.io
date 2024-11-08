@@ -84,7 +84,6 @@
 <body>
 
     <h1>Jeu de Démineur</h1>
-    <button class="btn" id="startButton">Commencer le jeu</button>
     <div id="status" class="status"></div>
     <div id="timer">Temps: 0s</div>
     <div id="score">Score: 0</div>
@@ -103,7 +102,6 @@
 
         const gridContainer = document.getElementById('grid');
         const statusDiv = document.getElementById('status');
-        const startButton = document.getElementById('startButton');
         const timerDisplay = document.getElementById('timer');
         const scoreDisplay = document.getElementById('score');
 
@@ -272,12 +270,6 @@
             }
         }
 
-        // Start the game
-        startButton.addEventListener('click', () => {
-            initGame();
-            timerDisplay.textContent = "Temps: 0s"; // Reset timer
-            scoreDisplay.textContent = "Score: 0"; // Reset score
-        });
 
         // Start the game for the first time
         initGame();
