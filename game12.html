@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minesweeper Game</title>
+    <title>Jeu de Démineur</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -74,15 +74,20 @@
             font-size: 20px;
             margin-top: 10px;
         }
+
+        #score {
+            font-size: 20px;
+            margin-left: 20px;
+        }
     </style>
 </head>
 <body>
 
-    <h1>Minesweeper Game</h1>
-    <button class="btn" id="startButton">Start Game</button>
-    <button class="btn" id="restartButton">Restart Game</button>
+    <h1>Jeu de Démineur</h1>
+    <button class="btn" id="startButton">Commencer le jeu</button>
     <div id="status" class="status"></div>
-    <div id="timer">Time: 0s</div>
+    <div id="timer">Temps: 0s</div>
+    <div id="score">Score: 0</div>
     <div id="grid" class="grid"></div>
 
     <script>
@@ -94,12 +99,13 @@
         let gameOver = false;
         let timer = null;
         let startTime = 0;
+        let score = 0;
 
         const gridContainer = document.getElementById('grid');
         const statusDiv = document.getElementById('status');
-        const restartButton = document.getElementById('restartButton');
         const startButton = document.getElementById('startButton');
         const timerDisplay = document.getElementById('timer');
+        const scoreDisplay = document.getElementById('score');
 
         // Initialize the game
         function initGame() {
@@ -109,7 +115,9 @@
             gridContainer.innerHTML = '';
             mines = [];
             startTime = 0;
-            timerDisplay.textContent = "Time: 0s";
+            score = 0;
+            timerDisplay.textContent = "Temps: 0s";
+            scoreDisplay.textContent = "Score: 0";
 
             // Generate grid cells
             for (let i = 0; i < gridSize; i++) {
@@ -160,7 +168,7 @@
             }
 
             // Update the status
-            statusDiv.textContent = `Mines remaining: ${mineCount}`;
+            statusDiv.textContent = `Mines restantes: ${mineCount}`;
         }
 
         // Start timer
@@ -168,7 +176,7 @@
             if (timer) return;  // Prevent multiple timers from running
             timer = setInterval(() => {
                 startTime++;
-                timerDisplay.textContent = `Time: ${startTime}s`;
+                timerDisplay.textContent = `Temps: ${startTime}s`;
             }, 1000);
         }
 
@@ -207,7 +215,8 @@
             if (grid[row][col].mine) {
                 cell.classList.add('mine');
                 gameOver = true;
-                statusDiv.textContent = "Game Over! You hit a mine!";
+                score = 0;  // Score is 0 if the user hits a bomb
+                statusDiv.textContent = "Game Over! Vous avez frappé une mine!";
                 clearInterval(timer); // Stop timer
                 revealAllMines();
             } else {
@@ -219,7 +228,8 @@
                 revealedCount++;
                 if (revealedCount === gridSize * gridSize - mineCount) {
                     gameOver = true;
-                    statusDiv.textContent = "Congratulations! You've cleared the minefield!";
+                    score = Math.max(0, 100 - startTime);  // Score is calculated based on the time taken
+                    statusDiv.textContent = "Félicitations! Vous avez nettoyé le champ de mines!";
                     clearInterval(timer); // Stop timer
                 }
 
@@ -240,6 +250,7 @@
                     }
                 }
             }
+            scoreDisplay.textContent = `Score: ${score}`;
         }
 
         // Flag or unflag a cell
@@ -261,13 +272,11 @@
             }
         }
 
-        // Restart the game
-        restartButton.addEventListener('click', initGame);
-
         // Start the game
         startButton.addEventListener('click', () => {
             initGame();
-            timerDisplay.textContent = "Time: 0s"; // Reset timer
+            timerDisplay.textContent = "Temps: 0s"; // Reset timer
+            scoreDisplay.textContent = "Score: 0"; // Reset score
         });
 
         // Start the game for the first time
