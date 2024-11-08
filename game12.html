@@ -1,20 +1,54 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jeu de Démineur</title>
+    <title>Bomberman mais sans man et sans mouvement 💣</title>
     <style>
+        /* General body styling */
         body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #f4f4f4;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #ffebcd;
+            background-image: url('https://www.transparenttextures.com/patterns/snow.png');
             margin: 0;
-            padding: 20px;
         }
 
+        /* Christmas themed title */
         h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #d32f2f;
+            font-family: 'Comic Sans MS', cursive;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        /* User status */
+        #userStatus {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.2em;
+            color: #a23636;
+        }
+
+        /* Instructions section */
+        #instructions {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            text-align: center;
+            max-width: 1000px;
+            font-size: 1.2em;
             color: #333;
+            overflow-y: auto;  /* Added for scrolling if needed */
+            max-height: 300px; /* Set a maximum height */
         }
 
         .grid {
@@ -83,13 +117,53 @@
 </head>
 <body>
 
-    <h1>Jeu de Démineur</h1>
+    <h1>Bomberman mais sans man et sans mouvement 💣</h1>
+
+    <div id="instructions">
+        <p>Décembre est enfin là, et cela ne peut signifier qu’une chose : l’atelier du Père Noël Adrien, que tout le monde appelle Topapa, est en effervescence. Fidèle à sa réputation, Topapa s’enfile une grande tasse de café. "Elle a meilleur goût quand c'est l'autre Dudley qui me la prépare" se dit-il et puis il s'élance dans l’atelier pour réveiller ses lutins. Ces derniers, encore en pyjama, s’étirent maladroitement alors que Topapa secoue une vieille ceinture de cuir devant eux.</p>
+        <p>« Allez, allez ! Au boulot, petits fainéants ! » dit-il d’une voix joviale. Mais il sentit que les lutins de Noël traînaient au lit, bien décidés à ne pas se lever. Devant leur obstination, il comprit qu'il allait devoir employer les grands moyens. Il retira son bonnet avec un sourire déterminé, et d'un seul coup, un éclat lumineux envahit la pièce. La surface lisse et parfaitement polie de son crâne chauve reflétait le moindre rayon de lumière qui passait à travers le rideau, transformant la pièce en un véritable phare. 
+        « Merci pour la technique, Zizou », se dit-il, ravi du résultat.
+        </p>
+        <p>Soudain, un cri fluet se fait entendre : « Graoumpf… » Les bébés Romain, aveuglés par cette lumière divine et encore enroulés dans leurs couvertures, ouvraient un œil en fronçant leur gros sourcil, perturbés dans leur douce sieste. Tout endormis, ils tentent d’appuyer en vain sur le bouton Snooze de leur réveil, espérant grappiller quelques minutes de sommeil supplémentaires. Mais leurs petites mains glissent et ratent à chaque tentative, provoquant des petits bruits de frustration.</p>
+        <p>Topapa, amusé, décide d'intervenir pour motiver ses petits nains : « Allez, allez, les nains ! On enfile les chaussures de sécurité. Décembre ne va pas attendre que vous vous réveilliez ! »</p>
+        <p>Explication jeu : Vous disposez de  5 essais pour améliorer votre score. Après avoir lancé le jeu, appuyer sur le bouton Snooze le plus de fois possibles en 10 secondes. Après 5 essais, vous pourrez toujours jouer à ce jeu passionnant.</p>
+        <p>Déconseillé sur Smartphone.</p>
+    </div>
+
+    
     <div id="status" class="status"></div>
     <div id="timer">Temps: 0s</div>
     <div id="score">Score: 0</div>
     <div id="grid" class="grid"></div>
+    <div id="highest-score">Meilleur score: 0</div>
+    <div id="total-play-count">Jeux joués: 0</div>
 
-    <script>
+      <script defer type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyC4bjg7lVwd8FU8MREaPhBsBENv5qmiYYM",
+            authDomain: "calendrier-de-l-avent-54e3a.firebaseapp.com",
+            databaseURL: "https://calendrier-de-l-avent-54e3a-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "calendrier-de-l-avent-54e3a",
+            storageBucket: "calendrier-de-l-avent-54e3a.appspot.com",
+            messagingSenderId: "850639567855",
+            appId: "1:850639567855:web:0d799a1ecca005fcff141a",
+            measurementId: "G-PC1W7RYVEH"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+          
+        let playCount = 0;
+        let totalPlayCountGame1 = 0;
+        let highestScore = 0;
+          
+        let userId = '';
         const gridSize = 10;
         const mineCount = 1;
         let grid = [];
@@ -104,6 +178,34 @@
         const statusDiv = document.getElementById('status');
         const timerDisplay = document.getElementById('timer');
         const scoreDisplay = document.getElementById('score');
+
+
+         onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                userId = user.uid;
+                document.getElementById('userStatus').innerText = `Bienvenue : ${user.email}`;
+
+                const userRef = doc(db, 'users', userId);
+                const docSnap = await getDoc(userRef);
+
+                if (!docSnap.exists()) {
+                    await setDoc(userRef, { userId: userId, totalPlayCountGame11: 0, highestScoreGame11: 0, UserEmail: user.email });
+                } else {
+                    const userData = docSnap.data();
+                    totalPlayCountGame1 = userData.totalPlayCountGame1 || 0;
+                    highestScore = userData.highestScoreGame11 || 0;
+                    playCount = totalPlayCountGame11 + 1;
+                    UserEmail: user.email
+                    
+                    highestScoreDisplay.innerText = `Meilleur score: ${highestScore}`;
+                    totalPlayCountDisplay.innerText = `Jeux joués: ${totalPlayCountGame11}`;
+                    
+                    
+                }
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
 
         // Initialize the game
         function initGame() {
@@ -215,6 +317,7 @@
                 gameOver = true;
                 score = 0;  // Score is 0 if the user hits a bomb
                 statusDiv.textContent = "Game Over! Vous avez frappé une mine!";
+                saveScore(score)
                 clearInterval(timer); // Stop timer
                 revealAllMines();
             } else {
@@ -227,6 +330,7 @@
                 if (revealedCount === gridSize * gridSize - mineCount) {
                     gameOver = true;
                     score = Math.max(0, 100 - startTime);  // Score is calculated based on the time taken
+                    saveScore(score)
                     statusDiv.textContent = "Félicitations! Vous avez nettoyé le champ de mines!";
                     clearInterval(timer); // Stop timer
                 }
@@ -270,6 +374,21 @@
             }
         }
 
+          async function saveScore(score) {
+            try {
+                const gameData = { score: score, playCount: playCount, timestamp: new Date() };
+                await addDoc(collection(db, 'users', userId, 'Game11'), gameData);
+
+                const userRef = doc(db, 'users', userId);
+                if (totalPlayCountGame11 <= 5 && score > highestScore) {
+                    highestScore = score;
+                    await updateDoc(userRef, { highestScoreGame11: highestScore });
+                    highestScoreDisplay.innerText = `Meilleur score: ${highestScore}`; // Update display for highest score
+                }
+            } catch (error) {
+                console.error("Error saving score:", error);
+            }
+        }
 
         // Start the game for the first time
         initGame();
