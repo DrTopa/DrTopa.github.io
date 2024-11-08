@@ -282,73 +282,74 @@
         });
 
         startBtn.addEventListener('click', async () => {
-            score = 0;
-            scoreDisplay.innerText = `Current Score: ${score}`;
+    score = 0;
+    scoreDisplay.innerText = `Current Score: ${score}`;
+    inputField.value = '';
+    inputField.disabled = false;
+    timerDisplay.innerText = '';
+    optionsDisplay.innerHTML = '';
+
+    // Increment totalPlayCount and update Firestore
+    totalPlayCountGame2 += 1;
+    await updateDoc(doc(db, 'users', userId), { totalPlayCountGame2: totalPlayCountGame2 });
+
+    let questionIndex = 0;
+    showQuestion(questionIndex);
+
+    let timer = startTimer(); // Start the timer for the first question
+
+    inputField.addEventListener('keyup', (event) => {
+        if (event.key === 'Enter' && inputField.value) {
+            clearInterval(timer); // Clear the current timer
+            checkAnswer(questionIndex, inputField.value.toUpperCase());
+            questionIndex++;
             inputField.value = '';
-            inputField.disabled = false;
-            timerDisplay.innerText = '';
-            optionsDisplay.innerHTML = '';
 
-            // Increment totalPlayCount and update Firestore
-            totalPlayCountGame2 += 1;
-            await updateDoc(doc(db, 'users', userId), { totalPlayCountGame2: totalPlayCountGame2 });
-
-            let questionIndex = 0;
-            showQuestion(questionIndex);
-
-            const timerDuration = 30;
-            let timeLeft;
-
-            function startTimer() {
-                timeLeft = timerDuration;
-                timerDisplay.innerText = `Temps restant: ${timeLeft}s`;
-
-                const timer = setInterval(() => {
-                    timeLeft -= 1;
-                    timerDisplay.innerText = `Temps restant: ${timeLeft}s`;
-
-                    if (timeLeft <= 0) {
-                        clearInterval(timer);
-                        inputField.disabled = true; // Disable input after time runs out
-                        checkAnswer(questionIndex, ''); // Check answer as incorrect if time is up
-                        questionIndex++;
-                        if (questionIndex < questions.length) {
-                            showQuestion(questionIndex);
-                        } else {
-                            endGame();
-                        }
-                    }
-                }, 1000);
-                return timer; // Return timer reference for clearing if needed
+            if (questionIndex < questions.length) {
+                showQuestion(questionIndex);
+                timer = startTimer(); // Start the timer for the next question
+            } else {
+                endGame();
             }
-
-            let timer = startTimer(); // Start the timer for the first question
-
-            inputField.addEventListener('keyup', (event) => {
-                if (event.key === 'Enter' && inputField.value) {
-                    clearInterval(timer); // Clear the current timer
-                    checkAnswer(questionIndex, inputField.value.toUpperCase());
-                    questionIndex++;
-                    inputField.value = '';
-
-                    if (questionIndex < questions.length) {
-                        showQuestion(questionIndex);
-                        timer = startTimer(); // Start the timer for the next question
-                    } else {
-                        endGame();
-                    }
-                }
-            });
-        });
-
-        function showQuestion(index) {
-            const question = questions[index];
-            questionDisplay.innerText = question.question;
-            optionsDisplay.innerHTML = question.options.join('<br>');
-            timerDisplay.innerText = `Temps restant : 30s`;
-            inputField.disabled = false;
-            inputField.focus();
         }
+    });
+});
+
+           function startTimer() {
+    let timeLeft = 30; // Set time left for each question
+    timerDisplay.innerText = `Temps restant: ${timeLeft}s`;
+
+    const timer = setInterval(() => {
+        timeLeft -= 1;
+        timerDisplay.innerText = `Temps restant: ${timeLeft}s`;
+
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            inputField.disabled = true; // Disable input after time runs out
+            checkAnswer(questionIndex, ''); // Check answer as incorrect if time is up
+            questionIndex++;
+            
+            if (questionIndex < questions.length) {
+                showQuestion(questionIndex);
+                timer = startTimer(); // Start the timer for the next question
+            } else {
+                endGame();
+            }
+        }
+    }, 1000);
+
+    return timer; // Return timer reference for clearing if needed
+}
+
+
+function showQuestion(index) {
+    const question = questions[index];
+    questionDisplay.innerText = question.question;
+    optionsDisplay.innerHTML = question.options.join('<br>');
+    timerDisplay.innerText = `Temps restant : 30s`;
+    inputField.disabled = false;
+    inputField.focus();
+}
 
         function checkAnswer(index, userAnswer) {
             if (userAnswer === questions[index].answer) {
