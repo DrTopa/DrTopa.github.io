@@ -164,7 +164,7 @@
         let highestScoreGame4 = 0;
         let score = 0;
         let timer;
-        let timeLeft = 600;
+        let timeLeft = 6;
 
         const staticGrid = [
     ["E", "K", "M", "R", "E", "M", "O", "R", "D", "N", "I", "L", "A", "P", "J", "O", "G", "Z", "U", "F"],
@@ -244,7 +244,7 @@
         }
 
         function startTimer() {
-            timeLeft = 600; // Set timer to 600 seconds
+            timeLeft = 6; // Set timer to 600 seconds
             timerDisplay.innerText = `Temps restant : ${timeLeft}s`;
             timer = setInterval(() => {
                 timeLeft--;
@@ -288,23 +288,37 @@
                 guessInput.value = ''; // Clear input
 
                 // Check for highest score
-                if (totalPlayCountGame4 < 2 && score > highestScoreGame4) {
-                    highestScoreGame4 = score;
-                    await updateDoc(doc(db, 'users', userId), { highestScoreGame4: highestScoreGame4 });
-                }
+
             } else {
                 hint.innerText = "Mot non trouvé, essayez encore!";
                 guessInput.value = ''; // Clear input
             }
         }
 
-       async function endGame() {
+       function endGame() {
             clearInterval(timer);
             startBtn.disabled = false;
             submitBtn.disabled = true;
             hint.innerText = `Temps écoulé! Votre score final est : ${score}`;
-            const userRef = doc(db, 'users', userId);
-            await updateDoc(userRef, { totalPlayCountGame4: totalPlayCountGame4 });
+            saveScore ()
+ 
+        }
+
+        async function saveScore() {
+            try {
+                const gameData = { score: score, timestamp: new Date() };
+                await addDoc(collection(db, 'users', userId, 'Game1'), gameData);
+
+                const userRef = doc(db, 'users', userId);
+                if (totalPlayCountGame4 < 2 && score > highestScoreGame4) {
+                    highestScoreGame4 = score;
+                    await updateDoc(userRef, { highestScoreGame4: highestScoreGame4 });
+                    
+                }
+                 await updateDoc(userRef, { totalPlayCountGame4: totalPlayCountGame4 });
+            } catch (error) {
+                console.error("Error saving score:", error);
+            }
         }
     </script>
 </body>
