@@ -12,7 +12,6 @@
             justify-content: center;
             align-items: center;
             flex-direction: column;
-            height: 100vh;
             background-color: #ffebcd;
             background-image: url('https://www.transparenttextures.com/patterns/snow.png');
             margin: 0;
@@ -48,7 +47,7 @@
             font-size: 1.2em;
             color: #333;
             overflow-y: auto;  /* Added for scrolling if needed */
-            max-height: 300px; /* Set a maximum height */
+            max-height: 400px; /* Set a maximum height */
         }
 
         .grid {
@@ -131,7 +130,7 @@
     </div>
 
     
-    <div id="status" class="status"></div>
+    <div id="userStatus"></div>
     <div id="timer">Temps: 0s</div>
     <div id="score">Score: 0</div>
     <div id="grid" class="grid"></div>
@@ -160,7 +159,7 @@
         const db = getFirestore(app);
           
         let playCount = 0;
-        let totalPlayCountGame1 = 0;
+        let totalPlayCountGame11 = 0;
         let highestScore = 0;
           
         let userId = '';
