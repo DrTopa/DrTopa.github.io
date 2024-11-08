@@ -80,7 +80,7 @@
             cursor: not-allowed;
         }
 
-        #target-percentage, #score, #round-info, #totalPlayCountDisplay {
+        #target-percentage, #score, #round-info, #totalPlayCountDisplay, #highestScoreDisplay {
             font-size: 1.8em;
             margin: 15px;
             color: #1565c0;
@@ -104,47 +104,6 @@
             bottom: 0;
         }
 
-                /* Christmas Lights Effect */
-        #christmas-lights {
-            position: fixed;
-            top: 30%;
-            left: 30%;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            overflow: hidden;
-            z-index: 999;
-        }
-
-        .light {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-            animation: twinkle 1.5s infinite alternate;
-        }
-
-/* Left Side Lights */
-.light:nth-child(1) { left: -50px; top: -20px; background-color: #ff0000; animation-delay: 0.2s; }
-.light:nth-child(2) { left: -50px; top: 20px; background-color: #00ff00; animation-delay: 0.4s; }
-.light:nth-child(3) { left: -50px; top: 60px; background-color: #0000ff; animation-delay: 0.6s; }
-.light:nth-child(4) { left: -50px; top: 100px; background-color: #ffff00; animation-delay: 0.8s; }
-
-/* Right Side Lights */
-.light:nth-child(5) { left: 50px; top: -20px; background-color: #ff00ff; animation-delay: 1s; }
-.light:nth-child(6) { left: 50px; top: 20px; background-color: #ff9900; animation-delay: 1.2s; }
-.light:nth-child(7) { left: 50px; top: 60px; background-color: #00ffff; animation-delay: 1.4s; }
-.light:nth-child(8) { left: 50px; top: 100px; background-color: #ff6699; animation-delay: 1.6s; }
-
-
-        @keyframes twinkle {
-            0% {
-                opacity: 0.5;
-            }
-            100% {
-                opacity: 1;
-            }
-        }
         
     </style>
 </head>
@@ -165,22 +124,13 @@
         <p>Jeu impossible sur Smartphone
         </p>
     </div>
-    <div id="christmas-lights">
-        <div class="light"></div>
-        <div class="light"></div>
-        <div class="light"></div>
-        <div class="light"></div>
-        <div class="light"></div>
-        <div class="light"></div>
-        <div class="light"></div>
-        <div class="light"></div>
-    </div>
+
     <div id="gameArea">
         <button id="start-btn">Commencer le Jeu</button>
         <button id="fill-btn" disabled>Maintenir pour Remplir</button>
-        <div id="target-percentage">Cible : 0%</div>
         <div id="round-info">Manche 1 sur 5</div>
         <div id="score">Score : 100</div>
+        <div id="target-percentage">Cible : 0%</div>
         <div id="highestScoreDisplay">Meilleur Score : 0</div>
         <div id="totalPlayCountDisplay">Total des Parties : 0</div>
 
@@ -230,6 +180,7 @@
         const totalPlayCountDisplay = document.getElementById('totalPlayCountDisplay');
         const container = document.getElementById('container');
         const roundFillDisplay = document.getElementById('roundFillDisplay');
+        const highestScoreDisplay = document.getElementById('highestScoreDisplay');
         
         onAuthStateChanged(auth, async (user) => {
             if (user) {
@@ -318,7 +269,9 @@
             score -= roundPenalty;
             scoreDisplay.innerText = `Score : ${score}`;
             
-            roundFillDisplay.innerText = `Remplissage Dernière Manche : ${fillPercentage}%`;
+            // Display both the fill percentage and target, along with the score for the previous round
+            roundFillDisplay.innerText = `Remplissage Dernière Manche : ${fillPercentage}% (Cible : ${targetFill}%) - Score pour cette manche : ${score}`;
+
 
             if (round < 5) {
                 round++;
