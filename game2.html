@@ -294,7 +294,7 @@
     totalPlayCountGame2 += 1;
     await updateDoc(doc(db, 'users', userId), { totalPlayCountGame2: totalPlayCountGame2 });
 
-    let questionIndex = 0;
+    questionIndex = 0;
     showQuestion(questionIndex);
 
     let timer = startTimer(); // Start the timer for the first question
