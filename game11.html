@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bomberman mais sans man et sans mouvement 💣</title>
+    <style>
+        /* General body styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #ffebcd;
+            background-image: url('https://www.transparenttextures.com/patterns/snow.png');
+            margin: 0;
+        }
+
+        /* Title */
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #d32f2f;
+            font-family: 'Comic Sans MS', cursive;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        /* User status */
+        #userStatus {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.2em;
+            color: #a23636;
+        }
+
+        /* Instructions section */
+        #instructions {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            text-align: center;
+            max-width: 1000px;
+            font-size: 1.2em;
+            color: #333;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        /* Game area */
+        #gameArea {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 2px solid #b71c1c;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Grid styling */
+        .grid {
+            display: grid;
+            gap: 2px;
+            background-color: #333;
+            padding: 10px;
+        }
+
+        .cell {
+            width: 30px;
+            height: 30px;
+            background-color: #ccc;
+            text-align: center;
+            line-height: 30px;
+            font-size: 1.2em;
+            cursor: pointer;
+        }
+
+        /* Button styles */
+        #start-btn {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 1.5em;
+            cursor: pointer;
+            background-color: #388e3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        #start-btn:hover {
+            background-color: #2e7d32;
+        }
+
+        /* Timer and score styling */
+        #timer, #score, #highest-score, #total-play-count {
+            font-size: 1.2em;
+            margin: 10px;
+            color: #1565c0;
+        }
+    </style>
+</head>
+<body>
+    <h1>💣 Bomberman mais sans man et sans mouvement 💣</h1>
+
+    <div id="userStatus"></div>
+    
+    <!-- Game instructions -->
+    <div id="instructions">
+        <p>Bienvenue dans le jeu ! Votre objectif est de dévoiler toutes les cases sans déclencher de mines.</p>
+        <p>Cliquez gauche pour révéler une case, et cliquez droit pour placer un drapeau.</p>
+        <p>Votre score est calculé en fonction du temps (1000 - temps en secondes). Si vous perdez, le score est 0.</p>
+    </div>
+
+    <div id="gameArea">
+        <button id="start-btn">Commencer le jeu</button>
+        <div id="timer">Temps écoulé: 0s</div>
+        <div id="score">Score actuel: 0</div>
+        <div id="highest-score">Meilleur score: 0</div>
+        <div id="total-play-count">Jeux joués: 0</div>
+        <div id="grid-container"></div>
+    </div>
+
+    <script defer type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyC4bjg7lVwd8FU8MREaPhBsBENv5qmiYYM",
+            authDomain: "calendrier-de-l-avent-54e3a.firebaseapp.com",
+            databaseURL: "https://calendrier-de-l-avent-54e3a-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "calendrier-de-l-avent-54e3a",
+            storageBucket: "calendrier-de-l-avent-54e3a.appspot.com",
+            messagingSenderId: "850639567855",
+            appId: "1:850639567855:web:0d799a1ecca005fcff141a",
+            measurementId: "G-PC1W7RYVEH"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let userId = '';
+        let startTime, timerInterval, score = 0;
+        let playCount = 0;
+        let totalPlayCountGame11 = 0;
+        let highestScoreGame11 = 0;
+        
+        const rows = 10;
+        const cols = 10;
+        const mineCount = 10;
+        let grid = [];
+        let gameOver = false;
+        let flags = 0;
+        let startTime;
+        let intervalId;
+
+        const startBtn = document.getElementById('start-btn');
+        const timerDisplay = document.getElementById('timer');
+        const scoreDisplay = document.getElementById('score');
+        const highestScoreDisplay = document.getElementById('highest-score');
+        const totalPlayCountDisplay = document.getElementById('total-play-count');
+        const gridContainer = document.getElementById('grid-container');
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                userId = user.uid;
+                document.getElementById('userStatus').innerText = `Bienvenue : ${user.email}`;
+
+                const userRef = doc(db, 'users', userId);
+                const docSnap = await getDoc(userRef);
+                if (!docSnap.exists()) {
+                    await setDoc(userRef, { totalPlayCount11: 0, highestScoreGame11: 0 });
+                } else {
+                    const data = docSnap.data();
+                    totalPlayCountGame11 = data.totalPlayCount11 || 0;
+                    highestScoreGame11 = data.highestScoreGame11 || 0;
+                    highestScoreDisplay.innerText = `Meilleur score: ${highestScoreGame11}`;
+                    totalPlayCountDisplay.innerText = `Jeux joués: ${totalPlayCountGame11}`;
+                }
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
+        function setupGrid() {
+            const gameArea = document.getElementById("gameArea");
+            gameArea.innerHTML = "";
+            grid = Array.from({ length: rows }, () => Array(cols).fill({}));
+            
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < cols; c++) {
+                    const cell = document.createElement("div");
+                    cell.classList.add("cell", "hidden");
+                    cell.dataset.row = r;
+                    cell.dataset.col = c;
+                    cell.addEventListener("click", revealCell);
+                    cell.addEventListener("contextmenu", toggleFlag);
+                    gameArea.appendChild(cell);
+                }
+                gameArea.appendChild(document.createElement("br"));
+            }
+            
+            placeMines();
+            calculateAdjacentMines();
+            startTime = Date.now();
+            intervalId = setInterval(updateTimer, 1000);
+        }
+
+        function placeMines() {
+            let minesPlaced = 0;
+            while (minesPlaced < mineCount) {
+                const r = Math.floor(Math.random() * rows);
+                const c = Math.floor(Math.random() * cols);
+                if (!grid[r][c].mine) {
+                    grid[r][c] = { mine: true, revealed: false, flagged: false };
+                    minesPlaced++;
+                }
+            }
+        }
+
+        function calculateAdjacentMines() {
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < cols; c++) {
+                    if (grid[r][c].mine) continue;
+                    let adjacentMines = 0;
+                    for (let i = -1; i <= 1; i++) {
+                        for (let j = -1; j <= 1; j++) {
+                            const nr = r + i;
+                            const nc = c + j;
+                            if (nr >= 0 && nr < rows && nc >= 0 && nc < cols && grid[nr][nc].mine) {
+                                adjacentMines++;
+                            }
+                        }
+                    }
+                    grid[r][c] = { mine: false, adjacentMines, revealed: false, flagged: false };
+                }
+            }
+        }
+
+        function revealCell(event) {
+            if (gameOver) return;
+            const cell = event.target;
+            const r = parseInt(cell.dataset.row);
+            const c = parseInt(cell.dataset.col);
+            if (grid[r][c].flagged || grid[r][c].revealed) return;
+
+            if (grid[r][c].mine) {
+                cell.classList.add("revealed");
+                cell.textContent = "💣";
+                gameOver = true;
+                clearInterval(intervalId);
+                alert("Boom! Vous avez perdu.");
+                return;
+            }
+            
+            revealArea(r, c);
+            checkWin();
+        }
+
+        function revealArea(r, c) {
+            const cell = document.querySelector(`[data-row='${r}'][data-col='${c}']`);
+            if (!cell || grid[r][c].revealed || grid[r][c].flagged) return;
+
+            grid[r][c].revealed = true;
+            cell.classList.remove("hidden");
+            cell.classList.add("revealed");
+            cell.textContent = grid[r][c].adjacentMines > 0 ? grid[r][c].adjacentMines : "";
+            
+            if (grid[r][c].adjacentMines === 0) {
+                for (let i = -1; i <= 1; i++) {
+                    for (let j = -1; j <= 1; j++) {
+                        revealArea(r + i, c + j);
+                    }
+                }
+            }
+        }
+
+        function toggleFlag(event) {
+            event.preventDefault();
+            const cell = event.target;
+            const r = parseInt(cell.dataset.row);
+            const c = parseInt(cell.dataset.col);
+
+            if (grid[r][c].revealed) return;
+            grid[r][c].flagged = !grid[r][c].flagged;
+            cell.classList.toggle("flagged");
+            cell.textContent = grid[r][c].flagged ? "🚩" : "";
+            checkWin();
+        }
+
+        function checkWin() {
+            let allClear = true;
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < cols; c++) {
+                    if (!grid[r][c].mine && !grid[r][c].revealed) {
+                        allClear = false;
+                        break;
+                    }
+                }
+            }
+            if (allClear) {
+                gameOver = true;
+                clearInterval(intervalId);
+                const score = Math.max(1000 - (Date.now() - startTime) / 1000, 0);
+                alert(`Félicitations! Vous avez gagné avec un score de ${score}.`);
+                saveScore(score);
+            }
+        }
+
+        function updateTimer() {
+            const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+            document.getElementById("timer").innerText = `Temps écoulé: ${elapsedTime}s`;
+        }
+
+        startBtn.addEventListener('click', () => {
+            setupGrid();
+            startTime = Date.now();
+            
+        });
+
+        async function saveScore(finalScore) {
+            try {
+                const gameData = { score: finalScore, timestamp: new Date() };
+                await addDoc(collection(db, 'users', userId, 'Game11'), gameData);
+
+                const userRef = doc(db, 'users', userId);
+                if (finalScore > highestScoreGame11) {
+                    highestScoreGame11 = finalScore;
+                    await updateDoc(userRef, { highestScoreGame11 });
+                    highestScoreDisplay.innerText = `Meilleur score: ${highestScoreGame11}`;
+                }
+                totalPlayCountGame11 += 1;
+                await updateDoc(userRef, { totalPlayCount11: totalPlayCountGame11 });
+                totalPlayCountDisplay.innerText = `Jeux joués: ${totalPlayCountGame11}`;
+            } catch (error) {
+                console.error("Erreur lors de l'enregistrement du score:", error);
+            }
+        }
+    </script>
+</body>
+</html>
