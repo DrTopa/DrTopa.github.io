@@ -300,6 +300,7 @@
             startBtn.disabled = false;
             guessInput.disabled = true;
             hint.innerText = `Temps écoulé! Votre score final est : ${score}`;
+           const userRef = doc(db, 'users', userId);
             if (totalPlayCountGame4 < 2 && score > highestScoreGame4) {
                     highestScoreGame4 = score;
                     await updateDoc(userRef, { highestScoreGame4: highestScoreGame4 });
