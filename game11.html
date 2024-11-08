@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bomberman mais sans man et sans mouvement 💣</title>
+    <title>Mexico mais sans lapin et sans mouvement 💣</title>
     <style>
         /* General body styling */
         body {
@@ -116,7 +116,7 @@
 </head>
 <body>
 
-    <h1>Bomberman mais sans man et sans mouvement 💣</h1>
+    <h1>Mexico mais sans lapin et sans mouvement 💣</h1>
 
     <div id="instructions">
         <p>La magie de la ceinture de Noël faisait son effet : nos camarades, malgré leurs différences d’âge, de poils ou de tempérament, étaient devenus des alliés complices. Mais alors qu’ils se laissaient emporter par ce moment de fraternité, un claquement sonore fit trembler le sol sous leurs pieds. En un instant, une nouvelle trappe s’ouvrit, les aspirant dans un tourbillon chaotique avant de les déposer dans une pièce étrangement familière.  </p>
@@ -323,7 +323,7 @@
                 cell.classList.add('mine');
                 gameOver = true;
                 score = 0;  // Score is 0 if the user hits a bomb
-                statusDiv.textContent = "Game Over! Vous avez frappé une mine!";
+                statusDiv.textContent = "Game Over! Sale Noob!";
                 saveScore(score)
                 clearInterval(timer); // Stop timer
                 revealAllMines();
@@ -338,7 +338,7 @@
                     gameOver = true;
                     score = Math.max(0, 100 - startTime);  // Score is calculated based on the time taken
                     saveScore(score)
-                    statusDiv.textContent = "Félicitations! Vous avez nettoyé le champ de mines!";
+                    statusDiv.textContent = "Félicitations! Mais un peu lent!";
                     clearInterval(timer); // Stop timer
                 }
 
