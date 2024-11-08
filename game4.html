@@ -58,7 +58,7 @@
             width: 650px;  /* Increased width */
             height: 850px; /* Increased height */
                 }
-        #start-btn, #submit-btn {
+        #start-btn {
             padding: 10px 20px;
             margin: 10px;
             font-size: 1.5em;
@@ -137,7 +137,6 @@
         <div id="totalPlayCountDisplay">Total des Parties : 0</div>
         <div id="grid"></div>
         <input type="text" id="guess" placeholder="Entrez un mot ici" />
-        <button id="submit-btn" disabled>Soumettre</button>
         <small id="hint"></small>
     </div>
 
@@ -204,8 +203,6 @@
         const guessInput = document.getElementById('guess');
         const hint = document.getElementById('hint');
         const startBtn = document.getElementById('start-btn');
-        const submitBtn = document.getElementById('submit-btn');
-
         const foundWords = new Set();
 
         onAuthStateChanged(auth, async (user) => {
@@ -229,7 +226,11 @@
         });
 
         startBtn.addEventListener('click', startGame);
-        submitBtn.addEventListener('click', submitGuess);
+        guessInput.addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+        submitGuess(); // Call the submit function
+    }
+});
 
         function startGame() {
             score = 0;
