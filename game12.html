@@ -131,6 +131,7 @@
 
     
     <div id="userStatus"></div>
+    <div id="status" class="status"></div>
     <div id="timer">Temps: 0s</div>
     <div id="score">Score: 0</div>
     <div id="grid" class="grid"></div>
@@ -191,7 +192,7 @@
                     await setDoc(userRef, { userId: userId, totalPlayCountGame11: 0, highestScoreGame11: 0, UserEmail: user.email });
                 } else {
                     const userData = docSnap.data();
-                    totalPlayCountGame1 = userData.totalPlayCountGame1 || 0;
+                    totalPlayCountGame11 = userData.totalPlayCountGame11 || 0;
                     highestScore = userData.highestScoreGame11 || 0;
                     playCount = totalPlayCountGame11 + 1;
                     UserEmail: user.email
