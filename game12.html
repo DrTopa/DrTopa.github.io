@@ -37,7 +37,7 @@
         }
 
         .cell.revealed {
-            background-color: #dcdcdc;
+            background-color: #7a6f6f;
         }
 
         .cell.flagged {
@@ -69,13 +69,20 @@
         .btn:hover {
             background-color: #45a049;
         }
+
+        #timer {
+            font-size: 20px;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
 
     <h1>Minesweeper Game</h1>
+    <button class="btn" id="startButton">Start Game</button>
     <button class="btn" id="restartButton">Restart Game</button>
     <div id="status" class="status"></div>
+    <div id="timer">Time: 0s</div>
     <div id="grid" class="grid"></div>
 
     <script>
@@ -85,18 +92,24 @@
         let mines = [];
         let revealedCount = 0;
         let gameOver = false;
+        let timer = null;
+        let startTime = 0;
 
-        // Initialize the grid
         const gridContainer = document.getElementById('grid');
         const statusDiv = document.getElementById('status');
         const restartButton = document.getElementById('restartButton');
+        const startButton = document.getElementById('startButton');
+        const timerDisplay = document.getElementById('timer');
 
+        // Initialize the game
         function initGame() {
             grid = [];
             revealedCount = 0;
             gameOver = false;
             gridContainer.innerHTML = '';
             mines = [];
+            startTime = 0;
+            timerDisplay.textContent = "Time: 0s";
 
             // Generate grid cells
             for (let i = 0; i < gridSize; i++) {
@@ -150,11 +163,23 @@
             statusDiv.textContent = `Mines remaining: ${mineCount}`;
         }
 
+        // Start timer
+        function startTimer() {
+            if (timer) return;  // Prevent multiple timers from running
+            timer = setInterval(() => {
+                startTime++;
+                timerDisplay.textContent = `Time: ${startTime}s`;
+            }, 1000);
+        }
+
         // Handle click event on a cell
         function handleCellClick(event) {
             if (gameOver) return;
             const row = event.target.dataset.row;
             const col = event.target.dataset.col;
+
+            // Start the timer when the first click is made
+            startTimer();
 
             // Reveal the clicked cell
             revealCell(row, col);
@@ -183,6 +208,7 @@
                 cell.classList.add('mine');
                 gameOver = true;
                 statusDiv.textContent = "Game Over! You hit a mine!";
+                clearInterval(timer); // Stop timer
                 revealAllMines();
             } else {
                 if (grid[row][col].adjacentMines > 0) {
@@ -194,10 +220,11 @@
                 if (revealedCount === gridSize * gridSize - mineCount) {
                     gameOver = true;
                     statusDiv.textContent = "Congratulations! You've cleared the minefield!";
+                    clearInterval(timer); // Stop timer
                 }
 
                 if (grid[row][col].adjacentMines === 0) {
-                    // Reveal neighboring cells
+                    // Chain reaction: reveal neighboring cells
                     for (let x = -1; x <= 1; x++) {
                         for (let y = -1; y <= 1; y++) {
                             const newRow = row + x;
@@ -234,6 +261,12 @@
         restartButton.addEventListener('click', initGame);
 
         // Start the game
+        startButton.addEventListener('click', () => {
+            initGame();
+            timerDisplay.textContent = "Time: 0s"; // Reset timer
+        });
+
+        // Start the game for the first time
         initGame();
     </script>
 </body>
