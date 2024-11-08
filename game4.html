@@ -69,7 +69,7 @@
             border-radius: 5px;
             transition: background-color 0.3s;
         }
-        #score, #totalPlayCountDisplay {
+        #score, {
             font-size: 1.8em;
             margin: 15px;
             color: #1565c0;
@@ -135,7 +135,6 @@
         <div id="timer"></div>
         <div id="score">Score : 0</div>
         <small id="hint"></small>
-        <div id="totalPlayCountDisplay">Total des Parties : 0</div>
         <div id="grid"></div>
         <input type="text" id="guess" placeholder="Entrez un mot ici" />
         
@@ -198,7 +197,6 @@
         ];
 
         const scoreDisplay = document.getElementById('score');
-        const totalPlayCountDisplay = document.getElementById('totalPlayCountDisplay');
         const grid = document.getElementById('grid');
         const timerDisplay = document.getElementById('timer');
         const guessInput = document.getElementById('guess');
@@ -219,7 +217,6 @@
                     const userData = docSnap.data();
                     totalPlayCountGame4 = userData.totalPlayCountGame4 || 0;
                     highestScoreGame4 = userData.highestScoreGame4 || 0;
-                    totalPlayCountDisplay.innerText = `Total des Parties : ${totalPlayCountGame4}`;
                 }
             } else {
                 window.location.href = 'login.html';
@@ -236,7 +233,6 @@
         function startGame() {
             score = 0;
             totalPlayCountGame4++;
-            totalPlayCountDisplay.innerText = `Total des Parties : ${totalPlayCountGame4}`;
             scoreDisplay.innerText = `Score : ${score}`;
             grid.innerHTML = '';
             foundWords.clear(); // Clear the found words set
