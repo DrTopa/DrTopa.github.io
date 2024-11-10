@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comparatif 2010 vs 2024 - Game 2 </title>
+    <title>T'as la ref ou t'as pas la ref ? - Jeu 13 🍿</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, sans-serif;
@@ -100,7 +100,7 @@
 </head>
 <body>
 
-    <h1>🎅 Comparatif 2010 vs 2024 - Game 2 🎅</h1>
+    <h1>🍿T'as la ref ou t'as pas la ref ? - Jeu 13 🍿</h1>
     <div id="userStatus"></div>
     
  <!-- Game instructions -->
@@ -144,7 +144,7 @@
         let userId = '';
         let score = 0;
         let playCount = 0;
-        let totalPlayCountGame2 = 0;
+        let totalPlayCountGame13 = 0;
         let highestScore = 0;
         let questionIndex = 0;
         let timer; 
@@ -181,14 +181,14 @@
                 const docSnap = await getDoc(userRef);
 
                 if (!docSnap.exists()) {
-                    await setDoc(userRef, { userId: userId, totalPlayCountGame2: 0, highestScoreGame2: 0 });
+                    await setDoc(userRef, { userId: userId, totalPlayCountGame13: 0, highestScoreGame13: 0 });
                     console.log("User document created with initial values.");
                 } else {
                     const userData = docSnap.data();
-                    totalPlayCountGame2 = userData.totalPlayCountGame2 || 0;
-                    highestScore = userData.highestScoreGame2 || 0;
-                    playCount = totalPlayCountGame2 + 1;
-                    console.log(`Loaded totalPlayCountGame2: ${totalPlayCountGame2}, highestScore: ${highestScore}`);
+                    totalPlayCountGame13 = userData.totalPlayCountGame13 || 0;
+                    highestScore = userData.highestScoreGame13 || 0;
+                    playCount = totalPlayCountGame13 + 1;
+                    console.log(`Loaded totalPlayCountGame13: ${totalPlayCountGame13}, highestScore: ${highestScore}`);
                 }
             } else {
                 window.location.href = 'login.html';
@@ -203,8 +203,8 @@ startBtn.addEventListener('click', async () => {
     timerDisplay.innerText = '';
 
     // Increment totalPlayCount and update Firestore
-    totalPlayCountGame2 += 1;
-    await updateDoc(doc(db, 'users', userId), { totalPlayCountGame2: totalPlayCountGame2 });
+    totalPlayCountGame13 += 1;
+    await updateDoc(doc(db, 'users', userId), { totalPlayCountGame13: totalPlayCountGame13 });
 
     questionIndex = 0;
     showQuestion(questionIndex);
@@ -282,12 +282,12 @@ function showQuestion(index) {
         async function saveScore(score) {
             try {
                 const gameData = { score: score, playCount: playCount, timestamp: new Date() };
-                await addDoc(collection(db, 'users', userId, 'Game2'), gameData);
+                await addDoc(collection(db, 'users', userId, 'Game13'), gameData);
 
                 const userRef = doc(db, 'users', userId);
-                if (totalPlayCountGame2 <= 1 &&score > highestScore) {
+                if (totalPlayCountGame13 <= 1 &&score > highestScore) {
                     highestScore = score;
-                    await updateDoc(userRef, { highestScoreGame2: highestScore });
+                    await updateDoc(userRef, { highestScoreGame13: highestScore });
                 }
                 console.log("Score saved successfully.");
             } catch (error) {
