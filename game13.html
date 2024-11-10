@@ -91,7 +91,7 @@
             padding: 20px;
             font-size: 1.5em;
             margin: 10px;
-            width: 100px;
+            width: 300px;
         }
       
       
@@ -170,7 +170,12 @@
                  question: "Une filette découvre ses parents transformés en cochon. Et après tous les enfants du ciné en sont traumatisés",
                 answer: ["Le voyage de Chihiro" , "Spirited away"], 
             },{
-                 question: "<p>Somebody once told me<br>The world is gonna roll me<br>I ain't the sharpest tool in the shed<br>She was looking kind of dumb<br>With her finger and her thumb<br>In the shape of an 'L' on her forehead</p>",
+                 question: `<p>Somebody once told me<br>
+                    The world is gonna roll me<br>
+                    I ain't the sharpest tool in the shed<br>
+                    She was looking kind of dumb<br>
+                    With her finger and her thumb<br>
+                    In the shape of an 'L' on her forehead</p>`,
                 answer: ["Shrek"], 
             },
             {
@@ -291,7 +296,7 @@ document.getElementById('next-question-btn').addEventListener('click', () => {
 });
       
 function startTimer() {
-    let timeLeft = 30; // Set time left for each question
+    let timeLeft = 60; // Set time left for each question
     timerDisplay.innerText = `Temps restant: ${timeLeft}s`;
 
     clearInterval(timer);
@@ -316,7 +321,7 @@ function showQuestion(index) {
     clearInterval(timer);
     const question = questions[index];
     questionDisplay.innerText = question.question;
-    timerDisplay.innerText = `Temps restant : 30s`;
+    timerDisplay.innerText = `Temps restant : 60s`;
     inputField.disabled = false;
     inputField.focus();
     timer = startTimer();
