@@ -82,10 +82,7 @@
             font-size: 1.5em;
             margin: 20px;
         }
-        #options {
-            font-size: 1.2em;
-            margin: 10px;
-        }
+
         #timer, #score {
             font-size: 1.5em;
             margin: 10px;
@@ -117,8 +114,7 @@
         <div id="score"></div>
         <button id="next-question-btn" style="display: none;">Prochaine question</button>
         <div id="question"></div>
-        <div id="options"></div>
-        <input type="text" id="input" placeholder="A/B/C/D" maxlength="1" disabled>
+        <input type="text" id="input" placeholder="Réponse" disabled>
       
 
       
@@ -157,7 +153,6 @@
         const timerDisplay = document.getElementById('timer');
         const scoreDisplay = document.getElementById('score');
         const questionDisplay = document.getElementById('question');
-        const optionsDisplay = document.getElementById('options');
         const inputField = document.getElementById('input');
         const nextquestionbtn = document.getElementById('next-question-btn');
 
@@ -199,7 +194,6 @@ startBtn.addEventListener('click', async () => {
     inputField.value = '';
     inputField.disabled = false;
     timerDisplay.innerText = '';
-    optionsDisplay.innerHTML = '';
 
     // Increment totalPlayCount and update Firestore
     totalPlayCountGame2 += 1;
@@ -256,7 +250,6 @@ function showQuestion(index) {
     clearInterval(timer);
     const question = questions[index];
     questionDisplay.innerText = question.question;
-    optionsDisplay.innerHTML = question.options.join('<br>');
     timerDisplay.innerText = `Temps restant : 30s`;
     inputField.disabled = false;
     inputField.focus();
