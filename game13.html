@@ -346,12 +346,14 @@ function startTimer() {
 
 
 function showQuestion(index) {
+    clearInterval(timer);
     const question = questions[index];
     questionDisplay.innerText = question.question;
     optionsDisplay.innerHTML = question.options.join('<br>');
     timerDisplay.innerText = `Temps restant : 30s`;
     inputField.disabled = false;
     inputField.focus();
+    timer = startTimer();
 }
 
         function checkAnswer(index, userAnswer) {
