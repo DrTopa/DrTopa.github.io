@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GeoGuessr - Hardcore version - Jeu 12 🍿</title>
+    <title>🌎GeoGuessr - Hardcore version - Jeu 12 🌎</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, sans-serif;
@@ -117,7 +117,7 @@
 <p>Mais le renne perdait lamentablement. « Meuhahaha ! » n’étant pas un pays, il se retrouva souvent en difficulté. « Quelqu’un d’autre pour me défier ? » lança Dudley, l’air hautain.</p>
 <p> Explication du jeu : Trouver le pays en identifiant le drapeau, c’était trop simple ? Ok, cette fois, vous devrez deviner le pays à partir d’une description du drapeau. Ah, on fait moins les malins là, hein ? </p>
 <p>Attention à la syntaxe. On évite les accents dans les réponses et les noms du pays sont uniquement en français. De même on évite les déterminants, c’est "belgique", et pas « la Belgique » ou toute autre variante. Vous pouvez écrire en minuscules ou en majuscules, mais attention aux fautes : cela peut se jouer à un caractère.</p>
-<p>Vous avez 45 secondes par drapeau pour répondre. Mais le chrono ne s'arrète pas en cas de mauvaises réponses, donc tentez autant de fois que vous voulez tant que le chrono tourne.</p>
+<p>Vous avez 60 secondes par drapeau pour répondre. Mais le chrono ne s'arrète pas en cas de mauvaises réponses, donc tentez autant de fois que vous voulez tant que le chrono tourne.</p>
 <p>Petit conseil : Ce jeu est coriace ! Prenez un papier et des crayons de couleur à portée de main pour visualiser les drapeaux. De même, pour éviter les contestations sur un pays mal écrit, vous pouvez filmer votre tentative en cas de réclamation. Vous n'avez bien sûr qu'un seul essai. Jeu possible sur Smartphone mais plus lisible sur ordinateur.</p>
     </div>
     
@@ -185,7 +185,7 @@
                  question: "Drapeau composé de trois bandes horizontales – bleu clair, blanc, bleu clair – avec un soleil jaune en plein centre de la bande blanche.",
                 answer: ["Argentine"], 
             },{
-                 question: "Drapeau composé d'uUne étoile et une lune blanche sur un fond vert foncé avec une bande blanche à sa gauche.",
+                 question: "Drapeau composé d'une étoile et une lune blanche sur un fond vert foncé avec une bande blanche à sa gauche.",
                 answer: ["Pakistan"], 
             },{
                  question: "Drapeau tricolore composé de trois bandes horizontales : vert, blanc et rouge. Un aigle tenant un serpent au centre de la bande blanche",
@@ -206,7 +206,7 @@
                  question: "Drapeau composé de deux bandes verticales vert foncé et blanc avec un croissant et une étoile rouge au milieu",
                 answer: ["Algerie","Algérie"], 
             },{
-                 question: "Drapeau tricolaire composé de trois bandes horizontales. Rouge, jaune et vert foncée avec une étoile noire en son centre.",
+                 question: "Drapeau tricolore composé de trois bandes horizontales. Rouge, jaune et vert foncée avec une étoile noire en son centre.",
                 answer: ["Ghana"], 
             },{
                  question: "Drapeau tricolore avec trois bandes horizontales : Noire, Rouge et Jaune",
@@ -295,7 +295,7 @@ document.getElementById('next-question-btn').addEventListener('click', () => {
 });
       
 function startTimer() {
-    let timeLeft = 30; // Set time left for each question
+    let timeLeft = 60; // Set time left for each question
     timerDisplay.innerText = `Temps restant: ${timeLeft}s`;
 
     clearInterval(timer);
@@ -304,7 +304,9 @@ function startTimer() {
         timerDisplay.innerText = `Temps restant: ${timeLeft}s`;
 
         if (timeLeft <= 0) {
+            const correctAnswers = questions[index].answer;
             clearInterval(timer);
+            questionDisplay.innerHTML += `<br><strong>Réponse correcte : ${correctAnswers.join(', ')}</strong>`;
             inputField.disabled = true; // Disable input after time runs out
             checkAnswer(questionIndex, ''); // Check answer as incorrect if time is up
            document.getElementById('next-question-btn').style.display = 'inline'; // Show "Next Question" button
@@ -320,7 +322,7 @@ function showQuestion(index) {
     clearInterval(timer);
     const question = questions[index];
     questionDisplay.innerText = question.question;
-    timerDisplay.innerText = `Temps restant : 30s`;
+    timerDisplay.innerText = `Temps restant : 60s`;
     inputField.disabled = false;
     inputField.focus();
     timer = startTimer();
