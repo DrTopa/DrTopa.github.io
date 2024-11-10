@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Fruit Ninja Game</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #1e1e1e;
+            font-family: Arial, sans-serif;
+            color: white;
+        }
+        #gameArea {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .shape {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            opacity: 0.8;
+            border-radius: 50%;
+            background-color: red;
+            transition: background-color 0.3s;
+        }
+        #score {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div id="gameArea">
+        <div id="score">Score: 0</div>
+    </div>
+
+    <script>
+        const gameArea = document.getElementById("gameArea");
+        const scoreDisplay = document.getElementById("score");
+        let score = 0;
+
+        // Function to create a random shape
+        function createShape() {
+            const shape = document.createElement("div");
+            shape.classList.add("shape");
+            
+            // Random position and color
+            shape.style.left = Math.random() * window.innerWidth + "px";
+            shape.style.top = window.innerHeight + "px"; // Start off-screen at the bottom
+            shape.style.backgroundColor = getRandomColor();
+            shape.dataset.sliced = "false";
+
+            // Random shape (circle or square)
+            if (Math.random() > 0.5) {
+                shape.style.borderRadius = "0"; // Make it a square
+            }
+
+            gameArea.appendChild(shape);
+
+            // Animate the shape upwards
+            animateShape(shape);
+        }
+
+        // Function to animate a shape upwards
+        function animateShape(shape) {
+            const speed = Math.random() * 3 + 2; // Random speed between 2 and 5
+            const interval = setInterval(() => {
+                const currentTop = parseFloat(shape.style.top);
+                shape.style.top = currentTop - speed + "px";
+                
+                // Remove the shape if it goes off the top of the screen
+                if (currentTop < -50) {
+                    gameArea.removeChild(shape);
+                    clearInterval(interval);
+                }
+            }, 20);
+        }
+
+        // Function to handle slicing
+        function sliceShape(shape) {
+            if (shape.dataset.sliced === "false") { // Only slice once
+                shape.dataset.sliced = "true";
+                shape.style.backgroundColor = "gray"; // Indicate it's "sliced"
+                score++;
+                scoreDisplay.textContent = "Score: " + score;
+                setTimeout(() => gameArea.removeChild(shape), 300);
+            }
+        }
+
+        // Function to detect if mouse is over shape
+        gameArea.addEventListener("mousemove", (e) => {
+            const shapes = document.querySelectorAll(".shape");
+            shapes.forEach(shape => {
+                const rect = shape.getBoundingClientRect();
+                if (
+                    e.clientX > rect.left &&
+                    e.clientX < rect.right &&
+                    e.clientY > rect.top &&
+                    e.clientY < rect.bottom
+                ) {
+                    sliceShape(shape);
+                }
+            });
+        });
+
+        // Function to generate random colors
+        function getRandomColor() {
+            const colors = ["#ff6347", "#ffeb3b", "#4caf50", "#03a9f4", "#e91e63"];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        // Create a new shape every 1 second
+        setInterval(createShape, 1000);
+    </script>
+</body>
+</html>
