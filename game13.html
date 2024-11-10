@@ -110,10 +110,11 @@
         <button id="start-btn">🎅Start Game🎅</button>
         <div id="timer"></div>
         <div id="score"></div>
+        <button id="next-question-btn" style="display: none;">Prochaine question</button>
         <div id="question"></div>
         <div id="options"></div>
         <input type="text" id="input" placeholder="A/B/C/D" maxlength="1" disabled>
-        <button id="next-question-btn" style="display: none;">Prochaine question</button>
+      
 
       
     </div>
@@ -145,6 +146,7 @@
         let totalPlayCountGame2 = 0;
         let highestScore = 0;
         let questionIndex = 0;
+        let timer; 
 
         const startBtn = document.getElementById('start-btn');
         const timerDisplay = document.getElementById('timer');
@@ -300,7 +302,7 @@ startBtn.addEventListener('click', async () => {
     questionIndex = 0;
     showQuestion(questionIndex);
 
-    let timer = startTimer(); // Start the timer for the first question
+    timer = startTimer(); // Start the timer for the first question
 
     inputField.addEventListener('keyup', (event) => {
         if (event.key === 'Enter' && inputField.value) {
