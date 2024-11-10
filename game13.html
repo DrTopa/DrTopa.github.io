@@ -306,15 +306,8 @@ startBtn.addEventListener('click', async () => {
         if (event.key === 'Enter' && inputField.value) {
             clearInterval(timer); // Clear the current timer
             checkAnswer(questionIndex, inputField.value.toUpperCase());
-            questionIndex++;
             inputField.value = '';
 
-            if (questionIndex < questions.length) {
-                showQuestion(questionIndex);
-                timer = startTimer(); // Start the timer for the next question
-            } else {
-                endGame();
-            }
         }
     });
 });
