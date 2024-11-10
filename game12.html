@@ -213,7 +213,6 @@ startBtn.addEventListener('click', async () => {
 
     inputField.addEventListener('keyup', (event) => {
         if (event.key === 'Enter' && inputField.value) {
-            clearInterval(timer); // Clear the current timer
             checkAnswer(questionIndex, inputField.value.toUpperCase());
             inputField.value = '';
 
