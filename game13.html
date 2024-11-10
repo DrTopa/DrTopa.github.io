@@ -88,10 +88,10 @@
             margin: 10px;
         }
         #input {
-            padding: 10px;
-            font-size: 1.2em;
+            padding: 20px;
+            font-size: 1.5em;
             margin: 10px;
-            width: 50px;
+            width: 100px;
         }
       
       
@@ -161,7 +161,14 @@
             {
                  question: "What is the capital of France?",
                 answer: ["Paris", "Pariz", "Paris_France"], 
+            },{
+                 question: "What is the capital of France?",
+                answer: ["Paris", "Pariz", "Paris_France"], 
             },
+            {
+                 question: "What is the capital of France?",
+                answer: ["Paris", "Pariz", "Paris_France"], 
+            }
             
         ];
 
@@ -257,7 +264,7 @@ function showQuestion(index) {
 }
 
         function checkAnswer(index, userAnswer) {
-            const correctAnswer = questions[index].answer;
+            const correctAnswers = questions[index].answer;
             userAnswer = userAnswer.trim().toLowerCase();
             
              if (correctAnswers.some(answer => answer.toLowerCase() === userAnswer)) {
