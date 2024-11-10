@@ -100,7 +100,7 @@
 </head>
 <body>
 
-    <h1>GeoGuessr - Hardcore version - Jeu 12 🍿</h1>
+    <h1>🌎GeoGuessr - Hardcore version - Jeu 12 🌎</h1>
     <div id="userStatus"></div>
     
  <!-- Game instructions -->
@@ -304,7 +304,7 @@ function startTimer() {
         timerDisplay.innerText = `Temps restant: ${timeLeft}s`;
 
         if (timeLeft <= 0) {
-            const correctAnswers = questions[index].answer;
+            const correctAnswers = questions[questionIndex].answer;
             clearInterval(timer);
             questionDisplay.innerHTML += `<br><strong>Réponse correcte : ${correctAnswers.join(', ')}</strong>`;
             inputField.disabled = true; // Disable input after time runs out
