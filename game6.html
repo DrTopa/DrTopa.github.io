@@ -62,6 +62,22 @@
         #start-btn:hover {
             background-color: #0056b3;
         }
+
+                #next-question-btn {
+    padding: 10px 20px;
+    margin: 10px;
+    font-size: 1.5em;
+    cursor: pointer;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    display: none; /* Keeps it hidden initially */
+}
+
+#next-question-btn:hover {
+    background-color: #0056b3;
+}
+        
         #question {
             font-size: 1.5em;
             margin: 0px;
@@ -115,6 +131,7 @@
         <button id="start-btn">🎅Start Game🎅</button>
         <div id="timer"></div>
         <div id="score"></div>
+        <button id="next-question-btn" style="display: none;">Prochaine question</button>
         <div id="question"></div>
         <div id="options"></div>
         <input type="text" id="input" placeholder="A/B/C/D" maxlength="1" disabled>
@@ -147,6 +164,7 @@
         let totalPlayCountGame6 = 0;
         let highestScore = 0;
          let questionIndex = 0;
+        let timer; 
 
         const startBtn = document.getElementById('start-btn');
         const timerDisplay = document.getElementById('timer');
@@ -154,6 +172,7 @@
         const questionDisplay = document.getElementById('question');
         const optionsDisplay = document.getElementById('options');
         const inputField = document.getElementById('input');
+        const nextquestionbtn = document.getElementById('next-question-btn');
 
 
 
@@ -303,30 +322,33 @@ startBtn.addEventListener('click', async () => {
     questionIndex = 0;
     showQuestion(questionIndex);
 
-    let timer = startTimer(); // Start the timer for the first question
+    timer = startTimer(); // Start the timer for the first question
 
     inputField.addEventListener('keyup', (event) => {
         if (event.key === 'Enter' && inputField.value) {
             clearInterval(timer); // Clear the current timer
             checkAnswer(questionIndex, inputField.value.toUpperCase());
-            questionIndex++;
             inputField.value = '';
-
-            if (questionIndex < questions.length) {
-                showQuestion(questionIndex);
-                timer = startTimer(); // Start the timer for the next question
-            } else {
-                endGame();
-            }
         }
     });
+});
+
+document.getElementById('next-question-btn').addEventListener('click', () => {
+    questionIndex++;
+    if (questionIndex < questions.length) {
+        showQuestion(questionIndex);
+        startTimer();
+        document.getElementById('next-question-btn').style.display = 'none'; // Hide the button again
+    } else {
+        endGame();
+    }
 });
 
 function startTimer() {
     let timeLeft = 30; // Set time left for each question
     timerDisplay.innerText = `Temps restant: ${timeLeft}s`;
-
-    let timer = setInterval(() => {
+    clearInterval(timer);
+    timer = setInterval(() => {
         timeLeft -= 1;
         timerDisplay.innerText = `Temps restant: ${timeLeft}s`;
 
@@ -334,14 +356,8 @@ function startTimer() {
             clearInterval(timer);
             inputField.disabled = true; // Disable input after time runs out
             checkAnswer(questionIndex, ''); // Check answer as incorrect if time is up
-            questionIndex++;
+            document.getElementById('next-question-btn').style.display = 'inline'; // Show "Next Question" button
             
-            if (questionIndex < questions.length) {
-                showQuestion(questionIndex);
-                timer = startTimer(); // Start the timer for the next question
-            } else {
-                endGame();
-            }
         }
     }, 1000);
 
@@ -350,15 +366,18 @@ function startTimer() {
 
 
 function showQuestion(index) {
+    clearInterval(timer);
     const question = questions[index];
     questionDisplay.innerText = question.question;
     optionsDisplay.innerHTML = question.options.join('<br>');
     timerDisplay.innerText = `Temps restant : 30s`;
     inputField.disabled = false;
     inputField.focus();
+    timer = startTimer();
 }
 
-        function checkAnswer(index, userAnswer) {
+function checkAnswer(index, userAnswer) {
+            const correctAnswer = questions[index].answer;
             if (userAnswer === questions[index].answer) {
                 score += 5;
                 scoreDisplay.innerText = `Score actuel: ${score}`;
@@ -366,7 +385,11 @@ function showQuestion(index) {
             } else if (userAnswer !== '') {
                 console.log("Incorrect Answer.");
             }
+          questionDisplay.innerHTML += `<br><strong>Réponse correcte : ${correctAnswer}</strong>`;
+          inputField.disabled = true;
+          document.getElementById('next-question-btn').style.display = 'inline'; // Show "Next Question" button
         }
+
 
         async function saveScore(score) {
             try {
@@ -388,7 +411,7 @@ function showQuestion(index) {
             inputField.disabled = true;
             await saveScore(score); // Save the score at the end of the game
             console.log("Game Over. Final Score:", score);
-            alert(`The quiz is over! Your final score is: ${score}`);
+            alert(`Le quiz est fini! Pas ouf la mémoire ! Ton score est: ${score}`);
         }
     </script>
 </body>
