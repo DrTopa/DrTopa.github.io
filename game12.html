@@ -105,7 +105,20 @@
     
  <!-- Game instructions -->
     <div id="instructions">
-        <p></p>
+        <p>La bouche encore pleine d'arlequins, Bébé Romain ferma l'ordinateur. Soudain, la ceinture magique de Noël fit son apparition, scintillante comme jamais. « Bien joué, les enfants ! Vous vous débrouillez très bien. Mais le chemin est encore long, » annonça-t-elle avec une voix chaleureuse.</p>
+<p>« Ça va être le jeu du dictionnaire, c’est ça la suite ? » rigola Dudley</p>
+<p>Quelques secondes après, alors que tout le monde était assis, sauf Dudley — qui avait du mal à s’asseoir confortablement après sa blague —, la ceinture magique ouvrit un nouveau portail. Les cinq compères s’y engagèrent avec curiosité.</p>
+<p>Ils se retrouvèrent sur un tapis un peu vieillot, devant un canapé recouvert d'anciens draps. Un rocking chair grinçait doucement, et une énorme radio ornée d'une tour de CD trônait dans un coin. Pas de doutes, ils étaient au 17 rue du Colonel Fabien. Mais ce n’était pas en 2024. Le piano dans le salon confirmait qu’ils n’étaient pas dans le futur non plus.</p>
+<p>Au fond de la pièce, ils aperçurent un homme avec la même coupe de cheveux que Bébé Romain. Ce dernier était en train d’écrire un article pour Armenews. Grinchémie, curieuse de découvrir sa caverne d'autrefois, fut surprise de revoir cet homme en train de peindre dans le couloir. En regardant par la fenêtre de sa chambre, elle le revit en train d’enlever des mauvaises herbes dans le jardin. </p>
+<p>Pendant ce temps, dans le coin de la pièce Kevin et Priscilla se mariaient sous le regard du témoin Brandon. « Dommage que Maman ne soient plus là pour voir ça » se dit-il. Et il engloutit un moucheron pour se consoler.</p>
+<p>Alors qu’elle se retourna, elle vit qu’il était encore là, souriant, en train de peindre dans le couloir. Désabusée, elle remonta dans le salon et elle l’aperçut en train de siroter un thé tout en consultant son smartphone à la recherche d’appartements à Lyon, son ordinateur étant visiblement ralenti par quatre téléchargements en cours.</p>
+<p>La ceinture magique de Noël remarqua l’air de Grinchémie. « C’est TéléPAPArition, » annonça-t-elle avec un sourire malicieux, « très pratique quand il faut être partout à la fois. » </p>
+<p>Pendant ce temps, Dudley fouilla autour de lui et trouva une boîte remplie de petits drapeaux. Un défi s'illumina dans son esprit. « Hé, RaseToiLaMoustache, tu veux te battre en duel ? » s'exclama-t-il, un sourire arrogant aux lèvres. </p>
+<p>Mais le renne perdait lamentablement. « Meuhahaha ! » n’étant pas un pays, il se retrouva souvent en difficulté. « Quelqu’un d’autre pour me défier ? » lança Dudley, l’air hautain.</p>
+<p> Explication du jeu : Trouver le pays en identifiant le drapeau, c’était trop simple ? Ok, cette fois, vous devrez deviner le pays à partir d’une description du drapeau. Ah, on fait moins les malins là, hein ? </p>
+<p>Attention à la syntaxe. On évite les accents dans les réponses et les noms du pays sont uniquement en français. De même on évite les déterminants, c’est "belgique", et pas « la Belgique » ou toute autre variante. Vous pouvez écrire en minuscules ou en majuscules, mais attention aux fautes : cela peut se jouer à un caractère.</p>
+<p>Vous avez 45 secondes par drapeau pour répondre. Mais le chrono ne s'arrète pas en cas de mauvaises réponses, donc tentez autant de fois que vous voulez tant que le chrono tourne.</p>
+<p>Petit conseil : Ce jeu est coriace ! Prenez un papier et des crayons de couleur à portée de main pour visualiser les drapeaux. De même, pour éviter les contestations sur un pays mal écrit, vous pouvez filmer votre tentative en cas de réclamation. Vous n'avez bien sûr qu'un seul essai. Jeu possible sur Smartphone mais plus lisible sur ordinateur.</p>
     </div>
     
     <div id="gameArea">
@@ -159,15 +172,66 @@
 
         const questions = [
             {
-                 question: "What is the capital of France?",
-                answer: ["Paris", "Pariz", "Paris_France"], 
+                 question: "Drapeau tricolore avec trois bandes verticales : Bleu, Blanc et Rouge",
+                answer: ["France"], 
             },{
-                 question: "What is the capital of France?",
-                answer: ["Paris", "Pariz", "Paris_France"], 
+                 question: "Drapeau tricolore avec trois bandes horizontales : Rouge, Bleu et Orange",
+                answer: ["Armenie", "Arménie"], 
             },
             {
-                 question: "What is the capital of France?",
-                answer: ["Paris", "Pariz", "Paris_France"], 
+                 question: "Drapeau avec un fond blanc et un cercle rouge au centre.",
+                answer: ["Japon"], 
+            },{
+                 question: "Drapeau composé de trois bandes horizontales – bleu clair, blanc, bleu clair – avec un soleil jaune en plein centre de la bande blanche.",
+                answer: ["Argentine"], 
+            },{
+                 question: "Drapeau composé d'uUne étoile et une lune blanche sur un fond vert foncé avec une bande blanche à sa gauche.",
+                answer: ["Pakistan"], 
+            },{
+                 question: "Drapeau tricolore composé de trois bandes horizontales : vert, blanc et rouge. Un aigle tenant un serpent au centre de la bande blanche",
+                answer: ["Mexique"], 
+            },{
+                 question: "Drapeau tout rouge avec une étoile jaune à cinq branches en plein centre",
+                answer: ["Vietnam","Viet Nam", "Viet-Nam", "Viêtnam"], 
+            },{
+                 question: "Sur fond vert clair, un losange jaune dans lequel on retrouve une sphère bleu foncée remplie d’étoiles dans lequel on peut lire ‘ordem et progresso’",
+                answer: ["Bresil", "Brésil"], 
+            },{
+                 question: "Un drapeau rectangulaire séparé en 2 par la diagonale. La partie supérieure est jaune et celle du dessous est orange. Un dragon est situé au centre du drapeau",
+                answer: ["Bhoutan"], 
+            },{
+                 question: "Drapeau composé de 5 bandes horizontales de taille différentes : une moyenne verte foncée, une petite blanche, une grande rouge, une petite blanche et une moyenne verte foncée. Au centre de la bande rouge, on retrouve une étoile jaune à 5 branches.",
+                answer: ["Suriname"], 
+            },{
+                 question: "Drapeau composé de deux bandes verticales vert foncé et blanc avec un croissant et une étoile rouge au milieu",
+                answer: ["Algerie","Algérie"], 
+            },{
+                 question: "Drapeau tricolaire composé de trois bandes horizontales. Rouge, jaune et vert foncée avec une étoile noire en son centre.",
+                answer: ["Ghana"], 
+            },{
+                 question: "Drapeau tricolore avec trois bandes horizontales : Noire, Rouge et Jaune",
+                answer: ["Allemagne"], 
+            },{
+                 question: "Drapeau bleu foncé avec une fine bande centrale horizontale jaune. En dessous de la bande, on retrouve un soleil blanc",
+                answer: ["Nauru"], 
+            },{
+                 question: "Drapeau blanc avec deux larges bandes bleues foncées .La première traverse le drapeau horizontalement en son centre et la deuxième verticalement au niveau du 1er tier du drapeau, le tout formant une croix. ",
+                answer: ["Finlande"], 
+            },{
+                 question: "Drapeau tricolore composé de trois bandes horizontales : rouge, blanc, rouge avec un cèdre dans la partie blanche qui est un peu plus grande que les deux autres.",
+                answer: ["Liban"], 
+            },{
+                 question: "Drapeau tricolore horizontale rouge, blanc et noir avec deux étoiles vertes au centre",
+                answer: ["Syrie"], 
+            },{
+                 question: "Drapeau tricolore avec trois bandes horizontales : Rouge, Jaune et Verte",
+                answer: ["Bolivie"], 
+            },{
+                 question: "Drapeau bicolore avec trois bandes verticale avec 3 bandes verticales rouge, blanc et rouge. Il y a une feuille d’ érable rouge dans la partie blanche",
+                answer: ["Canada"], 
+            },{
+                 question: " Drapeau constitué de 3 bandes horizontales: noire , rouge (bordée en haut et en bas par une petite bande blanche) et verte.Au centre, présence d’un bouclier rouge couvrant deux lances blanches pointant vers le haut. ",
+                answer: ["Kenya"], 
             }
             
         ];
