@@ -7,18 +7,19 @@
     <style>
         body {
             margin: 0;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #1e1e1e;
             font-family: Arial, sans-serif;
             color: white;
+            background-color: #1e1e1e;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-y: scroll; /* Allow scrolling for instructions */
         }
         #gameArea {
             position: relative;
             width: 100vw;
-            height: 100vh;
+            height: 80vh;
+            background-color: #333;
             overflow: hidden;
         }
         .shape {
@@ -36,23 +37,51 @@
             left: 20px;
             font-size: 24px;
         }
+        #startButton {
+            margin: 20px;
+            padding: 10px 20px;
+            font-size: 20px;
+            color: #fff;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #instructions {
+            width: 90%;
+            max-width: 800px;
+            margin: 20px;
+            padding: 10px;
+            background-color: #444;
+            color: #fff;
+            border-radius: 5px;
+            font-size: 16px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
+    <button id="startButton">Start Game</button>
     <div id="gameArea">
         <div id="score">Score: 0</div>
+    </div>
+    <div id="instructions">
+        <h3>Instructions:</h3>
+        <p>Press "Start Game" to begin. Move your mouse over the shapes to "slice" them and earn points. Avoid letting them reach the top without slicing!</p>
     </div>
 
     <script>
         const gameArea = document.getElementById("gameArea");
         const scoreDisplay = document.getElementById("score");
+        const startButton = document.getElementById("startButton");
         let score = 0;
+        let gameInterval;
 
         // Function to create a random shape
         function createShape() {
             const shape = document.createElement("div");
             shape.classList.add("shape");
-            
+
             // Random position and color
             shape.style.left = Math.random() * window.innerWidth + "px";
             shape.style.top = window.innerHeight + "px"; // Start off-screen at the bottom
@@ -72,7 +101,7 @@
 
         // Function to animate a shape upwards
         function animateShape(shape) {
-            const speed = Math.random() * 3 + 2; // Random speed between 2 and 5
+            const speed = Math.random() * 3 + 5; // Random speed between 2 and 5
             const interval = setInterval(() => {
                 const currentTop = parseFloat(shape.style.top);
                 shape.style.top = currentTop - speed + "px";
@@ -118,8 +147,18 @@
             return colors[Math.floor(Math.random() * colors.length)];
         }
 
-        // Create a new shape every 1 second
-        setInterval(createShape, 1000);
+        // Start button event listener to begin the game
+        startButton.addEventListener("click", () => {
+            // Reset score and clear existing shapes
+            score = 0;
+            scoreDisplay.textContent = "Score: " + score;
+            const shapes = document.querySelectorAll(".shape");
+            shapes.forEach(shape => gameArea.removeChild(shape));
+
+            // Start generating shapes every 1 second
+            clearInterval(gameInterval); // Clear previous intervals if any
+            gameInterval = setInterval(createShape, 500);
+        });
     </script>
 </body>
 </html>
