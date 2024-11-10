@@ -329,7 +329,7 @@ function startTimer() {
     timerDisplay.innerText = `Temps restant: ${timeLeft}s`;
 
     clearInterval(timer);
-    let timer = setInterval(() => {
+    timer = setInterval(() => {
         timeLeft -= 1;
         timerDisplay.innerText = `Temps restant: ${timeLeft}s`;
 
