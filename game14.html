@@ -251,6 +251,7 @@ const gameArea = document.getElementById("gameArea");
         let fruitCount = 0;
         let gameInterval;
         let shapeRemovalInterval;
+        let gameOver = false;
 
         function createShape() {
             if (fruitCount >= 10) {
@@ -278,8 +279,10 @@ const gameArea = document.getElementById("gameArea");
 
             gameArea.appendChild(shape);
             animateShape(shape);
-            shapeRemovalInterval = setInterval(checkGameEnd, 1000); // Periodically check if the game should end
             fruitCount++; // Increment the fruit count each time a new fruit is created
+            if (fruitCount >=10 & gameOver==false){
+                shapeRemovalInterval = setInterval(checkGameEnd, 1000); 
+            }
         }
 
         function animateShape(shape) {
@@ -319,6 +322,7 @@ const gameArea = document.getElementById("gameArea");
         }
 
         function endGame() {
+            gameOver=true;
             alert("Game Over! Your final score is: " + score);
         }
 
