@@ -57,7 +57,134 @@
             border-radius: 5px;
             font-size: 16px;
             text-align: center;
+
         }
+
+         .pomegranate {
+        width: 50px;
+        height: 50px;
+        background-color: #b71c1c;
+        border-radius: 50%;
+        position: relative;
+    }
+    .pomegranate::before {
+        content: '';
+        position: absolute;
+        top: -10px;
+        left: 15px;
+        width: 30px;
+        height: 10px;
+        background: #b71c1c;
+        clip-path: polygon(0 100%, 25% 0, 50% 100%, 75% 0, 100% 100%);
+    }
+
+    .grapes {
+        width: 40px;
+        height: 40px;
+        background-color: transparent;
+        position: relative;
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .grape {
+        width: 15px;
+        height: 15px;
+        background-color: #6a0dad;
+        border-radius: 50%;
+        margin: 1px;
+    }
+
+    .pineapple {
+        width: 30px;
+        height: 60px;
+        background-color: #ffeb3b;
+        border-radius: 20% 20% 40% 40%;
+        position: relative;
+    }
+    .pineapple::before {
+        content: '';
+        position: absolute;
+        top: -20px;
+        left: 0;
+        width: 100%;
+        height: 20px;
+        background-color: #4caf50;
+        clip-path: polygon(0 100%, 20% 0, 40% 100%, 60% 0, 80% 100%, 100% 0);
+    }
+
+    .banana {
+        width: 20px;
+        height: 60px;
+        background-color: #ffeb3b;
+        border-radius: 20px 50px 50px 20px;
+    }
+
+    .apple {
+        width: 50px;
+        height: 50px;
+        background-color: #e53935;
+        border-radius: 50%;
+        position: relative;
+    }
+    .apple::before {
+        content: '';
+        position: absolute;
+        top: -10px;
+        left: 20px;
+        width: 10px;
+        height: 15px;
+        background-color: #4caf50;
+        border-radius: 50%;
+    }
+
+    .pear {
+        width: 30px;
+        height: 50px;
+        background-color: #8bc34a;
+        border-radius: 50% 50% 30% 30%;
+    }
+
+    .orange {
+        width: 50px;
+        height: 50px;
+        background-color: #ff9800;
+        border-radius: 50%;
+    }
+
+    .cherry {
+        width: 10px;
+        height: 10px;
+        background-color: #e91e63;
+        border-radius: 50%;
+        position: relative;
+    }
+    .cherry::before {
+        content: '';
+        position: absolute;
+        width: 15px;
+        height: 15px;
+        background-color: #e91e63;
+        border-radius: 50%;
+        left: 20px;
+    }
+
+    .watermelon {
+        width: 50px;
+        height: 25px;
+        background-color: #ff1744;
+        border-radius: 50% 50% 0 0;
+        position: relative;
+    }
+    .watermelon::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 5px;
+        background-color: #388e3c;
+        border-radius: 0 0 10px 10px;
+    }
+        
     </style>
 </head>
 <body>
@@ -77,35 +204,43 @@
         let score = 0;
         let gameInterval;
 
-        // Function to create a random shape
-        function createShape() {
-            const shape = document.createElement("div");
-            shape.classList.add("shape");
+function createShape() {
+    const shape = document.createElement("div");
 
-            // Set initial position at a random x position near the bottom
-            shape.style.left = (Math.random()*0.8+0.1) * window.innerWidth + "px";
-            shape.style.top = window.innerHeight - 60 + "px"; // Start just above the bottom
+    // Array of available fruit classes
+    const fruits = [
+        "pomegranate", "grapes", "pineapple", 
+        "banana", "apple", "pear", 
+        "orange", "cherry", "watermelon"
+    ];
+    
+    // Randomly select a fruit class
+    const randomFruit = fruits[Math.floor(Math.random() * fruits.length)];
+    shape.classList.add(randomFruit);
 
-            shape.style.backgroundColor = getRandomColor();
-            shape.dataset.sliced = "false";
+    // Set initial position at a random x position near the bottom
+    shape.style.left = (Math.random() * 0.8 + 0.1) * window.innerWidth + "px";
+    shape.style.top = window.innerHeight - 60 + "px"; // Start just above the bottom
 
-            // Set random angle between 40° and 140° and calculate x/y velocity
-            const angle = (Math.random() * 100) + 40;
-            const speed = Math.random() * 3 + 2; // Random speed between 2 and 5
-            const radians = angle * (Math.PI / 180);
-            const velocityX = Math.cos(radians) * speed;
-            const velocityY = -Math.sin(radians) * speed;
+    shape.dataset.sliced = "false";
 
-            // Attach velocity properties to shape and bounce buffer flag
-            shape.velocityX = velocityX;
-            shape.velocityY = velocityY;
-            shape.bounceBuffer = 0; // Set bounce buffer to delay consecutive bounces
+    // Set random angle between 40° and 140° and calculate x/y velocity
+    const angle = (Math.random() * 100) + 40;
+    const speed = Math.random() * 3 + 2; // Random speed between 2 and 5
+    const radians = angle * (Math.PI / 180);
+    const velocityX = Math.cos(radians) * speed;
+    const velocityY = -Math.sin(radians) * speed;
 
-            gameArea.appendChild(shape);
+    // Attach velocity properties to shape and bounce buffer flag
+    shape.velocityX = velocityX;
+    shape.velocityY = velocityY;
+    shape.bounceBuffer = 0; // Set bounce buffer to delay consecutive bounces
 
-            // Animate the shape with bounce effect
-            animateShape(shape);
-        }
+    gameArea.appendChild(shape);
+
+    // Animate the shape with bounce effect
+    animateShape(shape);
+}
 
         // Function to animate a shape with bounce effect
         function animateShape(shape) {
@@ -161,11 +296,7 @@
             });
         });
 
-        // Function to generate random colors
-        function getRandomColor() {
-            const colors = ["#ff6347", "#ffeb3b", "#4caf50", "#03a9f4", "#e91e63"];
-            return colors[Math.floor(Math.random() * colors.length)];
-        }
+
 
         // Start button event listener to begin the game
         startButton.addEventListener("click", () => {
