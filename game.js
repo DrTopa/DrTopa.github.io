@@ -196,6 +196,7 @@ export function updateScore() {
 
 function nextLevel() {
     score += 5;
+    console.log("Score actuel : " score);
     percent = 0;
     level.ballCount += 1;
     resetBall();
