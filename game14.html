@@ -107,12 +107,7 @@
             background-color: #4caf50;
             clip-path: polygon(0 100%, 20% 0, 40% 100%, 60% 0, 80% 100%, 100% 0);
         }
-        .banana {
-            width: 20px;
-            height: 60px;
-            background-color: #ffeb3b;
-            border-radius: 20px 50px 50px 20px;
-        }
+
         .apple {
             width: 50px;
             height: 50px;
@@ -142,22 +137,7 @@
             background-color: #ff9800;
             border-radius: 50%;
         }
-        .cherry {
-            width: 10px;
-            height: 10px;
-            background-color: #e91e63;
-            border-radius: 50%;
-            position: relative;
-        }
-        .cherry::before {
-            content: '';
-            position: absolute;
-            width: 15px;
-            height: 15px;
-            background-color: #e91e63;
-            border-radius: 50%;
-            left: 20px;
-        }
+
         .watermelon {
             width: 50px;
             height: 25px;
@@ -195,9 +175,9 @@
         function createShape() {
             const shape = document.createElement("div");
             const fruits = [
-                "pomegranate", "grapes", "pineapple", 
-                "banana", "apple", "pear", 
-                "orange", "cherry", "watermelon"
+                "pomegranate", "grapes", "pineapple"
+                , "apple", "pear", 
+                "orange", "watermelon"
             ];
             const randomFruit = fruits[Math.floor(Math.random() * fruits.length)];
             shape.classList.add("shape", randomFruit); // Adding both 'shape' and specific fruit class
