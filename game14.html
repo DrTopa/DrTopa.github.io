@@ -83,7 +83,7 @@
             shape.classList.add("shape");
 
             // Set initial position at a random x position near the bottom
-            shape.style.left = Math.random() * window.innerWidth + "px";
+            shape.style.left = (Math.random()*0.8+0.1) * window.innerWidth + "px";
             shape.style.top = window.innerHeight - 60 + "px"; // Start just above the bottom
 
             shape.style.backgroundColor = getRandomColor();
