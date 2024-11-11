@@ -82,30 +82,45 @@
             const shape = document.createElement("div");
             shape.classList.add("shape");
 
-            // Random position and color
+            // Set initial position at a random x position near the bottom
             shape.style.left = Math.random() * window.innerWidth + "px";
-            shape.style.top = window.innerHeight + "px"; // Start off-screen at the bottom
+            shape.style.top = window.innerHeight - 60 + "px"; // Start just above the bottom
+
             shape.style.backgroundColor = getRandomColor();
             shape.dataset.sliced = "false";
 
-            // Random shape (circle or square)
-            if (Math.random() > 0.5) {
-                shape.style.borderRadius = "0"; // Make it a square
-            }
+            // Set random angle between 40° and 140° and calculate x/y velocity
+            const angle = (Math.random() * 100) + 40;
+            const speed = Math.random() * 3 + 2; // Random speed between 2 and 5
+            const radians = angle * (Math.PI / 180);
+            const velocityX = Math.cos(radians) * speed;
+            const velocityY = -Math.sin(radians) * speed;
+
+            // Attach velocity properties to shape
+            shape.velocityX = velocityX;
+            shape.velocityY = velocityY;
 
             gameArea.appendChild(shape);
 
-            // Animate the shape upwards
+            // Animate the shape with bounce effect
             animateShape(shape);
         }
 
-        // Function to animate a shape upwards
+        // Function to animate a shape with bounce effect
         function animateShape(shape) {
-            const speed = Math.random() * 3 + 5; // Random speed between 2 and 5
             const interval = setInterval(() => {
+                const currentLeft = parseFloat(shape.style.left);
                 const currentTop = parseFloat(shape.style.top);
-                shape.style.top = currentTop - speed + "px";
-                
+
+                // Update position based on velocity
+                shape.style.left = currentLeft + shape.velocityX + "px";
+                shape.style.top = currentTop + shape.velocityY + "px";
+
+                // Bounce off walls
+                if (currentLeft <= 0 || currentLeft >= window.innerWidth - 50) {
+                    shape.velocityX = -shape.velocityX; // Reverse x direction
+                }
+
                 // Remove the shape if it goes off the top of the screen
                 if (currentTop < -50) {
                     gameArea.removeChild(shape);
