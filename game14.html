@@ -253,8 +253,8 @@ const gameArea = document.getElementById("gameArea");
         let shapeRemovalInterval;
 
         function createShape() {
-            if (fruitCount >= 200) {
-                clearInterval(gameInterval); // Stop generating fruits once we reach 200
+            if (fruitCount >= 10) {
+                clearInterval(gameInterval); // Stop generating fruits once we reach 10
                 return;
             }
 
@@ -270,7 +270,7 @@ const gameArea = document.getElementById("gameArea");
             shape.dataset.sliced = "false";
 
             const angle = (Math.random() * 100) + 40;
-            const speed = Math.random() * 3 + 2;
+            const speed = Math.random() * 5 + 2;
             const radians = angle * (Math.PI / 180);
             shape.velocityX = Math.cos(radians) * speed;
             shape.velocityY = -Math.sin(radians) * speed;
@@ -313,7 +313,7 @@ const gameArea = document.getElementById("gameArea");
 
         function checkGameEnd() {
             const shapes = document.querySelectorAll(".shape");
-            if (shapes.length === 0 && fruitCount >= 200) {
+            if (shapes.length === 0 && fruitCount >= 10) {
                 endGame();
             }
         }
@@ -344,7 +344,7 @@ const gameArea = document.getElementById("gameArea");
             const shapes = document.querySelectorAll(".shape");
             shapes.forEach(shape => gameArea.removeChild(shape));
             clearInterval(gameInterval);
-            gameInterval = setInterval(createShape, 500);
+            gameInterval = setInterval(createShape, 400);
             shapeRemovalInterval = setInterval(checkGameEnd, 1000); // Periodically check if the game should end
         });
     </script>
