@@ -129,7 +129,7 @@
     </div>
     <div id="instructions">
         <h3>Instructions:</h3>
-        <p>Press "V1Start Game" to begin. Move your mouse over the shapes to "slice" them and earn points. Avoid letting them reach the top without slicing!</p>
+        <p>Press "Start Game" to begin. Move your mouse over the shapes to "slice" them and earn points. Avoid letting them reach the top without slicing!</p>
     </div>
     <script>
         const gameArea = document.getElementById("gameArea");
@@ -185,7 +185,7 @@
         function sliceShape(shape) {
             if (shape.dataset.sliced === "false") {
                 shape.dataset.sliced = "true";
-                shape.style.backgroundColor = "gray";
+                shape.style.background = "gray";
                 score++;
                 scoreDisplay.textContent = "Score: " + score;
                 setTimeout(() => gameArea.removeChild(shape), 300);
