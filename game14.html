@@ -96,9 +96,10 @@
             const velocityX = Math.cos(radians) * speed;
             const velocityY = -Math.sin(radians) * speed;
 
-            // Attach velocity properties to shape
+            // Attach velocity properties to shape and bounce buffer flag
             shape.velocityX = velocityX;
             shape.velocityY = velocityY;
+            shape.bounceBuffer = 0; // Set bounce buffer to delay consecutive bounces
 
             gameArea.appendChild(shape);
 
@@ -116,9 +117,13 @@
                 shape.style.left = currentLeft + shape.velocityX + "px";
                 shape.style.top = currentTop + shape.velocityY + "px";
 
-                // Bounce off walls
-                if (currentLeft <= 0 || currentLeft >= window.innerWidth - 50) {
+                // Reduce bounce buffer (to prevent immediate consecutive bounces)
+                if (shape.bounceBuffer > 0) shape.bounceBuffer--;
+
+                // Bounce off walls if the bounce buffer is 0 (not in recent bounce)
+                if ((currentLeft <= 0 || currentLeft >= window.innerWidth - 50) && shape.bounceBuffer === 0) {
                     shape.velocityX = -shape.velocityX; // Reverse x direction
+                    shape.bounceBuffer = 10; // Reset bounce buffer after bounce
                 }
 
                 // Remove the shape if it goes off the top of the screen
