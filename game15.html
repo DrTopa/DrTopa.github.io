@@ -1,185 +1,127 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Fruit Ninja Game</title>
+    <title>Jeu Snake</title>
     <style>
         body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
             margin: 0;
             font-family: Arial, sans-serif;
-            color: white;
-            background-color: #1e1e1e;
-            display: flex;
+            background-color: #f0f0f0;
             flex-direction: column;
-            align-items: center;
-            overflow-y: scroll; /* Allow scrolling for instructions */
         }
-        #gameArea {
-            position: relative;
-            width: 100vw;
-            height: 80vh;
-            background-color: #333;
-            overflow: hidden;
+
+        h1 {
+            margin: 0;
+            padding: 20px;
         }
-        .shape {
-            position: absolute;
-            width: 50px;
-            height: 50px;
-            opacity: 0.8;
-            border-radius: 50%;
-            background-color: red;
-            transition: background-color 0.3s;
-        }
-        #score {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            font-size: 24px;
-        }
-        #startButton {
-            margin: 20px;
-            padding: 10px 20px;
-            font-size: 20px;
-            color: #fff;
-            background-color: #4CAF50;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        #instructions {
-            width: 90%;
-            max-width: 800px;
-            margin: 20px;
-            padding: 10px;
-            background-color: #444;
-            color: #fff;
-            border-radius: 5px;
-            font-size: 16px;
-            text-align: center;
+
+        #gameCanvas {
+            background-color: #222;
+            border: 1px solid #333;
         }
     </style>
 </head>
 <body>
-    <button id="startButton">Start Game</button>
-    <div id="gameArea">
-        <div id="score">Score: 0</div>
-    </div>
-    <div id="instructions">
-        <h3>Instructions:</h3>
-        <p>Press "Start Game" to begin. Move your mouse over the shapes to "slice" them and earn points. Avoid letting them reach the top without slicing!</p>
-    </div>
+
+    <h1>Score : <span id="score">0</span></h1>
+    <canvas id="gameCanvas" width="400" height="400"></canvas>
 
     <script>
-        const gameArea = document.getElementById("gameArea");
-        const scoreDisplay = document.getElementById("score");
-        const startButton = document.getElementById("startButton");
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+        const boxSize = 20; // Taille d'une case
+        const canvasSize = 400;
+        const totalBoxes = canvasSize / boxSize;
+
         let score = 0;
-        let gameInterval;
+        let snake = [{ x: 9 * boxSize, y: 9 * boxSize }];
+        let direction = "RIGHT";
+        let food = {
+            x: Math.floor(Math.random() * totalBoxes) * boxSize,
+            y: Math.floor(Math.random() * totalBoxes) * boxSize
+        };
 
-        // Function to create a random shape
-        function createShape() {
-            const shape = document.createElement("div");
-            shape.classList.add("shape");
+        document.addEventListener("keydown", changeDirection);
 
-            // Set initial position within the center 80% of the screen width
-            const startX = (Math.random() * 0.8 + 0.1) * window.innerWidth;
-            shape.style.left = startX + "px";
-            shape.style.top = window.innerHeight - 60 + "px"; // Start just above the bottom
-
-            shape.style.backgroundColor = getRandomColor();
-            shape.dataset.sliced = "false";
-
-            // Set random angle between 40° and 140° and calculate x/y velocity
-            const angle = (Math.random() * 100) + 40;
-            const speed = Math.random() * 3 + 2; // Random speed between 2 and 5
-            const radians = angle * (Math.PI / 180);
-            const velocityX = Math.cos(radians) * speed;
-            const velocityY = -Math.sin(radians) * speed;
-
-            // Attach velocity properties to shape and bounce buffer flag
-            shape.velocityX = velocityX;
-            shape.velocityY = velocityY;
-            shape.bounceBuffer = 0; // Set bounce buffer to delay consecutive bounces
-
-            gameArea.appendChild(shape);
-
-            // Animate the shape with bounce effect
-            animateShape(shape);
-        }
-
-        // Function to animate a shape with bounce effect
-        function animateShape(shape) {
-            const interval = setInterval(() => {
-                const currentLeft = parseFloat(shape.style.left);
-                const currentTop = parseFloat(shape.style.top);
-
-                // Update position based on velocity
-                shape.style.left = currentLeft + shape.velocityX + "px";
-                shape.style.top = currentTop + shape.velocityY + "px";
-
-                // Reduce bounce buffer (to prevent immediate consecutive bounces)
-                if (shape.bounceBuffer > 0) shape.bounceBuffer--;
-
-                // Bounce off walls if the bounce buffer is 0 (not in recent bounce)
-                if ((currentLeft <= 0 || currentLeft >= window.innerWidth - 50) && shape.bounceBuffer === 0) {
-                    shape.velocityX = -shape.velocityX; // Reverse x direction
-                    shape.bounceBuffer = 10; // Reset bounce buffer after bounce
-                }
-
-                // Remove the shape if it goes off the top of the screen
-                if (currentTop < -50) {
-                    gameArea.removeChild(shape);
-                    clearInterval(interval);
-                }
-            }, 20);
-        }
-
-        // Function to handle slicing
-        function sliceShape(shape) {
-            if (shape.dataset.sliced === "false") { // Only slice once
-                shape.dataset.sliced = "true";
-                shape.style.backgroundColor = "gray"; // Indicate it's "sliced"
-                score++;
-                scoreDisplay.textContent = "Score: " + score;
-                setTimeout(() => gameArea.removeChild(shape), 300);
+        function changeDirection(event) {
+            if (event.key === "ArrowLeft" && direction !== "RIGHT") {
+                direction = "LEFT";
+            } else if (event.key === "ArrowUp" && direction !== "DOWN") {
+                direction = "UP";
+            } else if (event.key === "ArrowRight" && direction !== "LEFT") {
+                direction = "RIGHT";
+            } else if (event.key === "ArrowDown" && direction !== "UP") {
+                direction = "DOWN";
             }
         }
 
-        // Function to detect if mouse is over shape
-        gameArea.addEventListener("mousemove", (e) => {
-            const shapes = document.querySelectorAll(".shape");
-            shapes.forEach(shape => {
-                const rect = shape.getBoundingClientRect();
-                if (
-                    e.clientX > rect.left &&
-                    e.clientX < rect.right &&
-                    e.clientY > rect.top &&
-                    e.clientY < rect.bottom
-                ) {
-                    sliceShape(shape);
-                }
-            });
-        });
+        function drawGame() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Function to generate random colors
-        function getRandomColor() {
-            const colors = ["#ff6347", "#ffeb3b", "#4caf50", "#03a9f4", "#e91e63"];
-            return colors[Math.floor(Math.random() * colors.length)];
+            // Dessine le serpent
+            for (let i = 0; i < snake.length; i++) {
+                ctx.fillStyle = i === 0 ? "#4CAF50" : "#66BB6A";
+                ctx.fillRect(snake[i].x, snake[i].y, boxSize, boxSize);
+                ctx.strokeStyle = "#222";
+                ctx.strokeRect(snake[i].x, snake[i].y, boxSize, boxSize);
+            }
+
+            // Dessine la nourriture
+            ctx.fillStyle = "#FF5252";
+            ctx.fillRect(food.x, food.y, boxSize, boxSize);
+
+            // Position du prochain mouvement
+            let snakeX = snake[0].x;
+            let snakeY = snake[0].y;
+
+            if (direction === "LEFT") snakeX -= boxSize;
+            if (direction === "UP") snakeY -= boxSize;
+            if (direction === "RIGHT") snakeX += boxSize;
+            if (direction === "DOWN") snakeY += boxSize;
+
+            // Vérifie si le serpent mange la nourriture
+            if (snakeX === food.x && snakeY === food.y) {
+                score++;
+                document.getElementById("score").innerText = score;
+                food = {
+                    x: Math.floor(Math.random() * totalBoxes) * boxSize,
+                    y: Math.floor(Math.random() * totalBoxes) * boxSize
+                };
+            } else {
+                snake.pop(); // Supprime la dernière cellule
+            }
+
+            // Ajoute une nouvelle tête
+            const newHead = { x: snakeX, y: snakeY };
+
+            // Vérifie la collision avec les murs ou le serpent lui-même
+            if (snakeX < 0 || snakeY < 0 || snakeX >= canvas.width || snakeY >= canvas.height || collision(newHead, snake)) {
+                clearInterval(game);
+                alert("Game Over! Score final: " + score);
+                window.location.reload();
+            }
+
+            snake.unshift(newHead);
         }
 
-        // Start button event listener to begin the game
-        startButton.addEventListener("click", () => {
-            // Reset score and clear existing shapes
-            score = 0;
-            scoreDisplay.textContent = "Score: " + score;
-            const shapes = document.querySelectorAll(".shape");
-            shapes.forEach(shape => gameArea.removeChild(shape));
+        function collision(head, array) {
+            for (let i = 0; i < array.length; i++) {
+                if (head.x === array[i].x && head.y === array[i].y) {
+                    return true;
+                }
+            }
+            return false;
+        }
 
-            // Start generating shapes every 1 second
-            clearInterval(gameInterval); // Clear previous intervals if any
-            gameInterval = setInterval(createShape, 500);
-        });
+        // Met à jour le jeu toutes les 100 ms
+        const game = setInterval(drawGame, 100);
     </script>
+
 </body>
 </html>
