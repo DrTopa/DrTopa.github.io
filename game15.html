@@ -12,18 +12,21 @@
             height: 100vh;
             margin: 0;
             font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
+            background-color: #e0f7fa;
             flex-direction: column;
         }
 
         h1 {
             margin: 0;
             padding: 20px;
+            font-size: 24px;
+            color: #00695c;
         }
 
         #gameCanvas {
-            background-color: #222;
-            border: 1px solid #333;
+            background-color: #004d40;
+            border: 3px solid #00695c;
+            border-radius: 10px;
         }
 
         #startButton {
@@ -31,6 +34,15 @@
             margin-top: 20px;
             font-size: 16px;
             cursor: pointer;
+            background-color: #00796b;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        #startButton:hover {
+            background-color: #004d40;
         }
     </style>
 </head>
@@ -43,7 +55,7 @@
     <script>
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
-        const boxSize = 20; // Taille d'une case
+        const boxSize = 20;
         const canvasSize = 400;
         const totalBoxes = canvasSize / boxSize;
 
@@ -55,13 +67,11 @@
             y: Math.floor(Math.random() * totalBoxes) * boxSize
         };
 
-        // Variables pour la gestion de la vitesse
-        let initialSpeed = 300; // Démarre avec 1/3 de la vitesse d'origine (100 ms)
+        let initialSpeed = 250;
         let speed = initialSpeed;
-        let game; // Variable pour stocker l'intervalle de jeu
+        let game;
 
         document.addEventListener("keydown", changeDirection);
-
         document.getElementById("startButton").addEventListener("click", startGame);
 
         function startGame() {
@@ -71,71 +81,76 @@
             direction = "RIGHT";
             document.getElementById("score").innerText = score;
 
-            // Démarre le jeu avec la vitesse initiale
             clearInterval(game);
             game = setInterval(drawGame, speed);
         }
 
         function changeDirection(event) {
-            if (event.key === "ArrowLeft" && direction !== "RIGHT") {
-                direction = "LEFT";
-            } else if (event.key === "ArrowUp" && direction !== "DOWN") {
-                direction = "UP";
-            } else if (event.key === "ArrowRight" && direction !== "LEFT") {
-                direction = "RIGHT";
-            } else if (event.key === "ArrowDown" && direction !== "UP") {
-                direction = "DOWN";
-            }
+            if (event.key === "ArrowLeft" && direction !== "RIGHT") direction = "LEFT";
+            if (event.key === "ArrowUp" && direction !== "DOWN") direction = "UP";
+            if (event.key === "ArrowRight" && direction !== "LEFT") direction = "RIGHT";
+            if (event.key === "ArrowDown" && direction !== "UP") direction = "DOWN";
         }
 
         function drawGame() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Dessine le serpent
+            // Dessine le serpent avec des segments arrondis et une tête plus marquée
             for (let i = 0; i < snake.length; i++) {
-                ctx.fillStyle = i === 0 ? "#4CAF50" : "#66BB6A";
-                ctx.fillRect(snake[i].x, snake[i].y, boxSize, boxSize);
-                ctx.strokeStyle = "#222";
-                ctx.strokeRect(snake[i].x, snake[i].y, boxSize, boxSize);
+                ctx.fillStyle = i === 0 ? "#ffeb3b" : "#81c784"; // Tête en jaune, corps en vert
+                ctx.beginPath();
+                ctx.roundRect(snake[i].x, snake[i].y, boxSize, boxSize, i === 0 ? 6 : 3); // Tête arrondie
+                ctx.fill();
+                if (i === 0) {
+                    // Dessine les yeux pour la tête
+                    ctx.fillStyle = "#004d40";
+                    const eyeOffset = 4;
+                    ctx.beginPath();
+                    ctx.arc(snake[i].x + eyeOffset, snake[i].y + eyeOffset, 2, 0, Math.PI * 2);
+                    ctx.arc(snake[i].x + boxSize - eyeOffset, snake[i].y + eyeOffset, 2, 0, Math.PI * 2);
+                    ctx.fill();
+                }
             }
 
-            // Dessine la nourriture
-            ctx.fillStyle = "#FF5252";
-            ctx.fillRect(food.x, food.y, boxSize, boxSize);
+            // Dessine la nourriture sous forme de pomme avec une couleur rouge et un reflet
+            ctx.fillStyle = "#e57373";
+            ctx.beginPath();
+            ctx.arc(food.x + boxSize / 2, food.y + boxSize / 2, boxSize / 2, 0, Math.PI * 2);
+            ctx.fill();
 
-            // Position du prochain mouvement
+            // Reflet pour la nourriture
+            ctx.fillStyle = "rgba(255, 255, 255, 0.3)";
+            ctx.beginPath();
+            ctx.arc(food.x + boxSize / 2 - 4, food.y + boxSize / 2 - 4, boxSize / 4, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Déplacement du serpent
             let snakeX = snake[0].x;
             let snakeY = snake[0].y;
-
             if (direction === "LEFT") snakeX -= boxSize;
             if (direction === "UP") snakeY -= boxSize;
             if (direction === "RIGHT") snakeX += boxSize;
             if (direction === "DOWN") snakeY += boxSize;
 
-            // Vérifie si le serpent mange la nourriture
             if (snakeX === food.x && snakeY === food.y) {
                 score++;
                 document.getElementById("score").innerText = score;
 
-                // Augmente la vitesse progressivement (3x vitesse initiale après 15 points)
                 clearInterval(game);
                 speed = initialSpeed - (score * (200 / 15));
-                speed = Math.max(60, speed); // Limite minimale de 100 ms
+                speed = Math.max(60, speed);
                 game = setInterval(drawGame, speed);
 
-                // Génère une nouvelle nourriture
                 food = {
                     x: Math.floor(Math.random() * totalBoxes) * boxSize,
                     y: Math.floor(Math.random() * totalBoxes) * boxSize
                 };
             } else {
-                snake.pop(); // Supprime la dernière cellule
+                snake.pop();
             }
 
-            // Ajoute une nouvelle tête
             const newHead = { x: snakeX, y: snakeY };
 
-            // Vérifie la collision avec les murs ou le serpent lui-même
             if (snakeX < 0 || snakeY < 0 || snakeX >= canvas.width || snakeY >= canvas.height || collision(newHead, snake)) {
                 clearInterval(game);
                 alert("Game Over! Score final: " + score);
@@ -152,6 +167,21 @@
                 }
             }
             return false;
+        }
+
+        // Ajout de roundRect si non supporté par le navigateur
+        if (!CanvasRenderingContext2D.prototype.roundRect) {
+            CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
+                r = Math.min(r, w / 2, h / 2);
+                this.beginPath();
+                this.moveTo(x + r, y);
+                this.arcTo(x + w, y, x + w, y + h, r);
+                this.arcTo(x + w, y + h, x, y + h, r);
+                this.arcTo(x, y + h, x, y, r);
+                this.arcTo(x, y, x + w, y, r);
+                this.closePath();
+                return this;
+            };
         }
     </script>
 
