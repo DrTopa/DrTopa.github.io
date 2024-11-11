@@ -58,105 +58,103 @@
             font-size: 16px;
             text-align: center;
         }
-    .apple {
-  width:3em;
-  height:2.5em;
+.apple {
+  width: 3em;  /* Reduced from 6em */
+  height: 2.5em;  /* Reduced from 5em */
   background-color:  #ff4355;
   box-shadow: inset 0.2em -0.2em  #cc1022;
   border-radius: 2em 2em 3em 3em;
-  position:absolute;
-  top: 0.5em;
-  left:0.15em;
+  position: absolute;
+  top: 1em;
+  left: 0.3em;
 }
 
 .apple:before {
-  top:-.1em;
-  left:0.9em;
-  content:"";
-  width:2.05em;
-  height:1.375em;
+  top: -.2em;
+  left: 0.9em;  /* Reduced from 1.8em */
+  content: "";
+  width: 2.05em;  /* Reduced from 4.1em */
+  height: 1.375em;  /* Reduced from 2.75em */
   background-color: inherit;
-  border-radius: 3em 3em 0 0 ;
+  border-radius: 3em 3em 0 0;
   position: absolute;
-  box-shadow:-1.5em 0 0   #ff4355, inset .2em 0.2em  #ff4355;
+  box-shadow: -0.75em 0 0   #ff4355, inset .2em 0.2em  #ff4355;
 }
 
-.apple:after{
-  content:"";
-  width: 0.1em;
-  height: 0.5em;
-  background-color:brown;
-  position:absolute;
+.apple:after {
+  content: "";
+  width: 0.1em;  /* Reduced from 0.2em */
+  height: 0.5em;  /* Reduced from 1em */
+  background-color: brown;
+  position: absolute;
   z-index: 2;
-  top: -0.25em;
-  left: 1.5em;
+  top: -0.5em;
+  left: 1.5em;  /* Reduced from 3em */
 }
 
 .orange {
-  width: 5.6em;
-  height: 5.6em;
+  width: 2.8em;  /* Reduced from 5.6em */
+  height: 2.8em;  /* Reduced from 5.6em */
   border-radius: 50%;
   background-color: #ffb526;
   box-shadow: inset 0.2em -.2em  #cc8a0c;
   position: absolute;
-  top:0.9em;
-  left: 0.3em;
+  top: 0.45em;  /* Reduced from 0.9em */
+  left: 0.15em;  /* Reduced from 0.3em */
 }
 
 .orange:before {
   content: "";
   position: absolute;
-  top: -1em;
-  left: 3em;
+  top: -0.5em;  /* Reduced from -1em */
+  left: 1.5em;  /* Reduced from 3em */
   height: 0;
   width: 0;
-  border: 1em solid #539e3d;
+  border: 0.5em solid #539e3d;  /* Reduced from 1em */
   border-radius: 50% 0 50% 0;
   border-bottom-color: #437512;
   border-right-color: #437512;
 }
 
 .banana {
-  width:6em;
-  height: 6em;
+  width: 3em;  /* Reduced from 6em */
+  height: 3em;  /* Reduced from 6em */
   background-color: transparent;
-  box-shadow: -1.1em 1.1em 0 0 #fcd110;
+  box-shadow: -0.55em 0.55em 0 0 #fcd110;
   border-radius: 50%;
   position: absolute;
-  top:-0.9em;
-  left:1.6em;
+  top: -0.45em;  /* Reduced from -0.9em */
+  left: 0.8em;  /* Reduced from 1.6em */
 }
 
 .banana:before {
-  content:"";
-  width: 0.3em;
-  height: 0.3em;
+  content: "";
+  width: 0.15em;  /* Reduced from 0.3em */
+  height: 0.15em;  /* Reduced from 0.3em */
   transform: rotate(45deg);
   background-color: #937714;
   position: absolute;
-  top: 5.4em;
-  left:4.3em;
-  z-index:1;
+  top: 2.7em;  /* Reduced from 5.4em */
+  left: 2.15em;  /* Reduced from 4.3em */
+  z-index: 1;
 }
 
 .banana:after {
   content: "";
-  width: 0.4em;
-  height: 0.8em;
+  width: 0.2em;  /* Reduced from 0.4em */
+  height: 0.4em;  /* Reduced from 0.8em */
   transform: rotate(31deg);
   background-color: #b3bb03;
   position: absolute;
-  top:1.1em;
-  left:0.2em;
-  z-index:1;
+  top: 0.55em;  /* Reduced from 1.1em */
+  left: 0.1em;  /* Reduced from 0.2em */
+  z-index: 1;
 }
 
-
-
 .lemon {
-  width: 5.1em;
-  height: 5.1em;
-  margin: 0.8em;
+  width: 2.55em;  /* Reduced from 5.1em */
+  height: 2.55em;  /* Reduced from 5.1em */
+  margin: 0.4em;  /* Reduced from 0.8em */
   background-color: #ffe135;
   border-radius: 50% 15%;
   box-shadow: inset 0.2em 0.2em  #ccb42a;
@@ -165,72 +163,73 @@
 }
 
 .pear {
-  width:5.4em;
-  height: 5.4em;
-  margin-top: 1.2em;
+  width: 2.7em;  /* Reduced from 5.4em */
+  height: 2.7em;  /* Reduced from 5.4em */
+  margin-top: 0.6em;  /* Reduced from 1.2em */
   background-color: #d7c322;
   border-radius: 50% 15% 50% 50%;
   transform: rotate(-45deg);
-  box-shadow: inset .15em .25em #c3b11f;
+  box-shadow: inset .075em .125em #c3b11f;
   position: absolute;
-  left: 0.6em;
+  left: 0.3em;  /* Reduced from 0.6em */
 }
 
-.pear:after{
-  content:"";
-  width: 0.2em;
-  height: 1em;
-  background-color:brown;
-  position:absolute;
+.pear:after {
+  content: "";
+  width: 0.1em;  /* Reduced from 0.2em */
+  height: 0.5em;  /* Reduced from 1em */
+  background-color: brown;
+  position: absolute;
   z-index: 2;
-  top: -0.2em;
-  left: 5.1em;
+  top: -0.1em;  /* Reduced from -0.2em */
+  left: 2.55em;  /* Reduced from 5.1em */
   transform: rotate(45deg);
 }
 
 .strawberry {
-  width:5em;
-  height: 5em;
-  margin-top: 0.7em;
+  width: 2.5em;  /* Reduced from 5em */
+  height: 2.5em;  /* Reduced from 5em */
+  margin-top: 0.35em;  /* Reduced from 0.7em */
   background-color: #ed2607;
   border-radius: 50% 15% 50% 50%;
   transform: rotate(135deg);
-  box-shadow: inset -.15em -.25em #C62106;
+  box-shadow: inset -.075em -.125em #C62106;
   position: absolute;
-  left: 0.6em;
+  left: 0.3em;  /* Reduced from 0.6em */
 }
 
-.strawberry:before{
-  content:"";
-	position:absolute;
-	top:3.5em;
-	left:2em;
-	width:.3em;
-	height:.3em;
-	background-color:white;
-	border-radius:50%;
- 	box-shadow:1.7em 0 0 0 white, -1em -2.8em 0 0 white, 2.5em -1.5em 0 0 white,
-  2em -2.5em 0 0 white, 0.75em -1.5em 0 0 white, -1em -1em 0 0 white, 0.8em -3.2em 0 0 white;
+.strawberry:before {
+  content: "";
+  position: absolute;
+  top: 1.75em;  /* Reduced from 3.5em */
+  left: 1em;  /* Reduced from 2em */
+  width: 0.15em;  /* Reduced from 0.3em */
+  height: 0.15em;  /* Reduced from 0.3em */
+  background-color: white;
+  border-radius: 50%;
+  box-shadow: 0.85em 0 0 0 white, -0.5em -1.4em 0 0 white, 1.25em -0.75em 0 0 white,
+    1em -1.25em 0 0 white, 0.375em -0.75em 0 0 white, -0.5em -0.5em 0 0 white, 0.4em -1.6em 0 0 white;
 }
+
 .blueberry {
   position: absolute;
-  width:6em;
-  height: 5.5em;
-  top: 0.6em;
-  left:0.4em;
+  width: 3em;  /* Reduced from 6em */
+  height: 2.75em;  /* Reduced from 5.5em */
+  top: 0.3em;  /* Reduced from 0.6em */
+  left: 0.2em;  /* Reduced from 0.4em */
   border-radius: 50%;
   background-color: #89a2ca;
   box-shadow: inset 0.2em -.2em  #6081B8;
 }
 
-.blueberry:before{
+.blueberry:before {
   content: "";
-  width: 2em;
-  height: 1em;
-  left: 2em;
+  width: 1em;  /* Reduced from 2em */
+  height: 0.5em;  /* Reduced from 1em */
+  left: 1em;  /* Reduced from 2em */
   position: absolute;
   background-color: #3e4d64;
-  border-radius:50%;
+  border-radius: 50%;
 }
 
     </style>
