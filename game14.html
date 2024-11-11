@@ -322,8 +322,10 @@ const gameArea = document.getElementById("gameArea");
         }
 
         function endGame() {
-            gameOver=true;
+            if (gameOver==false){
             alert("Game Over! Your final score is: " + score);
+                }
+            gameOver=true;
         }
 
         gameArea.addEventListener("mousemove", (e) => {
