@@ -280,8 +280,8 @@ const gameArea = document.getElementById("gameArea");
             gameArea.appendChild(shape);
             animateShape(shape);
             fruitCount++; // Increment the fruit count each time a new fruit is created
-            if (fruitCount >=10 & gameOver==false){
-                shapeRemovalInterval = setInterval(checkGameEnd, 1000); 
+            if (fruitCount >=10 && gameOver==false){
+                checkGameEnd(); 
             }
         }
 
