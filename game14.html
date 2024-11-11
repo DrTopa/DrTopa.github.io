@@ -197,11 +197,16 @@
             animateShape(shape);
         }
 function animateShape(shape) {
-    const interval = setInterval(() => {
-        const currentLeft = parseFloat(shape.style.left);
-        const currentTop = parseFloat(shape.style.top);
+    // Set the initial position once when the shape is created
+    const currentLeft = parseFloat(shape.style.left);
+    const currentTop = parseFloat(shape.style.top);
 
-        // Use transform to move shapes smoothly
+    // Remove `left` and `top` after the initial positioning
+    shape.style.left = '';  // Removing the left
+    shape.style.top = '';   // Removing the top
+
+    const interval = setInterval(() => {
+        // Apply the transform property for movement
         shape.style.transform = `translate(${currentLeft + shape.velocityX}px, ${currentTop + shape.velocityY}px)`;
 
         // Reduce bounce buffer (to prevent immediate consecutive bounces)
@@ -220,6 +225,7 @@ function animateShape(shape) {
         }
     }, 20);
 }
+
 
         function sliceShape(shape) {
             if (shape.dataset.sliced === "false") {
