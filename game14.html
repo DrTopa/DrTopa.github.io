@@ -270,7 +270,7 @@ const gameArea = document.getElementById("gameArea");
             shape.dataset.sliced = "false";
 
             const angle = (Math.random() * 100) + 40;
-            const speed = Math.random() * 5 + 2;
+            const speed = Math.random() * 3+ 4;
             const radians = angle * (Math.PI / 180);
             shape.velocityX = Math.cos(radians) * speed;
             shape.velocityY = -Math.sin(radians) * speed;
@@ -278,7 +278,7 @@ const gameArea = document.getElementById("gameArea");
 
             gameArea.appendChild(shape);
             animateShape(shape);
-
+            shapeRemovalInterval = setInterval(checkGameEnd, 1000); // Periodically check if the game should end
             fruitCount++; // Increment the fruit count each time a new fruit is created
         }
 
@@ -345,7 +345,7 @@ const gameArea = document.getElementById("gameArea");
             shapes.forEach(shape => gameArea.removeChild(shape));
             clearInterval(gameInterval);
             gameInterval = setInterval(createShape, 400);
-            shapeRemovalInterval = setInterval(checkGameEnd, 1000); // Periodically check if the game should end
+           
         });
     </script>
 </body>
