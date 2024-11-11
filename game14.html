@@ -107,7 +107,12 @@
             background-color: #4caf50;
             clip-path: polygon(0 100%, 20% 0, 40% 100%, 60% 0, 80% 100%, 100% 0);
         }
-
+        .banana {
+            width: 20px;
+            height: 60px;
+            background-color: #ffeb3b;
+            border-radius: 20px 50px 50px 20px;
+        }
         .apple {
             width: 50px;
             height: 50px;
@@ -137,7 +142,22 @@
             background-color: #ff9800;
             border-radius: 50%;
         }
-
+        .cherry {
+            width: 10px;
+            height: 10px;
+            background-color: #e91e63;
+            border-radius: 50%;
+            position: relative;
+        }
+        .cherry::before {
+            content: '';
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background-color: #e91e63;
+            border-radius: 50%;
+            left: 20px;
+        }
         .watermelon {
             width: 50px;
             height: 25px;
@@ -175,9 +195,9 @@
         function createShape() {
             const shape = document.createElement("div");
             const fruits = [
-                "pomegranate", "grapes", "pineapple"
-                , "apple", "pear", 
-                "orange", "watermelon"
+                "pomegranate", "grapes", "pineapple", 
+                "banana", "apple", "pear", 
+                "orange", "cherry", "watermelon"
             ];
             const randomFruit = fruits[Math.floor(Math.random() * fruits.length)];
             shape.classList.add("shape", randomFruit); // Adding both 'shape' and specific fruit class
@@ -197,37 +217,24 @@
             animateShape(shape);
         }
 
+        function animateShape(shape) {
+            const interval = setInterval(() => {
+                const currentLeft = parseFloat(shape.style.left);
+                const currentTop = parseFloat(shape.style.top);
+                shape.style.left = currentLeft + shape.velocityX + "px";
+                shape.style.top = currentTop + shape.velocityY + "px";
 
-function animateShape(shape) {
-    // Initialize current position based on the shape's initial left and top styles
-    let currentLeft = parseFloat(shape.style.left);
-    let currentTop = parseFloat(shape.style.top);
-
-    const interval = setInterval(() => {
-        // Update position based on velocity
-        currentLeft += shape.velocityX;
-        currentTop += shape.velocityY;
-
-        // Apply the transform property for smooth movement
-        shape.style.transform = `translate(${currentLeft}px, ${currentTop}px)`;
-
-        // Reduce bounce buffer (to prevent immediate consecutive bounces)
-        if (shape.bounceBuffer > 0) shape.bounceBuffer--;
-
-        // Bounce off walls if the bounce buffer is 0 (not in recent bounce)
-        if ((currentLeft <= 0 || currentLeft >= window.innerWidth - 50) && shape.bounceBuffer === 0) {
-            shape.velocityX = -shape.velocityX; // Reverse x direction
-            shape.bounceBuffer = 10; // Reset bounce buffer after bounce
+                if (shape.bounceBuffer > 0) shape.bounceBuffer--;
+                if ((currentLeft <= 0 || currentLeft >= window.innerWidth - 50) && shape.bounceBuffer === 0) {
+                    shape.velocityX = -shape.velocityX;
+                    shape.bounceBuffer = 10;
+                }
+                if (currentTop < -50) {
+                    gameArea.removeChild(shape);
+                    clearInterval(interval);
+                }
+            }, 20);
         }
-
-        // Remove the shape if it goes off the top of the screen
-        if (currentTop < -50) {
-            gameArea.removeChild(shape);
-            clearInterval(interval);
-        }
-    }, 20);
-}
-
 
         function sliceShape(shape) {
             if (shape.dataset.sliced === "false") {
