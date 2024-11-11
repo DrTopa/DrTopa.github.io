@@ -195,9 +195,8 @@
         function createShape() {
             const shape = document.createElement("div");
             const fruits = [
-                "pomegranate", "grapes", "pineapple", 
-                "banana", "apple", "pear", 
-                "orange", "cherry", "watermelon"
+                "banana", "pear", 
+                "orange", 
             ];
             const randomFruit = fruits[Math.floor(Math.random() * fruits.length)];
             shape.classList.add("shape", randomFruit); // Adding both 'shape' and specific fruit class
