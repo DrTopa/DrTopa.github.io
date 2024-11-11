@@ -241,7 +241,7 @@
     </div>
     <div id="instructions">
         <h3>Instructions:</h3>
-        <p>Press "Start Game" to begin. Move your mouse over the shapes to "slice" them and earn points. Avoid letting them reach the top without slicing!</p>
+        <p>v1Press "Start Game" to begin. Move your mouse over the shapes to "slice" them and earn points. Avoid letting them reach the top without slicing!</p>
     </div>
     <script>
 const gameArea = document.getElementById("gameArea");
@@ -271,7 +271,7 @@ const gameArea = document.getElementById("gameArea");
             shape.dataset.sliced = "false";
 
             const angle = (Math.random() * 100) + 40;
-            const speed = Math.random() * 3+ 4;
+            const speed = Math.random() * 6+ 5;
             const radians = angle * (Math.PI / 180);
             shape.velocityX = Math.cos(radians) * speed;
             shape.velocityY = -Math.sin(radians) * speed;
@@ -281,7 +281,7 @@ const gameArea = document.getElementById("gameArea");
             animateShape(shape);
             fruitCount++; // Increment the fruit count each time a new fruit is created
             if (fruitCount >=10 && gameOver==false){
-                checkGameEnd(); 
+                shapeRemovalInterval = setInterval(checkGameEnd, 1000);
             }
         }
 
