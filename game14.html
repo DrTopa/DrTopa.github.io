@@ -196,18 +196,35 @@
             gameArea.appendChild(shape);
             animateShape(shape);
         }
-function animateShape(shape) {
-    // Set the initial position once when the shape is created
-    const currentLeft = parseFloat(shape.style.left);
-    const currentTop = parseFloat(shape.style.top);
 
-    // Remove `left` and `top` after the initial positioning
-    shape.style.left = '';  // Removing the left
-    shape.style.top = '';   // Removing the top
+The problem with your updated animateShape function lies in how you're handling the currentLeft and currentTop values. In the current implementation, you set currentLeft and currentTop once when the shape is created, but you don't properly update them as the shape moves. Since you're using transform for the movement, these values don't get updated as the shape's position changes, causing the movement to be incorrect.
+
+To make this work correctly, you need to:
+
+Track the shape's current position dynamically, instead of only during its creation.
+Use the updated values inside setInterval to ensure smooth movement.
+Apply the transform property for movement but still keep track of left and top values for future bounce calculations and accurate position tracking.
+Fixing the Code:
+Here is how you can modify the animateShape function to update the position correctly:
+
+Track position dynamically: Update the currentLeft and currentTop inside the animation loop, so it reflects the shape’s actual position.
+Use transform: Apply the transform for smooth animation.
+Bounce logic: Ensure the bounce logic takes the updated positions into account.
+Updated Code:
+javascript
+Copier le code
+function animateShape(shape) {
+    // Initialize current position based on the shape's initial left and top styles
+    let currentLeft = parseFloat(shape.style.left);
+    let currentTop = parseFloat(shape.style.top);
 
     const interval = setInterval(() => {
-        // Apply the transform property for movement
-        shape.style.transform = `translate(${currentLeft + shape.velocityX}px, ${currentTop + shape.velocityY}px)`;
+        // Update position based on velocity
+        currentLeft += shape.velocityX;
+        currentTop += shape.velocityY;
+
+        // Apply the transform property for smooth movement
+        shape.style.transform = `translate(${currentLeft}px, ${currentTop}px)`;
 
         // Reduce bounce buffer (to prevent immediate consecutive bounces)
         if (shape.bounceBuffer > 0) shape.bounceBuffer--;
