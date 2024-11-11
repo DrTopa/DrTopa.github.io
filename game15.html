@@ -25,12 +25,20 @@
             background-color: #222;
             border: 1px solid #333;
         }
+
+        #startButton {
+            padding: 10px 20px;
+            margin-top: 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
 
     <h1>Score : <span id="score">0</span></h1>
     <canvas id="gameCanvas" width="400" height="400"></canvas>
+    <button id="startButton">Start Game</button>
 
     <script>
         const canvas = document.getElementById("gameCanvas");
@@ -47,7 +55,26 @@
             y: Math.floor(Math.random() * totalBoxes) * boxSize
         };
 
+        // Variables pour la gestion de la vitesse
+        let initialSpeed = 300; // Démarre avec 1/3 de la vitesse d'origine (100 ms)
+        let speed = initialSpeed;
+        let game; // Variable pour stocker l'intervalle de jeu
+
         document.addEventListener("keydown", changeDirection);
+
+        document.getElementById("startButton").addEventListener("click", startGame);
+
+        function startGame() {
+            score = 0;
+            speed = initialSpeed;
+            snake = [{ x: 9 * boxSize, y: 9 * boxSize }];
+            direction = "RIGHT";
+            document.getElementById("score").innerText = score;
+
+            // Démarre le jeu avec la vitesse initiale
+            clearInterval(game);
+            game = setInterval(drawGame, speed);
+        }
 
         function changeDirection(event) {
             if (event.key === "ArrowLeft" && direction !== "RIGHT") {
@@ -89,6 +116,14 @@
             if (snakeX === food.x && snakeY === food.y) {
                 score++;
                 document.getElementById("score").innerText = score;
+
+                // Augmente la vitesse progressivement (3x vitesse initiale après 15 points)
+                clearInterval(game);
+                speed = initialSpeed - (score * (200 / 15));
+                speed = Math.max(60, speed); // Limite minimale de 100 ms
+                game = setInterval(drawGame, speed);
+
+                // Génère une nouvelle nourriture
                 food = {
                     x: Math.floor(Math.random() * totalBoxes) * boxSize,
                     y: Math.floor(Math.random() * totalBoxes) * boxSize
@@ -118,9 +153,6 @@
             }
             return false;
         }
-
-        // Met à jour le jeu toutes les 100 ms
-        const game = setInterval(drawGame, 100);
     </script>
 
 </body>
