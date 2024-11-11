@@ -1,0 +1,49 @@
+:root {
+  --arcade-font: sans-serif;
+}
+
+body {
+    padding: 0;
+    background: #993f70;
+    color: #eee;
+    text-align: center;
+    margin-top: 2em;
+    font-family: sans;
+}
+
+#game {
+    margin: auto;
+    width: 720px;
+    height: 640px;
+    position: relative;
+    display: block;
+    border: 2px solid black;
+  }
+
+#ui-layer { z-index: 3; position: absolute; top: 0px; left: 0px;}
+#slow-layer { z-index: 2; position: absolute; top: 0px; left: 0px;}
+#game-layer { z-index: 1; position: absolute; top: 0px; left: 0px;}
+
+@media only screen and (min-width: 1000px) {
+  #main_content {
+    margin: 0 20%;
+  }
+}
+
+#swap_button {
+  background-color: black;
+  color: white;
+  height: 8em;
+  width: 640px;
+  border-radius: 10px;
+  padding: 1em;
+  margin: auto auto 0.5em auto;
+  font-size: x-large;
+  font-weight: 2;
+  text-align: center;
+}
+
+#help_text {
+  padding-bottom: 0.5em;
+  margin: 0 auto;
+}
