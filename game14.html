@@ -94,14 +94,41 @@
     box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.2), 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-/* Pear */
-.pear {
-    width: 30px;
-    height: 50px;
-    background: linear-gradient(to bottom, #8bc34a, #689f38);
-    border-radius: 50% 50% 30% 30%;
-    box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.2);
+.lemon {
+  width: 5.1em;
+  height: 5.1em;
+  margin: 0.8em;
+  background-color: #ffe135;
+  border-radius: 50% 15%;
+  box-shadow: inset 0.2em 0.2em  #ccb42a;
+  transform: rotate(225deg);
+  position: absolute;
 }
+
+.pear {
+  width:5.4em;
+  height: 5.4em;
+  margin-top: 1.2em;
+  background-color: #d7c322;
+  border-radius: 50% 15% 50% 50%;
+  transform: rotate(-45deg);
+  box-shadow: inset .15em .25em #c3b11f;
+  position: absolute;
+  left: 0.6em;
+}
+
+.pear:after{
+  content:"";
+  width: 0.2em;
+  height: 1em;
+  background-color:brown;
+  position:absolute;
+  z-index: 2;
+  top: -0.2em;
+  left: 5.1em;
+  transform: rotate(45deg);
+}
+
 
 /* Orange */
 .orange {
