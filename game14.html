@@ -244,21 +244,26 @@
         <p>Press "Start Game" to begin. Move your mouse over the shapes to "slice" them and earn points. Avoid letting them reach the top without slicing!</p>
     </div>
     <script>
-        const gameArea = document.getElementById("gameArea");
+const gameArea = document.getElementById("gameArea");
         const scoreDisplay = document.getElementById("score");
         const startButton = document.getElementById("startButton");
         let score = 0;
+        let fruitCount = 0;
         let gameInterval;
+        let shapeRemovalInterval;
 
         function createShape() {
+            if (fruitCount >= 200) {
+                clearInterval(gameInterval); // Stop generating fruits once we reach 200
+                return;
+            }
+
             const shape = document.createElement("div");
             const fruits = [
-                "apple",  "orange", 
-                "banana", "lemon", "pear", 
-                "strawberry",  "blueberry"
+                "apple", "orange", "banana", "lemon", "pear", "strawberry", "blueberry"
             ];
             const randomFruit = fruits[Math.floor(Math.random() * fruits.length)];
-            shape.classList.add("shape", randomFruit); // Adding both 'shape' and specific fruit class
+            shape.classList.add("shape", randomFruit);
 
             shape.style.left = (Math.random() * 0.8 + 0.1) * window.innerWidth + "px";
             shape.style.top = window.innerHeight - 60 + "px";
@@ -273,6 +278,8 @@
 
             gameArea.appendChild(shape);
             animateShape(shape);
+
+            fruitCount++; // Increment the fruit count each time a new fruit is created
         }
 
         function animateShape(shape) {
@@ -304,6 +311,17 @@
             }
         }
 
+        function checkGameEnd() {
+            const shapes = document.querySelectorAll(".shape");
+            if (shapes.length === 0 && fruitCount >= 200) {
+                endGame();
+            }
+        }
+
+        function endGame() {
+            alert("Game Over! Your final score is: " + score);
+        }
+
         gameArea.addEventListener("mousemove", (e) => {
             const shapes = document.querySelectorAll(".shape");
             shapes.forEach(shape => {
@@ -321,11 +339,13 @@
 
         startButton.addEventListener("click", () => {
             score = 0;
+            fruitCount = 0;
             scoreDisplay.textContent = "Score: " + score;
             const shapes = document.querySelectorAll(".shape");
             shapes.forEach(shape => gameArea.removeChild(shape));
             clearInterval(gameInterval);
             gameInterval = setInterval(createShape, 500);
+            shapeRemovalInterval = setInterval(checkGameEnd, 1000); // Periodically check if the game should end
         });
     </script>
 </body>
