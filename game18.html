@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JezzBall Game</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #333;
+    }
+    #game-container {
+      position: relative;
+      width: 600px;
+      height: 400px;
+      background-color: #000;
+      border: 2px solid #fff;
+    }
+    .ball {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background-color: #f00;
+    }
+    .line {
+      position: absolute;
+      background-color: #0f0;
+    }
+  </style>
+</head>
+<body>
+
+<div id="game-container"></div>
+
+<script>
+  const container = document.getElementById("game-container");
+  const balls = [];
+  const lines = [];
+  const ballCount = 5;
+  const lineWidth = 4;
+
+  // Ball initialization
+  class Ball {
+    constructor() {
+      this.el = document.createElement("div");
+      this.el.classList.add("ball");
+      this.x = Math.random() * (container.clientWidth - 20);
+      this.y = Math.random() * (container.clientHeight - 20);
+      this.dx = (Math.random() > 0.5 ? 1 : -1) * 2;
+      this.dy = (Math.random() > 0.5 ? 1 : -1) * 2;
+      container.appendChild(this.el);
+      this.updatePosition();
+    }
+
+    updatePosition() {
+      this.x += this.dx;
+      this.y += this.dy;
+
+      // Bounce on walls
+      if (this.x <= 0 || this.x >= container.clientWidth - 20) this.dx *= -1;
+      if (this.y <= 0 || this.y >= container.clientHeight - 20) this.dy *= -1;
+
+      this.el.style.left = this.x + "px";
+      this.el.style.top = this.y + "px";
+    }
+  }
+
+  // Line creation
+  function createLine(x, y, orientation) {
+    const line = document.createElement("div");
+    line.classList.add("line");
+    if (orientation === "vertical") {
+      line.style.width = lineWidth + "px";
+      line.style.height = container.clientHeight + "px";
+      line.style.left = x + "px";
+      line.style.top = 0;
+    } else {
+      line.style.width = container.clientWidth + "px";
+      line.style.height = lineWidth + "px";
+      line.style.left = 0;
+      line.style.top = y + "px";
+    }
+    container.appendChild(line);
+    lines.push({ element: line, orientation, x, y });
+  }
+
+  // Initialize balls
+  for (let i = 0; i < ballCount; i++) {
+    balls.push(new Ball());
+  }
+
+  // Animation loop
+  function gameLoop() {
+    balls.forEach(ball => ball.updatePosition());
+
+    // Check collisions with lines
+    balls.forEach(ball => {
+      lines.forEach(line => {
+        if (line.orientation === "vertical" && Math.abs(ball.x - line.x) < 10 &&
+            ball.y >= line.element.offsetTop && ball.y <= line.element.offsetTop + container.clientHeight) {
+          ball.dx *= -1;
+        } else if (line.orientation === "horizontal" && Math.abs(ball.y - line.y) < 10 &&
+            ball.x >= line.element.offsetLeft && ball.x <= line.element.offsetLeft + container.clientWidth) {
+          ball.dy *= -1;
+        }
+      });
+    });
+
+    requestAnimationFrame(gameLoop);
+  }
+
+  // Mouse click to create a line
+  container.addEventListener("click", (e) => {
+    const x = e.offsetX;
+    const y = e.offsetY;
+    const orientation = (x < container.clientWidth / 2) ? "vertical" : "horizontal";
+    createLine(x, y, orientation);
+  });
+
+  // Start the game
+  gameLoop();
+</script>
+
+</body>
+</html>
