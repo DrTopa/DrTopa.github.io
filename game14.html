@@ -464,6 +464,7 @@
         });
 
         startButton.addEventListener("click", () => {
+            gameOver = false;
             score = 0;
             fruitCount = 0;
             scoreDisplay.textContent = "Score: " + score;
