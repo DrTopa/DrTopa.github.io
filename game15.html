@@ -255,8 +255,8 @@
             if (direction === "DOWN") snakeY += boxSize;
 
             if (snakeX === food.x && snakeY === food.y) {
-                score++;
-                scoreDisplay.textContent = "Score actuel: " + score;
+               score += 5;
+              scoreDisplay.textContent = "Score actuel: " + score;
 
                 clearInterval(game);
                 speed = initialSpeed - (score * (200 / 15));
