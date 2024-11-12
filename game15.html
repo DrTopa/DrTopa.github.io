@@ -12,10 +12,10 @@
             justify-content: center;
             align-items: center;
             flex-direction: column;
-            height: 100vh;
             background-color: #ffebcd;
             background-image: url('https://www.transparenttextures.com/patterns/snow.png');
             margin: 0;
+            overflow-y: auto;
         }
 
         /* Christmas themed title */
@@ -48,7 +48,7 @@
             font-size: 1.2em;
             color: #333;
             overflow-y: auto;  /* Added for scrolling if needed */
-            max-height: 300px; /* Set a maximum height */
+            max-height: 400px; /* Set a maximum height */
         }
 
         #gameCanvas {
@@ -74,6 +74,11 @@
             border: none;
             border-radius: 5px;
             transition: background-color 0.3s;
+        }
+        #score {
+            font-size: 1.8em;
+            margin: 15px;
+            color: #1565c0;
         }
 
         #startButton:hover {
@@ -129,6 +134,7 @@
         let totalPlayCountGame15 = 0;
         let highestScore = 0;
 
+        const start_Button = document.getElementById('startButton');
         const scoreDisplay = document.getElementById('score');
         const highestScoreDisplay = document.getElementById('highest-score');
         const totalPlayCountDisplay = document.getElementById('total-play-count');
@@ -294,7 +300,7 @@
             };
         }
 
-                async function saveScore(score) {
+                async function saveScore() {
             try {
                 const gameData = { score: score, playCount: playCount, timestamp: new Date() };
                 await addDoc(collection(db, 'users', userId, 'Game15'), gameData);
