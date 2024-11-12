@@ -8,6 +8,7 @@ import { Grid } from "./grid.js";
 import { Paddle } from "./paddle.js";
 import { Wall, walls } from "./wall.js";
 import { Ball, balls } from "./ball.js";
+import { db, userId, app, auth, highestScore  } from "./main.js";
 
 let gamediv = document.getElementById("game");
 export const canvas = document.createElement("canvas");
