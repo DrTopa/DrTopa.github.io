@@ -15,7 +15,6 @@
             background-color: #ffebcd;
             background-image: url('https://www.transparenttextures.com/patterns/snow.png');
             margin: 0;
-            overflow-y: auto;
         }
 
         /* Christmas themed title */
@@ -47,8 +46,7 @@
             max-width: 1000px;
             font-size: 1.2em;
             color: #333;
-            overflow-y: auto;  /* Added for scrolling if needed */
-            max-height: 400px; /* Set a maximum height */
+
         }
 
         #gameCanvas {
@@ -186,7 +184,7 @@
         });
 
         document.addEventListener("keydown", changeDirection);
-        document.getElementById("startButton").addEventListener("click", startGame);
+        startButton.addEventListener("click", startGame);
 
         function startGame() {
             score = 0;
@@ -249,7 +247,7 @@
 
             if (snakeX === food.x && snakeY === food.y) {
                 score++;
-                document.getElementById("score").innerText = score;
+                scoreDisplay.textContent = "Score actuel: " + score;
 
                 clearInterval(game);
                 speed = initialSpeed - (score * (200 / 15));
@@ -269,7 +267,7 @@
             if (snakeX < 0 || snakeY < 0 || snakeX >= canvas.width || snakeY >= canvas.height || collision(newHead, snake)) {
                 clearInterval(game);
                 alert("Game Over! Score final: " + score);
-                saveScore();
+                saveScore(score);
                 window.location.reload();
             }
 
@@ -300,7 +298,7 @@
             };
         }
 
-                async function saveScore() {
+                async function saveScore(score) {
             try {
                 const gameData = { score: score, playCount: playCount, timestamp: new Date() };
                 await addDoc(collection(db, 'users', userId, 'Game15'), gameData);
