@@ -263,8 +263,8 @@
 
             if (snakeX < 0 || snakeY < 0 || snakeX >= canvas.width || snakeY >= canvas.height || collision(newHead, snake)) {
                 clearInterval(game);
-                alert("Game Over! Score final: " + score);
                 saveScore();
+                alert("Game Over! Score final: " + score);
                 window.location.reload();
             }
 
