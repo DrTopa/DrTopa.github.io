@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jezzball Game 18</title>
+    <style>
+        /* General body styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            background-color: #ffebcd;
+            background-image: url('https://www.transparenttextures.com/patterns/snow.png');
+            margin: 0;
+        }
+
+        /* Christmas themed title */
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #d32f2f;
+            font-family: 'Comic Sans MS', cursive;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+                #userStatus {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.2em;
+            color: #a23636;
+        }
+
+        /* Instructions section */
+        #instructions {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            text-align: center;
+            max-width: 1000px;
+            font-size: 1.2em;
+            color: #333;
+            overflow-y: auto;  /* Added for scrolling if needed */
+            max-height: 300px; /* Set a maximum height */
+        }
+                    #game {
+                margin: auto;
+                width: 720px;
+                height: 640px;
+                position: relative;
+                display: block;
+                border: 2px solid black;
+              }
+            
+            #ui-layer { z-index: 3; position: absolute; top: 0px; left: 0px;}
+            #slow-layer { z-index: 2; position: absolute; top: 0px; left: 0px;}
+            #game-layer { z-index: 1; position: absolute; top: 0px; left: 0px;}
+            
+            @media only screen and (min-width: 1000px) {
+              #main_content {
+                margin: 0 20%;
+              }
+            }
+            
+            #swap_button {
+              background-color: #ffebcd;
+              color: #ffebcd;
+              height: 1em;
+              width: 10px;
+              border-radius: 1px;
+              padding: 3em;
+              margin: auto auto 0.5em auto;
+              font-size: x-large;
+              font-weight: 2;
+              text-align: center;
+            }
+            
+
+    </style>
+</head>
+
+<body>
+    <h1>🎄 Bebe Romain Snooze - Game 1 🎄</h1>
+    <div id="userStatus"></div>
+    <!-- Game instructions -->
+    <div id="instructions">
+        <p>«Paf !  Et trois baffes pour Topapa ! » s'exclama joyeusement Dudley en le virant magistralement de Tokyo.</p>
+<p>« Paf, le chien ? » lança Bébé Romain en rigolant, provoquant un facepalm immédiat de TelePapaRition, qui, même depuis le garage, entendit la réplique tout en étendant le linge.</p>
+<p>« Bon, assez joué ! » intervint la ceinture magique. « En voiture tout le monde, direction le passé ! »</p>
+<p>Tous s'entassèrent dans la voiture bleue, en quête d'aventures encore inconnues. Grinchemie, pleine de malice, gratta le plafond juste au-dessus de Topapa, accentuant son allergie et provoquant chez lui une série de bruits ferroviaires.</p>
+<p>« Refais ça une fois et je TUT TUT… » commença Topapa</p>
+<p>« Tu me touches, c’est morsure 90 direct ! » répliqua Grinchemie, souriant de toutes ses dents. Topapa, peu impressionné, tapota sa main par défi — et reçut en retour la morsure promise.</p>
+<p>« Ceintuuuuure magique, Grinchemie m’a mordu ! » se plaignit-il.</p>
+<p>La ceinture magique, exaspérée, freina brusquement. « Allez, c’est bon, vous avez gagné. Vous allez entrer là-dedans et ne sortirez que quand vous aurez relevé ce défi ! »</p>
+<p>Ils pénétrèrent alors dans une grande salle éclairée par quelques faibles lumières. Au centre, plusieurs tables en bois ciré et une ardoise blanche accrochéd au mur. Une porte discrète menait vers une petite cuisine, mais ce qui attira tous les regards, c’était une immense porte dérobée… qui s’ouvrait sur une église !</p>
+<p>« Wow… Qu’est-ce qu’on fait là ? » s’étonna Topapa.</p>
+<p>Dudley montra un gigantesque puzzle étalé au sol. « Je crois qu’on a trouvé la réponse… C’est un puzzle de 5000 pièces représentant le Mont Blanc. On ne sortira pas tant qu’il n’est pas fini. »</p>
+<p>Bébé Romain, peu impressionné, alluma un vieil ordinateur. « Euh, ce sera sans moi ! Même un jeu en arménien vaut mieux qu’un puzzle géant. » Il lança Arevig, un jeu étrangement addictif.</p>
+<p>Dudley et RaseToiLaMoustache, intrigués, s'assirent à ses côtés pour suivre sa partie de Memory, tandis que Grinchemie et Topapa se mirent courageusement au travail sur le puzzle. Ils commencèrent par les contours, avançant lentement mais sûrement. Grinchemie, observatrice et perspicace, repérait les nuances subtiles de blanc et de vert dans les arbres, ce qui les aidait à assembler les pièces plus vite.</p>
+<p>Au bout de plusieurs heures intenses, yeux en bouillie et dos endolori, ils finirent le puzzle ensemble, partageant un moment complice de satisfaction. Topapa passait un moment étrangement plaisant. Partager ces défis à finir à 100 % avec Grinchemie lui procurait un réel bonheur. Mais au-delà de l’objectif de tout terminer, ce qui le motivait, c'était cette complicité partagée avec elle. Grinchemie possédait cette grande lucidité et intelligence, ce talent de comprendre les choses avec une rapidité surprenante. Elle n’était pas seulement brillante ; elle était aussi incroyablement organisée et méthodique, ce qui complétaient parfaitement la manière de jouer de Topapa et sa passion pour tout terminer à la perfection. Pour Topapa, c’était bien plus qu’un simple puzzle : c’était une parenthèse où les petits gestes partagés avaient autant de valeur que le défi lui-même. Intérieurement, il espérait que d’autres aventures de ce genre les attendraient plus tard, des défis à relever ensemble, où ils pourraient à nouveau allier leurs forces et talents.</p>
+<p>« On a fini ! » s’écria Grinchemie, soulagée et fière.</p>
+<p>« Bah, benef, » réagit Dudley sans lever les yeux de l’écran. « Et bah, c'est bien »  ajouta Bébé Romain  « Eh, regardez ! On pouvait quitter le jeu et jouer aux jeux Windows ! Venez, on fait un pinball. »</p>
+<p>« Non, trop compliqué pour le codeur ! » plaisanta Grinchemie. « Il va faire dans la simplicité avec de bonnes vieilles trajectoires linéaires.»</p>
+<p>Soudain, Bébé Romain aperçut une icône familière sur l’écran, un petit carré coloré avec des lignes tracées dessus. Une bouffée de nostalgie l’envahit, et un sourire mélancolique se dessina sur son visage. Le jeu avec les balles qu’on sépare avec des murs… C’était lui ! Ce classique indémodable dont le nom s’était effacé de sa mémoire, mais dont les souvenirs restaient vifs. Il se revoyait, tout petit, les mains agrippées à la souris, déterminé à dompter chaque rebond pour cloisonner les balles et atteindre un score inégalé tandis que son petit frère réclamait inlassablement la souris.</p>
+<p>Une larme d’émotion perla au coin de son œil. « Ah… tah l’époque… » murmura-t-il, presque pour lui-même, mais avec une intensité qui résonna dans la pièce.</p>
+<p>Topapa, captant la vague de souvenirs qui submergeait son camarade, hocha la tête d'un air solennel. « En effet, reufton… tah l’époque. » Son regard se perdit un instant dans le passé.</p>
+<p>Dudley, Grinchémie et RaseToiLaMoustache se regardèrent, déconcertés. C’était rare, mais pour une fois, ils ne comprenaient rien. Ils n’avaient pas la ref. </p>
+<p>« C’est quoi, votre truc, là ? » finit par demander Dudley, intrigué.</p>
+<p>Bébé Romain lui lança un sourire, comme un vieux sage devant des élèves. « Vous pouvez pas comprendre, bande de noeils. Ce jeu, c’est un morceau de notre enfance ! »</p>
+<p>Topapa rit doucement, mais il comprenait l’ampleur de cette nostalgie partagée avec Bébé Romain. Pour eux, cette icône n’était pas juste un vieux jeu. C’était une porte vers des souvenirs d’une époque lointaine.</p>
+<p>Explication du jeu : Copyright (c) 2020-2023 Brianna Rainey  
+</p>
+<p>Eh oui, même votre codeur préféré a ses limites ! J’ai bien tenté de le coder moi-même, mais le résultat était… disons, loin d’être à la hauteur. Le rendu méritait d’être à la hauteur du jeu. Plutôt que de vous infliger un rendu médiocre, j’ai décidé de copier le code d’un autre développeur talentueux sur GitHub.</p>
+<p>Le jeu, c’est Jeezball. C’est un classique où des balles rebondissent dans une aire de jeu rectangulaire. Votre mission ? Enfermer ces balles en créant des murs pour réduire leur espace, jusqu’à ce qu’au moins 75 % de la zone soit couverte. Une fois atteint, vous passez au niveau suivant, avec une nouvelle balle pour augmenter la difficulté. Attention : si une balle touche une ligne en cours de dessin, vous perdez une vie (vous en avez trois au départ). Il existe différentes stratégies pour enfermer les balles ; à vous de trouver la plus efficace.</p>
+<p>Votre score augmente en fonction du nombre de niveaux franchis, chaque niveau ajoute au score le nombre de balles multiplié par deux. Comme ce jeu est un vrai « banger », il n’y a pas de limite de parties. Note : impossible de jouer sur smartphone !
+</p>
+    </div>
+
+    <div id="pause_button">&#9612;&#9612; PAUSE GAME</div>
+    <div id="main_content">
+        <!-- Remove / as needed to toggle modes -->
+        <!-- Miniature mode -/->
+            <style>
+                #game {
+                    width: 360px;
+                    height: 320px;
+                }
+            </style>
+        -->
+        <!-- Unbundled mode -->
+            <script type="module" src="main.js"></script>
+        -->
+        <!-- Bundled mode -/->
+        <script type="module" src="bundle.js"></script>
+        -->
+        <div id="game"></div>
+        <div>
+          <div id="swap_button">↻ Swap Direction By Tapping This Box</div>
+            <small>
+                made by <a href="https://tassaron.com">tassaron</a>
+                <br>
+                <a href="https://github.com/tassaron/jezzball">source code on github</a>
+            </small>
+        </div>
+    </div>
+</body>
+
+</html>
