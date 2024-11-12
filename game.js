@@ -232,8 +232,7 @@ export function pauseGame() {
 
 export function updateScore() {
     percent = Math.round(grid.percentFilled());
-    if (percent > 100) {
-        score += percent - 75;
+    if (percent > 75) {
         nextLevel();
     }
 }
