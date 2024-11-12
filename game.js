@@ -149,6 +149,7 @@ function draw() {
         timer.dying--;
         if (timer.dying == 0) {
             if (lives < 0) {
+                saveScore(score)
                 show_send_score_button();
                 gameOver = true;
             }
@@ -188,7 +189,7 @@ export function pauseGame() {
 
 export function updateScore() {
     percent = Math.round(grid.percentFilled());
-    if (percent > 75) {
+    if (percent > 100) {
         score += percent - 75;
         nextLevel();
     }
@@ -220,3 +221,18 @@ function nextLevel() {
         }
     }
 }
+
+async function saveScore(score) {
+            try {
+                const gameData = { score: score, timestamp: new Date() };
+                await addDoc(collection(db, 'users', userId, 'Game17'), gameData);
+
+                const userRef = doc(db, 'users', userId);
+                if ( score > highestScore) {
+                    highestScore = score;
+                    await updateDoc(userRef, { highestScoreGame17: highestScore });
+                }
+            } catch (error) {
+                console.error("Error saving score:", error);
+            }
+        }
