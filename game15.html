@@ -13,6 +13,7 @@
             align-items: center;
             flex-direction: column;
             background-color: #ffebcd;
+            height: 100vh;
             background-image: url('https://www.transparenttextures.com/patterns/snow.png');
             margin: 0;
         }
@@ -46,6 +47,8 @@
             max-width: 1000px;
             font-size: 1.2em;
             color: #333;
+            overflow-y: auto;  /* Added for scrolling if needed */
+            max-height: 400px; /* Set a maximum height */
 
         }
 
@@ -62,7 +65,7 @@
         }
         }
 
-        #startButton {
+        #start-btn {
             padding: 10px 20px;
             margin: 10px;
             font-size: 1.5em;
@@ -79,7 +82,7 @@
             color: #1565c0;
         }
 
-        #startButton:hover {
+        #start-btn:hover {
            background-color: #2e7d32;
         }
     </style>
@@ -102,7 +105,7 @@
     <div id="score">Score actuel: 0</div>
     <div id="highest-score">Meilleur score: 0</div>
     <div id="total-play-count">Jeux joués: 0</div>
-    <button id="startButton">Start Game</button>
+     <button id="start-btn">Start Game</button>
     <canvas id="gameCanvas" width="400" height="400"></canvas>
 
     
@@ -132,7 +135,7 @@
         let totalPlayCountGame15 = 0;
         let highestScore = 0;
 
-        const start_Button = document.getElementById('startButton');
+         const startBtn = document.getElementById('start-btn');
         const scoreDisplay = document.getElementById('score');
         const highestScoreDisplay = document.getElementById('highest-score');
         const totalPlayCountDisplay = document.getElementById('total-play-count');
@@ -184,7 +187,7 @@
         });
 
         document.addEventListener("keydown", changeDirection);
-        startButton.addEventListener("click", startGame);
+        startBtn.addEventListener('click', startGame);
 
         function startGame() {
             score = 0;
