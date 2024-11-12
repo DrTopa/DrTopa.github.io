@@ -2,7 +2,7 @@
 Imports all modules and starts the first game of Jezzball
 */
 "use strict";
-   <script defer type="module">
+
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
         import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
@@ -24,7 +24,6 @@ Imports all modules and starts the first game of Jezzball
         const db = getFirestore(app);
 
         let userId = '';
-        let totalPlayCountGame17 = 0;
         let highestScore = 0;
 
 onAuthStateChanged(auth, async (user) => {
@@ -39,9 +38,7 @@ onAuthStateChanged(auth, async (user) => {
                     await setDoc(userRef, { userId: userId, highestScoreGame17: 0, UserEmail: user.email });
                 } else {
                     const userData = docSnap.data();
-    
                     highestScore = userData.highestScoreGame17 || 0;
-                    UserEmail: user.email
               
                 }
             } else {
