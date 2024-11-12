@@ -13,9 +13,9 @@
             align-items: center;
             flex-direction: column;
             background-color: #ffebcd;
-            height: 100vh;
             background-image: url('https://www.transparenttextures.com/patterns/snow.png');
             margin: 0;
+            overflow-y: auto;  /* Added for scrolling if needed */
         }
 
         /* Christmas themed title */
@@ -58,8 +58,8 @@
             align-items: center;
             margin-top: 20px;
             background: rgba(255, 255, 255, 0.8);
-            border: 2px solid #b71c1c;
-            border-radius: 12px;
+            border: 3px solid #b71c1c;
+            border-radius: 10px;
             padding: 20px;
             box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
         }
@@ -270,7 +270,7 @@
             if (snakeX < 0 || snakeY < 0 || snakeX >= canvas.width || snakeY >= canvas.height || collision(newHead, snake)) {
                 clearInterval(game);
                 alert("Game Over! Score final: " + score);
-                saveScore(score);
+                saveScore();
                 window.location.reload();
             }
 
@@ -301,14 +301,15 @@
             };
         }
 
-                async function saveScore(score) {
+                async function saveScore() {
             try {
                 const gameData = { score: score, playCount: playCount, timestamp: new Date() };
                 await addDoc(collection(db, 'users', userId, 'Game15'), gameData);
                 totalPlayCountGame15 += 1;
                 await updateDoc(doc(db, 'users', userId), { totalPlayCountGame15: totalPlayCountGame15 });
                 totalPlayCountDisplay.innerText = `Jeux joués: ${totalPlayCountGame15}`;  // Update display for total play count
-
+                console.log("Saving score:", score);
+                
                 const userRef = doc(db, 'users', userId);
                 if (totalPlayCountGame15 <= 10 && score > highestScore) {
                     highestScore = score;
