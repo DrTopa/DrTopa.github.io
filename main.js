@@ -41,10 +41,7 @@ onAuthStateChanged(auth, async (user) => {
                     const userData = docSnap.data();
     
                     highestScore = userData.highestScoreGame17 || 0;
-                    playCount = totalPlayCountGame17 + 1;
                     UserEmail: user.email
-                    
-                    highestScoreDisplay.innerText = `Meilleur score: ${highestScore}`;
               
                 }
             } else {
