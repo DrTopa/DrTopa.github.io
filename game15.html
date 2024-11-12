@@ -259,7 +259,7 @@
               scoreDisplay.textContent = "Score actuel: " + score;
 
                 clearInterval(game);
-                speed = initialSpeed - (score * (200 / 15));
+                speed = initialSpeed - (score * (200 / 75));
                 speed = Math.max(60, speed);
                 game = setInterval(drawGame, speed);
 
