@@ -1,190 +1,512 @@
-
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jeu Snake</title>
+    <title> Qui Maman préfère t-elle ? </title>
     <style>
         body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #e0f7fa;
             flex-direction: column;
-        }
-
-        h1 {
+            background-color: #ffebcd;
+            background-image: url('https://www.transparenttextures.com/patterns/snow.png');
             margin: 0;
-            padding: 20px;
-            font-size: 24px;
-            color: #00695c;
         }
-
-        #gameCanvas {
-            background-color: #004d40;
-            border: 3px solid #00695c;
+        /* Christmas themed title */
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #d32f2f;
+            font-family: 'Comic Sans MS', cursive;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        #userStatus {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.2em;
+        }
+                
+        /* Instructions section */
+        #instructions {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 15px;
             border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            text-align: center;
+            max-width: 1000px;
+            font-size: 1.2em;
+            color: #333;
+            overflow-y: auto;  /* Added for scrolling if needed */
+            max-height: 300px; /* Set a maximum height */
         }
-
-        #startButton {
+        #gameArea {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 50px;
+        }
+        #start-btn {
             padding: 10px 20px;
-            margin-top: 20px;
-            font-size: 16px;
+            margin: 10px;
+            font-size: 1.5em;
             cursor: pointer;
-            background-color: #00796b;
+            background-color: #007BFF;
             color: white;
             border: none;
-            border-radius: 5px;
-            transition: background-color 0.3s;
+        }
+        #start-btn:hover {
+            background-color: #0056b3;
         }
 
-        #startButton:hover {
-            background-color: #004d40;
+        #next-question-btn {
+    padding: 10px 20px;
+    margin: 10px;
+    font-size: 1.5em;
+    cursor: pointer;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    display: none; /* Keeps it hidden initially */
+}
+
+#next-question-btn:hover {
+    background-color: #0056b3;
+}
+        
+        #question {
+            font-size: 1.5em;
+            margin: 20px;
         }
+        #options {
+            font-size: 1.2em;
+            margin: 10px;
+        }
+        #timer, #score {
+            font-size: 1.5em;
+            margin: 10px;
+        }
+        #input {
+            padding: 10px;
+            font-size: 1.2em;
+            margin: 10px;
+            width: 50px;
+        }
+      
+      
+
     </style>
 </head>
 <body>
 
-    <h1>Score : <span id="score">0</span></h1>
-    <canvas id="gameCanvas" width="400" height="400"></canvas>
-    <button id="startButton">Start Game</button>
+    <h1>💁‍♀️ Qui Maman préfère t-elle ? 💁‍♀️</h1>
+    <div id="userStatus"></div>
+    
+ <!-- Game instructions -->
+    <div id="instructions">
+        <p>« Bon, on rentre quand ? » Topapa soupira, conscient que ses serviteurs, les bébés Romain, devaient s’inquiéter de l’absence de leur leader charismatique. Loris, Artaban et Phasme, laissés à eux-mêmes, devaient probablement mourir de faim si personne n'était là pour leur préparer à manger, les nourrir et nettoyer leur litière. À la simple pensée de ses amis rennes, une vague de nostalgie envahit RaseToiLaMoustache. C’était vrai, ces compagnons lui manquaient. Mais au fond, il appréciait de plus en plus le temps passé avec ses nouveaux camarades.</p>
+<p>La dernière partie de Galerapagos avait été mémorable : Dudley, dans un élan d’héroïsme inattendu, avait donné la balle à Topapa, qui avait ensuite réussi à éliminer tout le monde sur le terrain. Et encore plus fort, la fois précédente où Dudley, dans un élan d’héroïsme inattendu, avait donné la balle à Topapa, qui avait ensuite réussi à éliminer tout le monde sur le terrain. Ah, quels beaux souvenirs. Mais son devoir de lâcheur l’appelait.</p>
+<p>Il se remémora alors sa dernière partie de Galerapagos avec ses amis. La dernière fois, son camarade Amance lui avait offert une planche en bois, lui offrant une échappatoire pour quitter la partie au lieu de le laisser mourir dans un éclat de moqueries. Cela l’avait profondément énervé. Comment peut-on manquer à ce point de respect pour l’art du jeu ? Et à leur dernière partie de LL, Amance lui avait même laissé marquer un point, au lieu de s’acharner sur lui pour qu’il soit Bobby. Quel manque d’élégance !</p>
+<p>Percevant l’hésitation de son camarade, Dudley se leva et lui fit un câlin chaleureux, cherchant à le motiver à rester avec eux. La sensation de la tête de RaseToiLaMoustache sur son nombril l’enveloppa d’un réconfort apaisant. Grinchémie, elle aussi, ressentit une envie de montrer son amour envers son ami dans une étreinte, mais elle se ravisa en regardant le plaid qui trônait sur ses épaules, probablement plus contaminé que le bec d’un doudou bien connu.</p>
+<p>Topapa, aurait aussi voulu montrer son amour envers son renne serviable. Il aurait souhaité lui dire combien il prenait plaisir à jouer avec lui, à partager ces moments de coopération ou de compétition. Il aurait voulu lui faire savoir à quel point il appréciait son imagination et la façon dont il créait des jeux fascinants pour Dudley. Mais aussi sa curiosité et sa volonté d'apprendre de nouvelles choses l'impressionnaient. Il apportait régulièrement à la table des nouveaux concepts de jeux et sa présence était un vrai bonheur pour lui. Bref il voulait dire qu’il l’aimait très fort  mais peu prompt aux effusions de sentiments, se contenta de coder un site internet pour lui exprimer son affection, ce qui, il fallait l’admettre, prenait un peu plus de temps.</p>
+<p>Soudain, Bébé Romain descendit les escaliers, son ordinateur en main, l'excitation palpable sur son visage. « J’ai fait une chasse au trésor, » annonça-t-il fièrement, les yeux brillants d’enthousiasme. Les quatre compères échangèrent un regard, peu emballés par l’idée. Mais Bébé Romain, déterminé à faire bonne impression, ajouta : « Sinon, j’ai fait un Kahoot ‘Vrai/Faux’ purement subjectif, où, peu importe la réponse, c’est mon point de vue qui compte. »</p>
+<p>« Le Kahoot ! » s’écrièrent à l’unisson les quatre autres. 
+</p>
 
-    <script>
-        const canvas = document.getElementById("gameCanvas");
-        const ctx = canvas.getContext("2d");
-        const boxSize = 20;
-        const canvasSize = 400;
-        const totalBoxes = canvasSize / boxSize;
+        <p>Explication du jeu : Simple quizz  Réponds par A,B,C, D ou E en appuyant sur entrée (majuscule ou minuscule) à chaque question. Tu disposes de 30 secondes par question et chaque bonne réponse vaut 2.5 points.</p>
+        <p>Il y a 40 questions. Attention seul le premier score est pris en compte. Possible sur Smartphone.
+</p>
+    </div>
+    
+    <div id="gameArea">
+        <button id="start-btn">🎅Start Game🎅</button>
+        <div id="timer"></div>
+        <div id="score"></div>
+        <button id="next-question-btn" style="display: none;">Prochaine question</button>
+        <div id="question"></div>
+        <div id="options"></div>
+        <input type="text" id="input" placeholder="A/B/C/D" maxlength="1" disabled>
+      
 
-        let score = 0;
-        let snake = [{ x: 9 * boxSize, y: 9 * boxSize }];
-        let direction = "RIGHT";
-        let food = {
-            x: Math.floor(Math.random() * totalBoxes) * boxSize,
-            y: Math.floor(Math.random() * totalBoxes) * boxSize
+      
+    </div>
+
+    <script defer type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyC4bjg7lVwd8FU8MREaPhBsBENv5qmiYYM",
+            authDomain: "calendrier-de-l-avent-54e3a.firebaseapp.com",
+            databaseURL: "https://calendrier-de-l-avent-54e3a-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "calendrier-de-l-avent-54e3a",
+            storageBucket: "calendrier-de-l-avent-54e3a.appspot.com",
+            messagingSenderId: "850639567855",
+            appId: "1:850639567855:web:0d799a1ecca005fcff141a",
+            measurementId: "G-PC1W7RYVEH"
         };
 
-        let initialSpeed = 250;
-        let speed = initialSpeed;
-        let game;
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
-        document.addEventListener("keydown", changeDirection);
-        document.getElementById("startButton").addEventListener("click", startGame);
+        let userId = '';
+        let score = 0;
+        let playCount = 0;
+        let totalPlayCountGame16 = 0;
+        let highestScore = 0;
+        let questionIndex = 0;
+        let timer; 
 
-        function startGame() {
-            score = 0;
-            speed = initialSpeed;
-            snake = [{ x: 9 * boxSize, y: 9 * boxSize }];
-            direction = "RIGHT";
-            document.getElementById("score").innerText = score;
+        const startBtn = document.getElementById('start-btn');
+        const timerDisplay = document.getElementById('timer');
+        const scoreDisplay = document.getElementById('score');
+        const questionDisplay = document.getElementById('question');
+        const optionsDisplay = document.getElementById('options');
+        const inputField = document.getElementById('input');
+        const nextquestionbtn = document.getElementById('next-question-btn');
 
-            clearInterval(game);
-            game = setInterval(drawGame, speed);
-        }
 
-        function changeDirection(event) {
-            if (event.key === "ArrowLeft" && direction !== "RIGHT") direction = "LEFT";
-            if (event.key === "ArrowUp" && direction !== "DOWN") direction = "UP";
-            if (event.key === "ArrowRight" && direction !== "LEFT") direction = "RIGHT";
-            if (event.key === "ArrowDown" && direction !== "UP") direction = "DOWN";
-        }
-
-        function drawGame() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // Dessine le serpent avec des segments arrondis et une tête plus marquée
-            for (let i = 0; i < snake.length; i++) {
-                ctx.fillStyle = i === 0 ? "#ffeb3b" : "#81c784"; // Tête en jaune, corps en vert
-                ctx.beginPath();
-                ctx.roundRect(snake[i].x, snake[i].y, boxSize, boxSize, i === 0 ? 6 : 3); // Tête arrondie
-                ctx.fill();
-                if (i === 0) {
-                    // Dessine les yeux pour la tête
-                    ctx.fillStyle = "#004d40";
-                    const eyeOffset = 4;
-                    ctx.beginPath();
-                    ctx.arc(snake[i].x + eyeOffset, snake[i].y + eyeOffset, 2, 0, Math.PI * 2);
-                    ctx.arc(snake[i].x + boxSize - eyeOffset, snake[i].y + eyeOffset, 2, 0, Math.PI * 2);
-                    ctx.fill();
-                }
+        const questions = [
+        
+            {
+                question: "Selon Noémie, qui est le/la plus sensible ?",
+                options: ["A) Romain", "B) Adrien", "C) Noémie", "D) Loris", "E)Thaddée"],
+                answer: "C"
+            },
+                        {
+                question: "Selon Loris, qui est le/la plus sensible ?",
+                options: ["A) Romain", "B) Adrien", "C) Noémie", "D) Loris", "E)Thaddée"],
+                answer: "E"
+            },
+                        {
+                question: "Selon Romain, qui ferait le/la meilleur.e détective ?",
+                options: ["A) Romain", "B) Adrien", "C) Noémie", "D) Loris", "E)Thaddée"],
+                answer: "B"
+            },
+                        {
+                question: "Selon Romain, qui offre les meilleurs cadeaux de Noël ?",
+                options: ["A) Romain", "B) Adrien", "C) Noémie", "D) Loris", "E)Thaddée"],
+                answer: "A"
+            },
+                        {
+                question: "Selon Adrien, qui offre les meilleurs cadeaux de Noël ?",
+                options: ["A) Romain", "B) Adrien", "C) Noémie", "D) Loris", "E)Thaddée"],
+                answer: "A"
+            },
+                        {
+                question: "Selon Thaddée, qui est le/la plus bordélique?",
+                options: ["A) Romain", "B) Adrien", "C) Noémie", "D) Loris", "E)Thaddée"],
+                answer: "D"
+            },
+                        {
+                question: "Selon Adrien, qui est le/la plus bordélique?",
+                options: ["A) Romain", "B) Adrien", "C) Noémie", "D) Loris", "E)Thaddée"],
+                answer: "E"
+            },
+                        {
+                question: "Selon Thaddée, Qui est le/la plus sportif.ve?",
+                options: ["A) Romain", "B) Adrien", "C) Noémie", "D) Loris", "E)Thaddée"],
+                answer: "D"
+            },
+                        {
+                question: "Selon Loris, Qui est le/la plus sportif.ve?",
+                options: ["A) Romain", "B) Adrien", "C) Noémie", "D) Loris", "E)Thaddée"],
+                answer: "B"
+            },
+                        {
+                question: "Selon Romain, qui est le/la plus organisé.e ?",
+                options: ["A) Romain", "B) Adrien", "C) Noémie", "D) Loris", "E)Thaddée"],
+                answer: "C"
+            },
+                        {
+                question: "Selon Thaddée, qui est le/la plus compétitif.ve ?",
+                options: ["A) Romain", "B) Adrien", "C) Noémie", "D) Loris", "E)Thaddée"],
+                answer: "D"
+            },
+                        {
+                question: "Selon Romain, qui serait le/la meilleur.e acteur/actrice dans un film ?",
+                options: ["A) Romain", "B) Adrien", "C) Noémie", "D) Loris", "E)Thaddée"],
+                answer: "B"
+            },
+                        {
+                question: "Selon Romain, qui est le/la plus accro.e à son téléphone ?",
+                options: ["A) Romain", "B) Adrien", "C) Noémie", "D) Loris", "E)Thaddée"],
+                answer: "E"
+            },
+                        {
+                question: "Selon Adrien, qui est le/la plus accro.e à son téléphone ?",
+                options: ["A) Romain", "B) Adrien", "C) Noémie", "D) Loris", "E)Thaddée"],
+                answer: "D"
+            },
+                        {
+                question: "Selon Adrien, qui a le plus de chances de devenir célèbre ?",
+                options: ["A) Romain", "B) Adrien", "C) Noémie", "D) Loris", "E)Thaddée"],
+                answer: "E"
+            },
+                        {
+                question: "Selon Noémie, qui est le/la plus doué.e pour raconter des blagues nulles ?",
+                options: ["A) Romain", "B) Adrien", "C) Noémie", "D) Loris", "E)Thaddée"],
+                answer: "A"
+            },
+                        {
+                question: "Selon Thaddée, qui dessine le plus mal ?",
+                options: ["A) Romain", "B) Adrien", "C) Noémie", "D) Loris", "E)Thaddée"],
+                answer: "D"
+            },
+                        {
+                question: "Selon Loris, qui dessine le plus mal ?",
+                options: ["A) Romain", "B) Adrien", "C) Noémie", "D) Loris", "E)Thaddée"],
+                answer: "E"
+            },
+                        {
+                question: "Selon Adrien, qui a les plus mauvais goûts musicaux ?",
+                options: ["A) Romain", "B) Adrien", "C) Noémie", "D) Loris", "E)Thaddée"],
+                answer: "E"
+            },
+                        {
+                question: "Selon Noémie, qui est le/la plus dépensier.e ?",
+                options: ["A) Romain", "B) Adrien", "C) Noémie", "D) Loris", "E)Thaddée"],
+                answer: "E"
+            },
+                        {
+                question: "Selon Adrien, qui est le/la plus drôle sans vraiment le vouloir?",
+                options: ["A) Romain", "B) Adrien", "C) Noémie", "D) Loris", "E)Thaddée"],
+                answer: "B"
+            },
+                        {
+                question: "Avec qui, Romain, aurait envie de faire un duo pour "Qui veut gagner des millions" ?",
+                options: ["A) Romain", "B) Adrien", "C) Noémie", "D) Loris", "E)Thaddée"],
+                answer: "D"
+            },
+                        {
+                question: "Avec qui, Adrien, aurait envie de faire un duo pour "Qui veut gagner des millions" ?",
+                options: ["A) Romain", "B) Adrien", "C) Noémie", "D) Loris", "E)Thaddée"],
+                answer: "C"
+            },
+                        {
+                question: "Avec qui, Noémie, aurait envie de faire un duo pour "Qui veut gagner des millions" ?",
+                options: ["A) Romain", "B) Adrien", "C) Noémie", "D) Loris", "E)Thaddée"],
+                answer: "C"
+            },
+                        {
+                question: "Avec qui, Loris, aurait envie de faire un duo pour "Qui veut gagner des millions" ?",
+                options: ["A) Romain", "B) Adrien", "C) Noémie", "D) Loris", "E)Thaddée"],
+                answer: "D"
+            },
+                        {
+                question: "Avec qui, Thaddée, aurait envie de faire un duo pour "Qui veut gagner des millions" ?",
+                options: ["A) Romain", "B) Adrien", "C) Noémie", "D) Loris", "E)Thaddée"],
+                answer: "A"
+            },
+                        {
+                question: "Selon Thaddée, qui est le/la plus insupportable après une victoire sur la Switch (Mario Party, Towerfall,..) ?",
+                options: ["A) Romain", "B) Adrien", "C) Noémie", "D) Loris", "E)Thaddée"],
+                answer: "D"
+            },
+                        {
+                question: "Selon Loris, qui est le/la plus insupportable après une victoire sur la Switch (Mario Party, Towerfall,..) ?",
+                options: ["A) Romain", "B) Adrien", "C) Noémie", "D) Loris", "E)Thaddée"],
+                answer: "D"
+            },
+                        {
+                question: "Selon Noémie, est le/la meilleur.e cuisinier.e ?",
+                options: ["A) Romain", "B) Adrien", "C) Noémie", "D) Loris", "E)Thaddée"],
+                answer: "C"
+            },
+                        {
+                question: "Selon Romain, est le/la meilleur.e cuisinier.e ?",
+                options: ["A) Romain", "B) Adrien", "C) Noémie", "D) Loris", "E)Thaddée"],
+                answer: "C"
+            },
+                        {
+                question: "Selon Loris, qui fait les meilleurs compliments ?",
+                options: ["A) Romain", "B) Adrien", "C) Noémie", "D) Loris", "E)Thaddée"],
+                answer: "A"
+            },
+                        {
+                question: "Selon Noémie, qui fait les meilleurs compliments ?",
+                options: ["A) Romain", "B) Adrien", "C) Noémie", "D) Loris", "E)Thaddée"],
+                answer: "A"
+            },
+                        {
+                question: "Selon Romain, qui est le/la plus douée pour mentir sans se faire attraper ?",
+                options: ["A) Romain", "B) Adrien", "C) Noémie", "D) Loris", "E)Thaddée"],
+                answer: "B"
+            },
+                        {
+                question: "Selon Adrien, qui est le/la plus douée pour mentir sans se faire attraper ?",
+                options: ["A) Romain", "B) Adrien", "C) Noémie", "D) Loris", "E)Thaddée"],
+                answer: "B"
+            },
+                        {
+                question: "Selon Noémie, est le/la plus têtu.e ?",
+                options: ["A) Romain", "B) Adrien", "C) Noémie", "D) Loris", "E)Thaddée"],
+                answer: "D"
+            },
+                        {
+                question: "Selon Loris, est le/la plus têtu.e ?",
+                options: ["A) Romain", "B) Adrien", "C) Noémie", "D) Loris", "E)Thaddée"],
+                answer: "C"
+            },
+                        {
+                question: "Selon Noémie, qui est le plus susceptible d’avoir toujours la même commande au restaurant ?",
+                options: ["A) Romain", "B) Adrien", "C) Noémie", "D) Loris", "E)Thaddée"],
+                answer: "B"
+            },
+                        {
+                question: "Selon Thaddée, qui est le plus susceptible d’avoir toujours la même commande au restaurant ?",
+                options: ["A) Romain", "B) Adrien", "C) Noémie", "D) Loris", "E)Thaddée"],
+                answer: "E"
+            },
+                        {
+                question: "Selon Thaddée, qui est le/la plus gros lâcheur.euse ?",
+                options: ["A) Romain", "B) Adrien", "C) Noémie", "D) Loris", "E)Thaddée"],
+                answer: "D"
+            },
+                        {
+                question: "Selon Loris, qui est le/la plus gros lâcheur.euse ?",
+                options: ["A) Romain", "B) Adrien", "C) Noémie", "D) Loris", "E)Thaddée"],
+                answer: "D"
             }
+            
+        ];
 
-            // Dessine la nourriture sous forme de pomme avec une couleur rouge et un reflet
-            ctx.fillStyle = "#e57373";
-            ctx.beginPath();
-            ctx.arc(food.x + boxSize / 2, food.y + boxSize / 2, boxSize / 2, 0, Math.PI * 2);
-            ctx.fill();
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                userId = user.uid;
+                document.getElementById('userStatus').innerText = `Welcome: ${user.email}`;
 
-            // Reflet pour la nourriture
-            ctx.fillStyle = "rgba(255, 255, 255, 0.3)";
-            ctx.beginPath();
-            ctx.arc(food.x + boxSize / 2 - 4, food.y + boxSize / 2 - 4, boxSize / 4, 0, Math.PI * 2);
-            ctx.fill();
+                const userRef = doc(db, 'users', userId);
+                const docSnap = await getDoc(userRef);
 
-            // Déplacement du serpent
-            let snakeX = snake[0].x;
-            let snakeY = snake[0].y;
-            if (direction === "LEFT") snakeX -= boxSize;
-            if (direction === "UP") snakeY -= boxSize;
-            if (direction === "RIGHT") snakeX += boxSize;
-            if (direction === "DOWN") snakeY += boxSize;
-
-            if (snakeX === food.x && snakeY === food.y) {
-                score++;
-                document.getElementById("score").innerText = score;
-
-                clearInterval(game);
-                speed = initialSpeed - (score * (200 / 15));
-                speed = Math.max(60, speed);
-                game = setInterval(drawGame, speed);
-
-                food = {
-                    x: Math.floor(Math.random() * totalBoxes) * boxSize,
-                    y: Math.floor(Math.random() * totalBoxes) * boxSize
-                };
+                if (!docSnap.exists()) {
+                    await setDoc(userRef, { userId: userId, totalPlayCountGame16: 0, highestScoreGame16: 0 });
+                    console.log("User document created with initial values.");
+                } else {
+                    const userData = docSnap.data();
+                    totalPlayCountGame16 = userData.totalPlayCountGame16 || 0;
+                    highestScore = userData.highestScoreGame16 || 0;
+                    playCount = totalPlayCountGame16 + 1;
+                    console.log(`Loaded totalPlayCountGame16: ${totalPlayCountGame16}, highestScore: ${highestScore}`);
+                }
             } else {
-                snake.pop();
+                window.location.href = 'login.html';
             }
+        });
 
-            const newHead = { x: snakeX, y: snakeY };
+startBtn.addEventListener('click', async () => {
+    score = 0;
+    scoreDisplay.innerText = `Current Score: ${score}`;
+    inputField.value = '';
+    inputField.disabled = false;
+    timerDisplay.innerText = '';
+    optionsDisplay.innerHTML = '';
 
-            if (snakeX < 0 || snakeY < 0 || snakeX >= canvas.width || snakeY >= canvas.height || collision(newHead, snake)) {
-                clearInterval(game);
-                alert("Game Over! Score final: " + score);
-                window.location.reload();
+    // Increment totalPlayCount and update Firestore
+    totalPlayCountGame16 += 1;
+    await updateDoc(doc(db, 'users', userId), { totalPlayCountGame16: totalPlayCountGame16 });
+
+    questionIndex = 0;
+    showQuestion(questionIndex);
+
+    timer = startTimer(); // Start the timer for the first question
+
+    inputField.addEventListener('keyup', (event) => {
+        if (event.key === 'Enter' && inputField.value) {
+            clearInterval(timer); // Clear the current timer
+            checkAnswer(questionIndex, inputField.value.toUpperCase());
+            inputField.value = '';
+
+        }
+    });
+});
+document.getElementById('next-question-btn').addEventListener('click', () => {
+    questionIndex++;
+    if (questionIndex < questions.length) {
+        showQuestion(questionIndex);
+        startTimer();
+        document.getElementById('next-question-btn').style.display = 'none'; // Hide the button again
+    } else {
+        endGame();
+    }
+});
+      
+function startTimer() {
+    let timeLeft = 30; // Set time left for each question
+    timerDisplay.innerText = `Temps restant: ${timeLeft}s`;
+
+    clearInterval(timer);
+    timer = setInterval(() => {
+        timeLeft -= 1;
+        timerDisplay.innerText = `Temps restant: ${timeLeft}s`;
+
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            inputField.disabled = true; // Disable input after time runs out
+            checkAnswer(questionIndex, ''); // Check answer as incorrect if time is up
+           document.getElementById('next-question-btn').style.display = 'inline'; // Show "Next Question" button
+            
+        }
+    }, 1000);
+
+    return timer; // Return timer reference for clearing if needed
+}
+
+
+function showQuestion(index) {
+    clearInterval(timer);
+    const question = questions[index];
+    questionDisplay.innerText = question.question;
+    optionsDisplay.innerHTML = question.options.join('<br>');
+    timerDisplay.innerText = `Temps restant : 30s`;
+    inputField.disabled = false;
+    inputField.focus();
+    timer = startTimer();
+}
+
+        function checkAnswer(index, userAnswer) {
+            const correctAnswer = questions[index].answer;
+            if (userAnswer === questions[index].answer) {
+                score += 2.5;
+                scoreDisplay.innerText = `Score actuel: ${score}`;
+                console.log("Correct Answer!");
+            } else if (userAnswer !== '') {
+                console.log("Incorrect Answer.");
             }
-
-            snake.unshift(newHead);
+          questionDisplay.innerHTML += `<br><strong>Réponse correcte : ${correctAnswer}</strong>`;
+          inputField.disabled = true;
+          document.getElementById('next-question-btn').style.display = 'inline'; // Show "Next Question" button
         }
 
-        function collision(head, array) {
-            for (let i = 0; i < array.length; i++) {
-                if (head.x === array[i].x && head.y === array[i].y) {
-                    return true;
+        async function saveScore(score) {
+            try {
+                const gameData = { score: score, playCount: playCount, timestamp: new Date() };
+                await addDoc(collection(db, 'users', userId, 'Game16'), gameData);
+
+                const userRef = doc(db, 'users', userId);
+                if (totalPlayCountGame16 <= 1 &&score > highestScore) {
+                    highestScore = Math.ceil(score);
+                    await updateDoc(userRef, { highestScoreGame16: highestScore });
                 }
+                console.log("Score saved successfully.");
+            } catch (error) {
+                console.error("Error saving score:", error);
             }
-            return false;
         }
 
-        // Ajout de roundRect si non supporté par le navigateur
-        if (!CanvasRenderingContext2D.prototype.roundRect) {
-            CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
-                r = Math.min(r, w / 2, h / 2);
-                this.beginPath();
-                this.moveTo(x + r, y);
-                this.arcTo(x + w, y, x + w, y + h, r);
-                this.arcTo(x + w, y + h, x, y + h, r);
-                this.arcTo(x, y + h, x, y, r);
-                this.arcTo(x, y, x + w, y, r);
-                this.closePath();
-                return this;
-            };
+        async function endGame() {
+            inputField.disabled = true;
+            await saveScore(score); // Save the score at the end of the game
+            console.log("Game Over. Final Score:", score);
+            alert(`Le quiz est fini! Nono et Thaddée, arrêtez de rager sur certaines questions! Votre score final est: ${score}`);
         }
     </script>
-
 </body>
 </html>
