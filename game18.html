@@ -179,22 +179,41 @@
             }
         }
         
-        function arenaSweep() {
-            let rowsCleared = 0;
-            for (let y = arena.length - 1; y >= 0; --y) {
-                if (arena[y].every(cell => cell !== 0)) {
-                    const row = arena.splice(y, 1)[0].fill(0); // remove row
-                    arena.unshift(row); // add new row on top
-                    ++rowsCleared;
-                    ++player.score;
-                    y++; // Check the new row in the same position
+            function arenaSweep() {
+                let clearedLines = 0;
+                outer: for (let y = arena.length - 1; y >= 0; --y) {
+                    for (let x = 0; x < arena[y].length; ++x) {
+                        if (arena[y][x] === 0) {
+                            continue outer;
+                        }
+                    }
+                    
+                    // Remove the row and add a new empty row at the top
+                    arena.splice(y, 1);
+                    arena.unshift(new Array(arena[0].length).fill(0));
+                    clearedLines++; // Track how many lines are cleared
+                }
+            
+                // Increase score based on the number of lines cleared at once
+                if (clearedLines > 0) {
+                    player.score += getScoreForLines(clearedLines);
                 }
             }
-        }
+
+                    function getScoreForLines(lines) {
+                if (lines === 1) return 1;
+                if (lines === 2) return 3;
+                if (lines === 3) return 6;
+                if (lines === 4) return 10;
+                return 0;
+            }
+
+        
 
 
         function updateScore() {
             document.getElementById('score').innerText = player.score;
+            dropInterval = 1000 - Math.min(player.score * 10, 900);
         }
 
         let dropCounter = 0;
