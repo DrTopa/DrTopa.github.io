@@ -178,20 +178,20 @@
                 updateScore();
             }
         }
-
+        
         function arenaSweep() {
-            outer: for (let y = arena.length -1; y > 0; --y) {
-                for (let x = 0; x < arena[y].length; ++x) {
-                    if (arena[y][x] === 0) {
-                        continue outer;
-                    }
+            let rowsCleared = 0;
+            for (let y = arena.length - 1; y >= 0; --y) {
+                if (arena[y].every(cell => cell !== 0)) {
+                    const row = arena.splice(y, 1)[0].fill(0); // remove row
+                    arena.unshift(row); // add new row on top
+                    ++rowsCleared;
+                    ++player.score;
+                    y++; // Check the new row in the same position
                 }
-
-                const row = arena.splice(y, 1)[0].fill(0);
-                arena.unshift(row);
-                ++player.score;
             }
         }
+
 
         function updateScore() {
             document.getElementById('score').innerText = player.score;
