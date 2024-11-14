@@ -7,23 +7,50 @@
     <style>
         /* CSS intégré dans le fichier HTML */
         body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            font-family: Arial, sans-serif;
-            background-color: #333;
-            color: #fff;
+            flex-direction: column;
+            background-color: #ffebcd;
+            background-image: url('https://www.transparenttextures.com/patterns/snow.png');
             margin: 0;
-            padding: 0;
+            overflow-y: auto;  /* Added for scrolling if needed */
         }
 
         h1 {
-            margin-top: 20px;
             font-size: 2.5em;
-            color: #ffcb05;
-            text-shadow: 2px 2px #333;
+            margin-bottom: 20px;
+            color: #d32f2f;
+            font-family: 'Comic Sans MS', cursive;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
         }
 
+        /* User status */
+        #userStatus {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.2em;
+            color: #a23636;
+        }
+
+        /* Instructions section */
+        #instructions {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            text-align: center;
+            max-width: 1000px;
+            font-size: 1.2em;
+            color: #333;
+            overflow-y: auto;  /* Added for scrolling if needed */
+            max-height: 400px; /* Set a maximum height */
+
+        }
+        
         .tetris-container {
             display: flex;
             align-items: center;
@@ -49,25 +76,27 @@
             font-weight: bold;
             font-size: 1.4em;
         }
+        
 
         /* Style for the start button */
         #start-btn {
-            background-color: #ffcb05;
-            color: #333;
-            font-size: 1.5em;
             padding: 10px 20px;
+            margin: 10px;
+            font-size: 1.5em;
+            cursor: pointer;
+            background-color: #388e3c;
+            color: white;
             border: none;
             border-radius: 5px;
-            cursor: pointer;
-            margin-top: 20px;
+            transition: background-color 0.3s;
         }
 
         #start-btn:hover {
-            background-color: #ff9900;
+            background-color: #2e7d32;
         }
 
         #start-btn:active {
-            background-color: #cc7a00;
+            background-color: #388e3c;
         }
 
         /* Hide the game initially */
@@ -82,8 +111,10 @@
     </style>
 </head>
 <body>
-    <h1>Tetris</h1>
-    
+    <h1>🟥 Cela m'avait pris 3 mois poour le faire à l'INSA 🟩</h1>
+    <div id="instructions">
+        <p></p>
+         </div>
     <!-- Start Button -->
     <button id="start-btn">Start Game</button>
 
@@ -93,9 +124,39 @@
         <div class="score-board">
             <p>Score: <span id="score">0</span></p>
         </div>
+        <div id="highest-score">Meilleur score: 0</div>
+        <div id="total-play-count">Jeux joués: 0</div>
     </div>
 
-    <script>
+   <script defer type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyC4bjg7lVwd8FU8MREaPhBsBENv5qmiYYM",
+            authDomain: "calendrier-de-l-avent-54e3a.firebaseapp.com",
+            databaseURL: "https://calendrier-de-l-avent-54e3a-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "calendrier-de-l-avent-54e3a",
+            storageBucket: "calendrier-de-l-avent-54e3a.appspot.com",
+            messagingSenderId: "850639567855",
+            appId: "1:850639567855:web:0d799a1ecca005fcff141a",
+            measurementId: "G-PC1W7RYVEH"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let userId = '';
+        let playCount = 0;
+        let totalPlayCountGame18 = 0;
+        let highestScore = 0;
+
+        const highestScoreDisplay = document.getElementById('highest-score');
+        const totalPlayCountDisplay = document.getElementById('total-play-count');
+       
         let gameLoopId;
         const canvas = document.getElementById('tetris');
         const context = canvas.getContext('2d');
@@ -110,6 +171,33 @@
         };
         
         context.scale(30, 30);
+
+       onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                userId = user.uid;
+                document.getElementById('userStatus').innerText = `Bienvenue : ${user.email}`;
+
+                const userRef = doc(db, 'users', userId);
+                const docSnap = await getDoc(userRef);
+
+                if (!docSnap.exists()) {
+                    await setDoc(userRef, { userId: userId, totalPlayCountGame18: 0, highestScoreGame18: 0, UserEmail: user.email });
+                } else {
+                    const userData = docSnap.data();
+                    totalPlayCountGame18 = userData.totalPlayCountGame18 || 0;
+                    highestScore = userData.highestScoreGame18 || 0;
+                    playCount = totalPlayCountGame18 + 1;
+                    UserEmail: user.email
+                    
+                    highestScoreDisplay.innerText = `Meilleur score: ${highestScore}`;
+                    totalPlayCountDisplay.innerText = `Jeux joués: ${totalPlayCountGame18}`;
+                    
+                    
+                }
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
 
         function createPiece(type) {
             if (type === 'T') {
@@ -320,6 +408,7 @@
         // Game Over handling
         function gameOver() {
             document.getElementById('start-btn').style.display = 'block';
+            saveScore();
             cancelAnimationFrame(gameLoopId); // Stop the game loop
         }
 
@@ -345,6 +434,26 @@
                 rotate(player.matrix, 1);
             }
         });
+
+       async function saveScore() {
+            try {
+                const gameData = { score: player.score, playCount: playCount, timestamp: new Date() };
+                await addDoc(collection(db, 'users', userId, 'Game18'), gameData);
+                totalPlayCountGame18 += 1;
+                await updateDoc(doc(db, 'users', userId), { totalPlayCountGame18: totalPlayCountGame18 });
+                totalPlayCountDisplay.innerText = `Jeux joués: ${totalPlayCountGame18}`;  // Update display for total play count
+                console.log("Saving score:", player.score);
+                
+                const userRef = doc(db, 'users', userId);
+                if (totalPlayCountGame18 <= 10 && player.score > highestScore) {
+                    highestScore = player.score;
+                    await updateDoc(userRef, { highestScoreGame18: highestScore });
+                    highestScoreDisplay.innerText = `Meilleur score: ${highestScore}`; // Update display for highest score
+                }
+            } catch (error) {
+                console.error("Error saving score:", error);
+            }
+        }
     </script>
 </body>
 </html>
