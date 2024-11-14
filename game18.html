@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -5,13 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tetris</title>
     <style>
-        /* Enhanced styling for the game */
+        /* CSS intégré dans le fichier HTML */
         body {
             display: flex;
             flex-direction: column;
             align-items: center;
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #333, #555);
+            font-family: Arial, sans-serif;
+            background-color: #333;
             color: #fff;
             margin: 0;
             padding: 0;
@@ -41,10 +42,10 @@
 
         .score-board {
             margin-left: 20px;
+            font-size: 1.2em;
             font-size: 1.5em;
             color: #ffcb05;
         }
-
         .score-board p {
             font-weight: bold;
             font-size: 1.4em;
@@ -60,12 +61,11 @@
         </div>
     </div>
 
+    <!-- Code JavaScript intégré dans une balise <script> -->
     <script>
         const canvas = document.getElementById('tetris');
         const context = canvas.getContext('2d');
-        context.scale(30, 30);
-
-        const colors = {
+                const colors = {
             'T': '#ff00ff',
             'O': '#ffff00',
             'L': '#ff8800',
@@ -74,16 +74,52 @@
             'S': '#00ff00',
             'Z': '#ff0000'
         };
+        
+        context.scale(30, 30);
 
         function createPiece(type) {
-            switch (type) {
-                case 'T': return [[0, 0, 0], [1, 1, 1], [0, 1, 0]];
-                case 'O': return [[1, 1], [1, 1]];
-                case 'L': return [[0, 1, 0], [0, 1, 0], [0, 1, 1]];
-                case 'J': return [[0, 1, 0], [0, 1, 0], [1, 1, 0]];
-                case 'I': return [[0, 1, 0, 0], [0, 1, 0, 0], [0, 1, 0, 0], [0, 1, 0, 0]];
-                case 'S': return [[0, 1, 1], [1, 1, 0], [0, 0, 0]];
-                case 'Z': return [[1, 1, 0], [0, 1, 1], [0, 0, 0]];
+            if (type === 'T') {
+                return [
+                    [0, 0, 0],
+                    [1, 1, 1],
+                    [0, 1, 0],
+                ];
+            } else if (type === 'O') {
+                return [
+                    [1, 1],
+                    [1, 1],
+                ];
+            } else if (type === 'L') {
+                return [
+                    [0, 1, 0],
+                    [0, 1, 0],
+                    [0, 1, 1],
+                ];
+            } else if (type === 'J') {
+                return [
+                    [0, 1, 0],
+                    [0, 1, 0],
+                    [1, 1, 0],
+                ];
+            } else if (type === 'I') {
+                return [
+                    [0, 1, 0, 0],
+                    [0, 1, 0, 0],
+                    [0, 1, 0, 0],
+                    [0, 1, 0, 0],
+                ];
+            } else if (type === 'S') {
+                return [
+                    [0, 1, 1],
+                    [1, 1, 0],
+                    [0, 0, 0],
+                ];
+            } else if (type === 'Z') {
+                return [
+                    [1, 1, 0],
+                    [0, 1, 1],
+                    [0, 0, 0],
+                ];
             }
         }
 
@@ -91,8 +127,7 @@
             const [m, o] = [player.matrix, player.pos];
             for (let y = 0; y < m.length; ++y) {
                 for (let x = 0; x < m[y].length; ++x) {
-                    if (m[y][x] !== 0 &&
-                        (arena[y + o.y] && arena[y + o.y][x + o.x]) !== 0) {
+                    if (m[y][x] !== 0 && (!arena[y + o.y] || arena[y + o.y][x + o.x] !== 0)) {
                         return true;
                     }
                 }
@@ -112,97 +147,32 @@
             player.matrix.forEach((row, y) => {
                 row.forEach((value, x) => {
                     if (value !== 0) {
+                        // Store the color in the arena matrix
                         arena[y + player.pos.y][x + player.pos.x] = player.color;
                     }
                 });
             });
         }
 
-        function playerReset() {
-            const pieces = 'TJLOSZI';
-            const pieceType = pieces[pieces.length * Math.random() | 0];
-            player.matrix = createPiece(pieceType);
-            player.color = colors[pieceType];
-            player.pos.y = 0;
-            player.pos.x = (arena[0].length / 2 | 0) - (player.matrix[0].length / 2 | 0);
-            if (collide(arena, player)) {
-                arena.forEach(row => row.fill(0));
-                player.score = 0;
-                updateScore();
-            }
-        }
 
-        function arenaSweep() {
-            let clearedLines = 0;
-            for (let y = arena.length - 1; y >= 0; --y) {
-                if (arena[y].every(cell => cell !== 0)) {
-                    arena.splice(y, 1);
-                    arena.unshift(new Array(arena[0].length).fill(0));
-                    clearedLines++;
-                    y++;
+        function rotate(matrix, dir) {
+            for (let y = 0; y < matrix.length; ++y) {
+                for (let x = 0; x < y; ++x) {
+                    [
+                        matrix[x][y],
+                        matrix[y][x],
+                    ] = [
+                        matrix[y][x],
+                        matrix[x][y],
+                    ];
                 }
             }
-
-            if (clearedLines > 0) {
-                player.score += getScoreForLines(clearedLines);
+            if (dir > 0) {
+                matrix.forEach(row => row.reverse());
+            } else {
+                matrix.reverse();
             }
         }
-
-        function getScoreForLines(lines) {
-            return lines === 1 ? 1 : lines === 2 ? 3 : lines === 3 ? 6 : 10;
-        }
-
-        function updateScore() {
-            document.getElementById('score').innerText = player.score;
-            dropInterval = 1000 - Math.min(player.score * 10, 900);
-        }
-
-        function drawMatrix(matrix, offset) {
-            matrix.forEach((row, y) => {
-                row.forEach((value, x) => {
-                    if (value !== 0) {
-                        context.fillStyle = player.color;
-                        context.fillRect(x + offset.x, y + offset.y, 1, 1);
-                        context.strokeStyle = 'rgba(0, 0, 0, 0.2)';
-                        context.strokeRect(x + offset.x, y + offset.y, 1, 1); // Adds a border for depth
-                    }
-                });
-            });
-        }
-
-        let dropCounter = 0;
-        let dropInterval = 1000;
-        let lastTime = 0;
-
-        function update(time = 0) {
-            const deltaTime = time - lastTime;
-            lastTime = time;
-
-            dropCounter += deltaTime;
-            if (dropCounter > dropInterval) {
-                playerDrop();
-            }
-
-            draw();
-            requestAnimationFrame(update);
-        }
-
-        function draw() {
-            context.fillStyle = '#111';
-            context.fillRect(0, 0, canvas.width, canvas.height);
-
-            drawMatrix(arena, {x: 0, y: 0});
-            drawMatrix(player.matrix, player.pos);
-        }
-
-        const arena = createMatrix(10, 20);
-
-        const player = {
-            pos: {x: 0, y: 0},
-            matrix: null,
-            color: null,
-            score: 0,
-        };
 
         function playerDrop() {
             player.pos.y++;
@@ -223,11 +193,116 @@
             }
         }
 
+        function playerReset() {
+            const pieces = 'TJLOSZI';
+            const pieceType = pieces[pieces.length * Math.random() | 0];
+            player.matrix = createPiece(pieceType);
+            player.color = colors[pieceType];
+            player.pos.y = 0;
+            player.pos.x = (arena[0].length / 2 | 0) -
+                           (player.matrix[0].length / 2 | 0);
+            if (collide(arena, player)) {
+                arena.forEach(row => row.fill(0));
+                player.score = 0;
+                updateScore();
+            }
+        }
+        
+
+            function arenaSweep() {
+                let clearedLines = 0;
+                for (let y = arena.length - 1; y >= 0; --y) {
+                    if (arena[y].every(cell => cell !== 0)) { // Check if row is full
+                        // Remove the full row and add an empty row at the top
+                        arena.splice(y, 1);
+                        arena.unshift(new Array(arena[0].length).fill(0));
+                        clearedLines++; // Count the cleared row
+                        y++; // Move the index back to recheck the current y after row removal
+                    }
+                }
+            
+                // Increase score based on the number of lines cleared at once
+                if (clearedLines > 0) {
+                    player.score += getScoreForLines(clearedLines);
+                }
+            }
+
+
+                    function getScoreForLines(lines) {
+                if (lines === 1) return 1;
+                if (lines === 2) return 3;
+                if (lines === 3) return 6;
+                if (lines === 4) return 10;
+                return 0;
+            }
+
+        
+
+
+        function updateScore() {
+            document.getElementById('score').innerText = player.score;
+            dropInterval = 1000 - Math.min(player.score * 10, 900);
+        }
+
+        let dropCounter = 0;
+        let dropInterval = 1000;
+
+        let lastTime = 0;
+        function update(time = 0) {
+            const deltaTime = time - lastTime;
+            lastTime = time;
+
+            dropCounter += deltaTime;
+            if (dropCounter > dropInterval) {
+                playerDrop();
+            }
+
+            draw();
+            requestAnimationFrame(update);
+        }
+
+        function draw() {
+            context.fillStyle = '#111';
+            context.fillRect(0, 0, canvas.width, canvas.height);
+
+            drawMatrix(arena, {x: 0, y: 0});
+            drawMatrix(player.matrix, player.pos);
+        }
+            
+            function drawMatrix(matrix, offset) {
+                matrix.forEach((row, y) => {
+                    row.forEach((value, x) => {
+                        if (value !== 0) {
+                            // Use either the player color or the color stored in the arena
+                           context.fillStyle = value === 1 ? player.color : colors[value];
+                            context.fillRect(x + offset.x, y + offset.y, 1, 1);
+                            context.strokeStyle = 'rgba(0, 0, 0, 0.2)';
+                            context.strokeRect(x + offset.x, y + offset.y, 1, 1);
+                        }
+                    });
+                });
+            }
+
+
+        const arena = createMatrix(10, 20);
+
+        const player = {
+            pos: {x: 0, y: 0},
+            matrix: null,
+            color: null,
+            score: 0,
+        };
+
         document.addEventListener('keydown', event => {
-            if (event.key === 'ArrowLeft') playerMove(-1);
-            else if (event.key === 'ArrowRight') playerMove(1);
-            else if (event.key === 'ArrowDown') playerDrop();
-            else if (event.key === 'ArrowUp') rotate(player.matrix, 1);
+            if (event.key === 'ArrowLeft') {
+                playerMove(-1);
+            } else if (event.key === 'ArrowRight') {
+                playerMove(1);
+            } else if (event.key === 'ArrowDown') {
+                playerDrop();
+            } else if (event.key === 'ArrowUp') {
+                rotate(player.matrix, 1);
+            }
         });
 
         playerReset();
