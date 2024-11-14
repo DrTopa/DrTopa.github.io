@@ -179,19 +179,17 @@
             }
         }
         
+
             function arenaSweep() {
                 let clearedLines = 0;
-                outer: for (let y = arena.length - 1; y >= 0; --y) {
-                    for (let x = 0; x < arena[y].length; ++x) {
-                        if (arena[y][x] === 0) {
-                            continue outer;
-                        }
+                for (let y = arena.length - 1; y >= 0; --y) {
+                    if (arena[y].every(cell => cell !== 0)) { // Check if row is full
+                        // Remove the full row and add an empty row at the top
+                        arena.splice(y, 1);
+                        arena.unshift(new Array(arena[0].length).fill(0));
+                        clearedLines++; // Count the cleared row
+                        y++; // Move the index back to recheck the current y after row removal
                     }
-                    
-                    // Remove the row and add a new empty row at the top
-                    arena.splice(y, 1);
-                    arena.unshift(new Array(arena[0].length).fill(0));
-                    clearedLines++; // Track how many lines are cleared
                 }
             
                 // Increase score based on the number of lines cleared at once
@@ -199,6 +197,7 @@
                     player.score += getScoreForLines(clearedLines);
                 }
             }
+
 
                     function getScoreForLines(lines) {
                 if (lines === 1) return 1;
