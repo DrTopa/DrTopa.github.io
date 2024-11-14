@@ -280,7 +280,8 @@ function drawMatrix(matrix, offset, color = null) {
                 // If color is provided, use it; otherwise, use the color stored in the arena cell
                 context.fillStyle = color || value;
                 context.fillRect(x + offset.x, y + offset.y, 1, 1);
-                context.strokeStyle = 'rgba(0, 0, 0, 0.2)';
+                context.strokeStyle = '#000';  // black border for contrast
+                context.lineWidth = 0.1; // thinner border
                 context.strokeRect(x + offset.x, y + offset.y, 1, 1);
             }
         });
