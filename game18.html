@@ -331,6 +331,7 @@
             playerReset();
             updateScore();
             gameLoopId = requestAnimationFrame(update); 
+            arena.forEach(row => row.fill(0)); // Clear the arena
         });
 
         document.addEventListener('keydown', event => {
