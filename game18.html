@@ -66,7 +66,7 @@
             border-radius: 10px;
         }
 
-        .score-board {
+        .score-board, #highest-score, #total-play-count {
             margin-left: 20px;
             font-size: 1.2em;
             font-size: 1.5em;
@@ -76,7 +76,9 @@
             font-weight: bold;
             font-size: 1.4em;
         }
-        
+        #highest-score, #total-play-count {
+    margin-top: 10px; /* Ensure there’s space between the score and the others */
+}
 
         /* Style for the start button */
         #start-btn {
@@ -426,7 +428,9 @@
         });
 
         document.addEventListener('keydown', event => {
-            
+            if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
+        event.preventDefault();
+    }
             if (event.key === 'ArrowLeft') {
                 playerMove(-1);
             } else if (event.key === 'ArrowRight') {
