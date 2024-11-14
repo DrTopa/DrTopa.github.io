@@ -147,8 +147,8 @@ function merge(arena, player) {
     player.matrix.forEach((row, y) => {
         row.forEach((value, x) => {
             if (value !== 0) {
-                // Store a unique identifier (like 1) instead of color
-                arena[y + player.pos.y][x + player.pos.x] = 1;
+                // Store the color of the player piece in each filled cell of the arena
+                arena[y + player.pos.y][x + player.pos.x] = player.color;
             }
         });
     });
@@ -266,16 +266,19 @@ function draw() {
     context.fillStyle = '#111';
     context.fillRect(0, 0, canvas.width, canvas.height);
 
-    drawMatrix(arena, {x: 0, y: 0});  // Draw the arena
-    drawMatrix(player.matrix, player.pos, player.color);  // Draw the player piece with its color
+    // Draw the arena with colors stored in each cell
+    drawMatrix(arena, { x: 0, y: 0 });
+
+    // Draw the current player piece with its color
+    drawMatrix(player.matrix, player.pos, player.color);
 }
-            
+
 function drawMatrix(matrix, offset, color = null) {
     matrix.forEach((row, y) => {
         row.forEach((value, x) => {
             if (value !== 0) {
-                // If color is provided (player matrix), use it; otherwise, use the arena color
-                context.fillStyle = color ? color : colors['T']; // Update 'T' as needed
+                // If color is provided, use it; otherwise, use the color stored in the arena cell
+                context.fillStyle = color || value;
                 context.fillRect(x + offset.x, y + offset.y, 1, 1);
                 context.strokeStyle = 'rgba(0, 0, 0, 0.2)';
                 context.strokeRect(x + offset.x, y + offset.y, 1, 1);
