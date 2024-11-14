@@ -143,16 +143,17 @@
             return matrix;
         }
 
-        function merge(arena, player) {
-            player.matrix.forEach((row, y) => {
-                row.forEach((value, x) => {
-                    if (value !== 0) {
-                        // Store the color in the arena matrix
-                        arena[y + player.pos.y][x + player.pos.x] = player.color;
-                    }
-                });
-            });
-        }
+function merge(arena, player) {
+    player.matrix.forEach((row, y) => {
+        row.forEach((value, x) => {
+            if (value !== 0) {
+                // Store a unique identifier (like 1) instead of color
+                arena[y + player.pos.y][x + player.pos.x] = 1;
+            }
+        });
+    });
+}
+
 
 
         function rotate(matrix, dir) {
@@ -261,27 +262,28 @@
             requestAnimationFrame(update);
         }
 
-        function draw() {
-            context.fillStyle = '#111';
-            context.fillRect(0, 0, canvas.width, canvas.height);
+function draw() {
+    context.fillStyle = '#111';
+    context.fillRect(0, 0, canvas.width, canvas.height);
 
-            drawMatrix(arena, {x: 0, y: 0});
-            drawMatrix(player.matrix, player.pos);
-        }
+    drawMatrix(arena, {x: 0, y: 0});  // Draw the arena
+    drawMatrix(player.matrix, player.pos, player.color);  // Draw the player piece with its color
+}
             
-            function drawMatrix(matrix, offset) {
-                matrix.forEach((row, y) => {
-                    row.forEach((value, x) => {
-                        if (value !== 0) {
-                            // Use either the player color or the color stored in the arena
-                           context.fillStyle = value === 1 ? player.color : colors[value];
-                            context.fillRect(x + offset.x, y + offset.y, 1, 1);
-                            context.strokeStyle = 'rgba(0, 0, 0, 0.2)';
-                            context.strokeRect(x + offset.x, y + offset.y, 1, 1);
-                        }
-                    });
-                });
+function drawMatrix(matrix, offset, color = null) {
+    matrix.forEach((row, y) => {
+        row.forEach((value, x) => {
+            if (value !== 0) {
+                // If color is provided (player matrix), use it; otherwise, use the arena color
+                context.fillStyle = color ? color : colors['T']; // Update 'T' as needed
+                context.fillRect(x + offset.x, y + offset.y, 1, 1);
+                context.strokeStyle = 'rgba(0, 0, 0, 0.2)';
+                context.strokeRect(x + offset.x, y + offset.y, 1, 1);
             }
+        });
+    });
+}
+
 
 
         const arena = createMatrix(10, 20);
