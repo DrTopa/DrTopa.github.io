@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tetris V2</title>
+    <title>Tetris V3</title>
     <style>
         /* CSS intégré dans le fichier HTML */
         body {
@@ -283,7 +283,7 @@
             }
 
             draw();
-            requestAnimationFrame(update);
+            gameLoopId = requestAnimationFrame(update); // Keep the loop running only if the game isn't over
         }
 
         function draw() {
@@ -320,7 +320,7 @@
         // Game Over handling
         function gameOver() {
             document.getElementById('start-btn').style.display = 'block';
-            cancelAnimationFrame(gameLoopId);// Show the Start button
+            cancelAnimationFrame(gameLoopId); // Stop the game loop
         }
 
         // Start game when the start button is clicked
@@ -330,8 +330,8 @@
             
             playerReset();
             updateScore();
-            gameLoopId = requestAnimationFrame(update); 
             arena.forEach(row => row.fill(0)); // Clear the arena
+            gameLoopId = requestAnimationFrame(update); // Start the game loop
         });
 
         document.addEventListener('keydown', event => {
