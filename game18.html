@@ -324,7 +324,7 @@
                 arena.forEach(row => row.fill(0));
                 updateScore();
                 gameOver();
-                player.score = 0;
+                
                 
             }
         }
@@ -419,12 +419,14 @@
             document.getElementById('start-btn').style.display = 'none';
             
             playerReset();
+            player.score = 0;
             updateScore();
             arena.forEach(row => row.fill(0)); // Clear the arena
             gameLoopId = requestAnimationFrame(update); // Start the game loop
         });
 
         document.addEventListener('keydown', event => {
+            
             if (event.key === 'ArrowLeft') {
                 playerMove(-1);
             } else if (event.key === 'ArrowRight') {
