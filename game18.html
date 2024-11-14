@@ -96,6 +96,7 @@
     </div>
 
     <script>
+        let gameLoopId;
         const canvas = document.getElementById('tetris');
         const context = canvas.getContext('2d');
         const colors = {
@@ -318,7 +319,8 @@
 
         // Game Over handling
         function gameOver() {
-            document.getElementById('start-btn').style.display = 'block';  // Show the Start button
+            document.getElementById('start-btn').style.display = 'block';
+            cancelAnimationFrame(gameLoopId);// Show the Start button
         }
 
         // Start game when the start button is clicked
@@ -328,7 +330,7 @@
             
             playerReset();
             updateScore();
-            update();
+            gameLoopId = requestAnimationFrame(update); 
         });
 
         document.addEventListener('keydown', event => {
