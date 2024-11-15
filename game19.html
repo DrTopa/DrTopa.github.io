@@ -2029,16 +2029,16 @@ async function saveScore(currentScore) {
 		console.log(window.userId);  // Access userId
         	console.log(window.totalPlayCountGame19);  // Access totalPlayCountGame19
        	 	console.log(window.highestScoreGame19);  // Access highestScoreGame19
-                totalPlayCountGame19 += 1;
-		const gameData = { score: currentScore, playCount: playCountGame19, timestamp: new Date() };
-                await addDoc(collection(db, 'users', userId, 'Game19'), gameData);
+                window.totalPlayCountGame19 += 1;
+		const gameData = { score: currentScore, playCount: window.playCountGame19, timestamp: new Date() };
+                await addDoc(collection(db, 'users', window.userId, 'Game19'), gameData);
                 
-                await updateDoc(doc(db, 'users', userId), { totalPlayCountGame19: totalPlayCountGame19 });
+                await updateDoc(doc(db, 'users', window.userId), { totalPlayCountGame19: window.totalPlayCountGame19 });
                 
-                const userRef = doc(db, 'users', userId);
-                if (totalPlayCountGame19 <= 10 && currentScore > highestScoreGame19) {
-                    highestScoreGame19 = currentScore;
-                    await updateDoc(userRef, { highestScoreGame19: highestScoreGame19 });
+                const userRef = doc(db, 'users', window.userId);
+                if (window.totalPlayCountGame19 <= 10 && currentScore > window.highestScoreGame19) {
+                    window.highestScoreGame19 = currentScore;
+                    await updateDoc(userRef, { highestScoreGame19: window.highestScoreGame19 });
                 }
             } catch (error) {
                 console.error("Error saving score:", error);
