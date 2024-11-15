@@ -2655,16 +2655,13 @@ html[subframe] body {
                 const docSnap = await getDoc(userRef);
 
                 if (!docSnap.exists()) {
-                    await setDoc(userRef, { userId: userId, totalPlayCountGame18: 0, highestScoreGame18: 0, UserEmail: user.email });
+                    await setDoc(userRef, { userId: userId, totalPlayCountGame19: 0, highestScoreGame19: 0, UserEmail: user.email });
                 } else {
                     const userData = docSnap.data();
-                    totalPlayCountGame18 = userData.totalPlayCountGame18 || 0;
-                    highestScore = userData.highestScoreGame18 || 0;
-                    playCount = totalPlayCountGame18 + 1;
+                    totalPlayCountGame19 = userData.totalPlayCountGame19 || 0;
+                    highestScoreGame19 = userData.highestScoreGame19 || 0;
                     UserEmail: user.email
-                    
-                    highestScoreDisplay.innerText = `Meilleur score: ${highestScore}`;
-                    totalPlayCountDisplay.innerText = `Jeux joués: ${totalPlayCountGame18}`;
+                   
                     
                     
                 }
