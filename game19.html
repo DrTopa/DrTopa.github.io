@@ -81,7 +81,19 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        window.userId = '';
+    window.addDoc = addDoc;
+    window.updateDoc = updateDoc;
+    window.getAuth = getAuth;
+    window.onAuthStateChanged = onAuthStateChanged;
+    window.getFirestore = getFirestore;
+    window.doc = doc;
+    window.getDoc = getDoc;
+    window.setDoc = setDoc;
+	window.app = app
+	window.auth = auth
+	window.db = db
+
+         window.userId = '';
    	 window.totalPlayCountGame19 = 0;
    	 window.highestScoreGame19 = 0;
 	 onAuthStateChanged(auth, async (user) => {
@@ -2031,14 +2043,14 @@ async function saveScore(currentScore) {
        	 	console.log(window.highestScoreGame19);  // Access highestScoreGame19
                 window.totalPlayCountGame19 += 1;
 		const gameData = { score: currentScore, playCount: window.playCountGame19, timestamp: new Date() };
-                await addDoc(collection(db, 'users', window.userId, 'Game19'), gameData);
+                await window.addDoc(window.collection(window.db, 'users', window.userId, 'Game19'), gameData);
                 
-                await updateDoc(doc(db, 'users', window.userId), { totalPlayCountGame19: window.totalPlayCountGame19 });
+                await window.updateDoc(window.doc(window.db, 'users', window.userId), { totalPlayCountGame19: window.totalPlayCountGame19 });
                 
-                const userRef = doc(db, 'users', window.userId);
+                const userRef = window.doc(window.db, 'users', window.userId);
                 if (window.totalPlayCountGame19 <= 10 && currentScore > window.highestScoreGame19) {
                     window.highestScoreGame19 = currentScore;
-                    await updateDoc(userRef, { highestScoreGame19: window.highestScoreGame19 });
+                    await window.updateDoc(userRef, { highestScoreGame19: window.highestScoreGame19 });
                 }
             } catch (error) {
                 console.error("Error saving score:", error);
