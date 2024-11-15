@@ -16,7 +16,33 @@
 <meta name="twitter:title" content="Check out the cool hidden game from Google Chrome!">
 <meta name="twitter:description" content="Check out the cool hidden game from Google Chrome!">
 <meta name="twitter:image:src" content="http://img.thecodepost.org/2015/01/trex.png">
-<script src="https://apis.google.com/js/platform.js" async defer></script>
+ <script defer type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyC4bjg7lVwd8FU8MREaPhBsBENv5qmiYYM",
+            authDomain: "calendrier-de-l-avent-54e3a.firebaseapp.com",
+            databaseURL: "https://calendrier-de-l-avent-54e3a-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "calendrier-de-l-avent-54e3a",
+            storageBucket: "calendrier-de-l-avent-54e3a.appspot.com",
+            messagingSenderId: "850639567855",
+            appId: "1:850639567855:web:0d799a1ecca005fcff141a",
+            measurementId: "G-PC1W7RYVEH"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let userId = '';
+        let totalPlayCountGame19 = 0;
+        let highestScoreGame19 = 0;
+
+	</script>
+	<script src="https://apis.google.com/js/platform.js" async defer></script>
 
 	<!--script type="text/javascript" src="a.js"></script-->
 	<script type="text/javascript">
@@ -589,6 +615,7 @@
     vibrate(200);
     this.stop();
     this.crashed = true;
+	    saveScore(this.distanceRan);
     this.distanceMeter.acheivement = false;
     this.tRex.update(100, Trex.status.CRASHED);
     // Game over panel.
@@ -2032,6 +2059,14 @@ button:hover {
             max-height: 400px; /* Set a maximum height */
 
         }
+		#userStatus {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.2em;
+            color: #a23636;
+        }
+
 
 h1 {
 font-size: 2.5em;
@@ -2513,6 +2548,14 @@ html[subframe] body {
             max-height: 400px; /* Set a maximum height */
 
         }
+	  #userStatus {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.2em;
+            color: #a23636;
+        }
+
 
 /* Offline page */
 .offline .interstitial-wrapper {
@@ -2602,6 +2645,50 @@ html[subframe] body {
      js.src = "//connect.facebook.net/en_US/sdk.js";
      fjs.parentNode.insertBefore(js, fjs);
    }(document, 'script', 'facebook-jssdk'));
+
+	onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                userId = user.uid;
+                document.getElementById('userStatus').innerText = `Bienvenue : ${user.email}`;
+
+                const userRef = doc(db, 'users', userId);
+                const docSnap = await getDoc(userRef);
+
+                if (!docSnap.exists()) {
+                    await setDoc(userRef, { userId: userId, totalPlayCountGame18: 0, highestScoreGame18: 0, UserEmail: user.email });
+                } else {
+                    const userData = docSnap.data();
+                    totalPlayCountGame18 = userData.totalPlayCountGame18 || 0;
+                    highestScore = userData.highestScoreGame18 || 0;
+                    playCount = totalPlayCountGame18 + 1;
+                    UserEmail: user.email
+                    
+                    highestScoreDisplay.innerText = `Meilleur score: ${highestScore}`;
+                    totalPlayCountDisplay.innerText = `Jeux joués: ${totalPlayCountGame18}`;
+                    
+                    
+                }
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+	       async function saveScore(currentScore) {
+            try {
+                totalPlayCountGame19 += 1;
+		const gameData = { score: currentScore, playCount: playCountGame19, timestamp: new Date() };
+                await addDoc(collection(db, 'users', userId, 'Game19'), gameData);
+                
+                await updateDoc(doc(db, 'users', userId), { totalPlayCountGame19: totalPlayCountGame19 });
+                
+                const userRef = doc(db, 'users', userId);
+                if (totalPlayCountGame19 <= 10 && currentScore > highestScoreGame19) {
+                    highestScoreGame19 = currentScore;
+                    await updateDoc(userRef, { highestScoreGame19: highestScoreGame19 });
+                }
+            } catch (error) {
+                console.error("Error saving score:", error);
+            }
+        }
 </script>
 <h1>🟥 Cela m'avait pris 3 mois pour le faire à l'INSA 🟩</h1>
 <div id="instructions">
@@ -2613,6 +2700,7 @@ html[subframe] body {
  <p>Explication du jeu : Il s'agit du Tetris classique. Le premier jeu développé par votre programmeur préféré à l'INSA. La vitesse augmente à mesure que vous marquez des points, et réaliser des combos (en complétant plusieurs lignes en même temps) rapporte plus de points. (1 point pour une ligne, 3 points pour deux, 6 points pour trois, et 10 points si quatre lignes sont complètes simultanément). Impossible sur Smartphone</p>
 </p>
 	 </div>
+<div id="userStatus"></div>
 <div id="main-frame-error" class="interstitial-wrapper" jstcache="0">
     <div class="onlyforchrome" style="margin-top:5px;text-align:center;color:#8a8a8a;margin-bottom:80px; font-size:.8em;line-height:1.2em;font-family: Georgia;"><a href="http://www.thecodepost.org/internet/play-hidden-t-rex-game-offline-chrome/" target="_blank"><strong>T-Rex Dino game</strong></a> from Google Chrome offline mode ripped by <a href="https://www.twitter.com/thecodepost" target="_blank"><strong>@thecodepost</strong></a>.<br/> Press "Space" to jump your Dino and start the game.</div>
 	<div id="main-frame-notchrome" style="display:none; margin-top:50px;">Sorry, this game only runs on the Google Chrome! You can download it free <a href="https://www.google.com/chrome">here</a></div>
