@@ -40,6 +40,29 @@
         let userId = '';
         let totalPlayCountGame19 = 0;
         let highestScoreGame19 = 0;
+	 onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                userId = user.uid;
+                document.getElementById('userStatus').innerText = `Bienvenue : ${user.email}`;
+
+                const userRef = doc(db, 'users', userId);
+                const docSnap = await getDoc(userRef);
+
+                if (!docSnap.exists()) {
+                    await setDoc(userRef, { userId: userId, totalPlayCountGame19: 0, highestScoreGame19: 0, UserEmail: user.email });
+                } else {
+                    const userData = docSnap.data();
+                    totalPlayCountGame19 = userData.totalPlayCountGame19 || 0;
+                    highestScoreGame19 = userData.highestScoreGame19 || 0;
+                    UserEmail: user.email
+                   
+                    
+                    
+                }
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
 
 	</script>
 	<script src="https://apis.google.com/js/platform.js" async defer></script>
@@ -2646,29 +2669,6 @@ html[subframe] body {
      fjs.parentNode.insertBefore(js, fjs);
    }(document, 'script', 'facebook-jssdk'));
 
-	onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                userId = user.uid;
-                document.getElementById('userStatus').innerText = `Bienvenue : ${user.email}`;
-
-                const userRef = doc(db, 'users', userId);
-                const docSnap = await getDoc(userRef);
-
-                if (!docSnap.exists()) {
-                    await setDoc(userRef, { userId: userId, totalPlayCountGame19: 0, highestScoreGame19: 0, UserEmail: user.email });
-                } else {
-                    const userData = docSnap.data();
-                    totalPlayCountGame19 = userData.totalPlayCountGame19 || 0;
-                    highestScoreGame19 = userData.highestScoreGame19 || 0;
-                    UserEmail: user.email
-                   
-                    
-                    
-                }
-            } else {
-                window.location.href = 'login.html';
-            }
-        });
 	       async function saveScore(currentScore) {
             try {
                 totalPlayCountGame19 += 1;
