@@ -371,18 +371,20 @@
         let dropInterval = 500;
         let lastTime = 0;
 
-        function update(time = 0) {
-            const deltaTime = time - lastTime;
-            lastTime = time;
+            function update(time = 0) {
+    if (!gameLoopId) return; // Stop the update if gameLoopId is null
+    const deltaTime = time - lastTime;
+    lastTime = time;
 
-            dropCounter += deltaTime;
-            if (dropCounter > dropInterval) {
-                playerDrop();
-            }
+    dropCounter += deltaTime;
+    if (dropCounter > dropInterval) {
+        playerDrop();
+    }
 
-            draw();
-            gameLoopId = requestAnimationFrame(update); // Keep the loop running only if the game isn't over
-        }
+    draw();
+    gameLoopId = requestAnimationFrame(update);
+}
+
 
         function draw() {
             context.fillStyle = '#111';
@@ -420,6 +422,7 @@
             document.getElementById('start-btn').style.display = 'block';
             saveScore();
             cancelAnimationFrame(gameLoopId); // Stop the game loop
+            gameLoopId = null;
         }
 
         // Start game when the start button is clicked
