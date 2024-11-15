@@ -324,7 +324,6 @@
         }
 
         function playerReset() {
-            if (!gameLoopId) return;
             const pieces = 'TJLOSZI';
             const pieceType = pieces[pieces.length * Math.random() | 0];
             player.matrix = createPiece(pieceType);
