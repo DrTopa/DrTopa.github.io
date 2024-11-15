@@ -421,8 +421,9 @@
         function gameOver() {
             document.getElementById('start-btn').style.display = 'block';
             saveScore();
-            cancelAnimationFrame(gameLoopId); // Stop the game loop
             gameLoopId = null;
+            cancelAnimationFrame(gameLoopId); // Stop the game loop
+            
         }
 
         // Start game when the start button is clicked
