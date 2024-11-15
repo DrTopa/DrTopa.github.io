@@ -587,7 +587,6 @@
     gameOver: function() {
     this.playSound(this.soundFx.HIT);
     vibrate(200);
-    saveScore()
     this.stop();
     this.crashed = true;
     this.distanceMeter.acheivement = false;
@@ -2033,22 +2032,6 @@ button:hover {
             max-height: 400px; /* Set a maximum height */
 
         }
-		        /* User status */
-        #userStatus {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 1.2em;
-            color: #a23636;
-        }
-		
-		#high-score, #total-play-count {
-	margin-left: 20px;
-            font-size: 1.2em;
-            font-size: 1.5em;
-            color: #ffcb05;
-   	 margin-top: 10px; /* Ensure there’s space between the score and the others */
-}
 
 h1 {
 font-size: 2.5em;
@@ -2531,15 +2514,6 @@ html[subframe] body {
 
         }
 
-	          /* User status */
-        #userStatus {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 1.2em;
-            color: #a23636;
-        }
-
 /* Offline page */
 .offline .interstitial-wrapper {
   color: #2b2b2b;
@@ -2639,11 +2613,6 @@ html[subframe] body {
  <p>Explication du jeu : Il s'agit du Tetris classique. Le premier jeu développé par votre programmeur préféré à l'INSA. La vitesse augmente à mesure que vous marquez des points, et réaliser des combos (en complétant plusieurs lignes en même temps) rapporte plus de points. (1 point pour une ligne, 3 points pour deux, 6 points pour trois, et 10 points si quatre lignes sont complètes simultanément). Impossible sur Smartphone</p>
 </p>
 	 </div>
-    <div id="userStatus"></div>
-    <div id="highest-score">Meilleur score: 0</div>
-    <div id="total-play-count">Jeux joués: 0</div>
-
-
 <div id="main-frame-error" class="interstitial-wrapper" jstcache="0">
     <div class="onlyforchrome" style="margin-top:5px;text-align:center;color:#8a8a8a;margin-bottom:80px; font-size:.8em;line-height:1.2em;font-family: Georgia;"><a href="http://www.thecodepost.org/internet/play-hidden-t-rex-game-offline-chrome/" target="_blank"><strong>T-Rex Dino game</strong></a> from Google Chrome offline mode ripped by <a href="https://www.twitter.com/thecodepost" target="_blank"><strong>@thecodepost</strong></a>.<br/> Press "Space" to jump your Dino and start the game.</div>
 	<div id="main-frame-notchrome" style="display:none; margin-top:50px;">Sorry, this game only runs on the Google Chrome! You can download it free <a href="https://www.google.com/chrome">here</a></div>
@@ -2696,79 +2665,7 @@ html[subframe] body {
 	  </tr></table>
     </div>
   </div>
-<script defer type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyC4bjg7lVwd8FU8MREaPhBsBENv5qmiYYM",
-            authDomain: "calendrier-de-l-avent-54e3a.firebaseapp.com",
-            databaseURL: "https://calendrier-de-l-avent-54e3a-default-rtdb.europe-west1.firebasedatabase.app",
-            projectId: "calendrier-de-l-avent-54e3a",
-            storageBucket: "calendrier-de-l-avent-54e3a.appspot.com",
-            messagingSenderId: "850639567855",
-            appId: "1:850639567855:web:0d799a1ecca005fcff141a",
-            measurementId: "G-PC1W7RYVEH"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
-        let userId = '';
-        let totalPlayCountGame19 = 0;
-        let highScore = 0;
-
-        const highScoreDisplay = document.getElementById('high-score');
-        const totalPlayCountDisplay = document.getElementById('total-play-count');
-
-       onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                userId = user.uid;
-                document.getElementById('userStatus').innerText = `Bienvenue : ${user.email}`;
-
-                const userRef = doc(db, 'users', userId);
-                const docSnap = await getDoc(userRef);
-
-                if (!docSnap.exists()) {
-                    await setDoc(userRef, { userId: userId, totalPlayCountGame19: 0, highestScoreGame19: 0, UserEmail: user.email });
-                } else {
-                    const userData = docSnap.data();
-                    totalPlayCountGame19 = userData.totalPlayCountGame19 || 0;
-                    highScore = userData.highestScoreGame19 || 0;
-                    UserEmail: user.email
-                    
-                    highScoreDisplay.innerText = `Meilleur score: ${highScore}`;
-                    totalPlayCountDisplay.innerText = `Jeux joués: ${totalPlayCountGame19}`;
-                    
-                    
-                }
-            } else {
-                window.location.href = 'login.html';
-            }
-        });
-	async function saveScore() {
-            try {
-                const gameData = { score: player.score, playCount: playCount, timestamp: new Date() };
-                await addDoc(collection(db, 'users', userId, 'Game19'), gameData);
-                totalPlayCountGame19 += 1;
-                await updateDoc(doc(db, 'users', userId), { totalPlayCountGame19: totalPlayCountGame19 });
-                totalPlayCountDisplay.innerText = `Jeux joués: ${totalPlayCountGame19}`;  // Update display for total play count
-                console.log("Saving score:", this.score);
-                
-                const userRef = doc(db, 'users', userId);
-                if (totalPlayCountGame19 <= 10 && this.score > highScore) {
-                    highestScore = this.score;
-                    await updateDoc(userRef, { highestScoreGame19: highScore });
-                    highestScoreDisplay.innerText = `Meilleur score: ${highScore}`; // Update display for highest score
-                }
-            } catch (error) {
-                console.error("Error saving score:", error);
-            }
-        }
-	 </script>
     <script type="text/javascript">
     if (navigator.userAgent.toLowerCase().indexOf('chrome') <= -1) {
 	  hideClass(".onlyforchrome");
