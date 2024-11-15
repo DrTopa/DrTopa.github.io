@@ -60,7 +60,7 @@
  
 	<script src="https://apis.google.com/js/platform.js" async defer></script>
 
-	<script defer type="module">
+	<script defer >
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
         import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
@@ -107,8 +107,7 @@
                 window.location.href = 'login.html';
             }
         });
-		</script>
-<script type="text/javascript">
+
 
 	function hideClass(name) {
        var myClasses = document.querySelectorAll(name),
