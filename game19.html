@@ -16,7 +16,10 @@
 <meta name="twitter:title" content="Check out the cool hidden game from Google Chrome!">
 <meta name="twitter:description" content="Check out the cool hidden game from Google Chrome!">
 <meta name="twitter:image:src" content="http://img.thecodepost.org/2015/01/trex.png">
- <script defer type="module">
+ 
+	<script src="https://apis.google.com/js/platform.js" async defer></script>
+	<!--script type="text/javascript" src="a.js"></script-->
+	<script defer type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
         import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
@@ -64,11 +67,7 @@
             }
         });
 
-	</script>
-	<script src="https://apis.google.com/js/platform.js" async defer></script>
 
-	<!--script type="text/javascript" src="a.js"></script-->
-	<script type="text/javascript">
 	function hideClass(name) {
        var myClasses = document.querySelectorAll(name),
       i = 0,
@@ -1983,7 +1982,23 @@
     };
     })();
 
-
+async function saveScore(currentScore) {
+            try {
+                totalPlayCountGame19 += 1;
+		const gameData = { score: currentScore, playCount: playCountGame19, timestamp: new Date() };
+                await addDoc(collection(db, 'users', userId, 'Game19'), gameData);
+                
+                await updateDoc(doc(db, 'users', userId), { totalPlayCountGame19: totalPlayCountGame19 });
+                
+                const userRef = doc(db, 'users', userId);
+                if (totalPlayCountGame19 <= 10 && currentScore > highestScoreGame19) {
+                    highestScoreGame19 = currentScore;
+                    await updateDoc(userRef, { highestScoreGame19: highestScoreGame19 });
+                }
+            } catch (error) {
+                console.error("Error saving score:", error);
+            }
+        }
 	</script>
 
 
@@ -2669,23 +2684,7 @@ html[subframe] body {
      fjs.parentNode.insertBefore(js, fjs);
    }(document, 'script', 'facebook-jssdk'));
 
-	       async function saveScore(currentScore) {
-            try {
-                totalPlayCountGame19 += 1;
-		const gameData = { score: currentScore, playCount: playCountGame19, timestamp: new Date() };
-                await addDoc(collection(db, 'users', userId, 'Game19'), gameData);
-                
-                await updateDoc(doc(db, 'users', userId), { totalPlayCountGame19: totalPlayCountGame19 });
-                
-                const userRef = doc(db, 'users', userId);
-                if (totalPlayCountGame19 <= 10 && currentScore > highestScoreGame19) {
-                    highestScoreGame19 = currentScore;
-                    await updateDoc(userRef, { highestScoreGame19: highestScoreGame19 });
-                }
-            } catch (error) {
-                console.error("Error saving score:", error);
-            }
-        }
+
 </script>
 <h1>🟥 Cela m'avait pris 3 mois pour le faire à l'INSA 🟩</h1>
 <div id="instructions">
