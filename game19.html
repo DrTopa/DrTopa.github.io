@@ -2026,6 +2026,9 @@
 
 async function saveScore(currentScore) {
             try {
+		console.log(window.userId);  // Access userId
+        	console.log(window.totalPlayCountGame19);  // Access totalPlayCountGame19
+       	 	console.log(window.highestScoreGame19);  // Access highestScoreGame19
                 totalPlayCountGame19 += 1;
 		const gameData = { score: currentScore, playCount: playCountGame19, timestamp: new Date() };
                 await addDoc(collection(db, 'users', userId, 'Game19'), gameData);
