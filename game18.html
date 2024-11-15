@@ -324,6 +324,7 @@
         }
 
         function playerReset() {
+            if (!gameLoopId) return;
             const pieces = 'TJLOSZI';
             const pieceType = pieces[pieces.length * Math.random() | 0];
             player.matrix = createPiece(pieceType);
@@ -331,6 +332,9 @@
             player.pos.y = 0;
             player.pos.x = (arena[0].length / 2 | 0) - (player.matrix[0].length / 2 | 0);
             if (collide(arena, player)) {
+                cancelAnimationFrame(gameLoopId); // Stop the game loop
+                gameLoopId =null;
+                arena.forEach(row => row.fill(0));
                 updateScore();
                 gameOver();
                 
@@ -421,8 +425,7 @@
         function gameOver() {
             document.getElementById('start-btn').style.display = 'block';
             saveScore();
-            gameLoopId = null;
-            cancelAnimationFrame(gameLoopId); // Stop the game loop
+           
             
         }
 
