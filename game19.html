@@ -130,7 +130,7 @@
         	console.log(window.totalPlayCountGame19);  // Access totalPlayCountGame19
        	 	console.log(window.highestScoreGame19);  // Access highestScoreGame19
                 window.totalPlayCountGame19 += 1;
-		const gameData = { score: currentScore, playCount: window.playCountGame19, timestamp: new Date() };
+		const gameData = { score: currentScore, playCount: window.totalPlayCountGame19, timestamp: new Date() };
                 await window.addDoc(window.collection(window.db, 'users', window.userId, 'Game19'), gameData);
                 
                 await window.updateDoc(window.doc(window.db, 'users', window.userId), { totalPlayCountGame19: window.totalPlayCountGame19 });
