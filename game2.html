@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comparatif 2010 vs 2024 - Game 2 </title>
+    <title>Comparatif 2010 vs 2024 </title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, sans-serif;
@@ -96,14 +96,121 @@
             margin: 10px;
             width: 50px;
         }
-      
+      <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bebe Romain Snooze </title>
+    <style>
+        /* General body styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            background-color: #ffebcd;
+            background-image: url('https://www.transparenttextures.com/patterns/snow.png');
+            margin: 0;
+            overflow-y: auto;
+        }
+
+        /* Christmas themed title */
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #d32f2f;
+            font-family: 'Comic Sans MS', cursive;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        /* User status */
+        #userStatus {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.2em;
+            color: #a23636;
+        }
+
+        /* Instructions section */
+        #instructions {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            text-align: center;
+            max-width: 1000px;
+            font-size: 1.2em;
+            color: #333;
+            overflow-y: auto;  /* Added for scrolling if needed */
+            max-height: 300px; /* Set a maximum height */
+        }
+
+        /* Centered game area */
+        #gameArea {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 2px solid #b71c1c;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Button styles */
+        #start-btn, #click-btn {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 1.5em;
+            cursor: pointer;
+            background-color: #388e3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        #click-btn:disabled {
+            background-color: #757575;
+            cursor: not-allowed;
+        }
+
+        #start-btn:hover, #click-btn:hover:not([disabled]) {
+            background-color: #2e7d32;
+        }
+
+        /* Timer and score styling */
+        #timer, #score {
+            font-size: 1.8em;
+            margin: 15px;
+            color: #1565c0;
+        }
+
+       .decoration {
+    position: relative; /* Change to relative */
+    display: flex; /* Use flexbox for centering */
+    justify-content: center; /* Horizontally center */
+    align-items: center; /* Vertically center */
+    height: 100vh; /* Full viewport height to center */
+    padding: 20px 0;
+}
+
+#santa {
+    height: 400px;
+    width: auto;
+}
       
 
     </style>
 </head>
 <body>
 
-    <h1>🎅 Comparatif 2010 vs 2024 - Game 2 🎅</h1>
+    <h1>🎅 Comparatif 2010 vs 2024 🎅</h1>
     <div id="userStatus"></div>
     
  <!-- Game instructions -->
@@ -121,7 +228,7 @@
         <p>Les 10 premières questions sont issues de diverses interros en 2024 et les 10 dernières d’interro en 2010. Il est possible de refaire le quizz mais seul le premier score est pris en compte. Possible sur Smartphone.
 </p>
     </div>
-    
+     <img id="santa" class="decoration" src="https://i.imgur.com/qnRTMCs.png" alt="Santa Claus">
     <div id="gameArea">
         <button id="start-btn">🎅Start Game🎅</button>
         <div id="timer"></div>
