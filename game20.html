@@ -108,7 +108,7 @@
     
     <!-- Start Button (Initially visible) -->
     <div id="startScreen">
-        <button id="startButton" onclick="startGame()">Start Game</button>
+        <button id="startButton" >Start Game</button>
     </div>
    
     
@@ -304,6 +304,14 @@
                 console.error("Error saving score:", error);
             }
         }
+
+       document.addEventListener("DOMContentLoaded", function() {
+        // Get the start button by ID and add a click event listener
+        const startButton = document.getElementById("startButton");
+        if (startButton) {
+            startButton.addEventListener("click", startGame); // Attach the startGame function
+        }
+           });
     </script>
 </body>
 </html>
