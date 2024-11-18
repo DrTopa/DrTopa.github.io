@@ -157,26 +157,36 @@
         }
 
 function animateBall(distance) {
-            const ball = document.getElementById("ball");
-            const canvas = document.getElementById("gameCanvas");
-            const holePosition = (holes[currentRound] / 1000) * canvas.offsetWidth; // Scale distance to canvas width
-            const stepSize = 5; // Speed of animation (higher value = faster)
+    const ball = document.getElementById("ball");
+    const canvas = document.getElementById("gameCanvas");
 
-            // Position the flag at the hole
-            const flag = document.getElementById("flag");
-            flag.style.left = holePosition + "px";
-            flag.style.display = "block"; // Show the flag
+    // Calculate hole position scaled to canvas width
+    const holePosition = (holes[currentRound] / 1000) * canvas.offsetWidth;
 
-            let currentLeft = parseFloat(ball.style.left) || 0;
-            let moveInterval = setInterval(() => {
-                if (currentLeft < holePosition + 20) {  // Allow the ball to move past the flag
-                    currentLeft += stepSize; // Move the ball
-                    ball.style.left = currentLeft + "px";
-                } else {
-                    clearInterval(moveInterval); // Stop animation when the ball passes the hole
-                }
-            }, 20);
+    // Log the hole position to the console for debugging
+    console.log(`Hole Position for Round ${currentRound + 1}: ${holePosition}px`);
+
+    const stepSize = 5; // Speed of animation (higher value = faster)
+
+    // Position the flag at the hole
+    const flag = document.getElementById("flag");
+    flag.style.left = holePosition + "px";
+    flag.style.display = "block"; // Show the flag
+
+    // Ensure ball starts at the beginning of the canvas (reset position)
+    let currentLeft = 0;
+    ball.style.left = currentLeft + "px";
+
+    // Animate ball movement
+    let moveInterval = setInterval(() => {
+        if (currentLeft < holePosition + 20) {  // Allow the ball to move past the hole
+            currentLeft += stepSize; // Move the ball
+            ball.style.left = currentLeft + "px";
+        } else {
+            clearInterval(moveInterval); // Stop animation when the ball passes the hole
         }
+    }, 20);
+}
 
         function nextHole() {
             if (currentRound >= holes.length - 1) {
