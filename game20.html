@@ -210,4 +210,17 @@
             currentPosition = 0; // Reset position for the new hole
             shootCounter = 0; // Reset shoot counter for the current round
             wind = Math.random() * 20 - 10; // Generate new wind
-            updateRoundDetails
+            updateRoundDetails(); // Update the details for the next round
+
+            // Reset the canvas and ball
+            placeBall();
+            placeFlag();
+        }
+
+        // Initialize the game
+        drawCourseLine();
+        placeFlag();
+        placeBall();
+    </script>
+</body>
+</html>
