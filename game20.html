@@ -57,17 +57,19 @@
         <div>
             <button onclick="playRound()">Shoot!</button>
         </div>
+        <p id="windMessage"></p>
         <p id="message"></p>
     </div>
     <script>
         const holes = [200, 300, 400, 500, 1000]; // Distances of the holes
         let currentRound = 0;
+        let wind = Math.random() * 20 - 10; // Random wind factor between -10 and 10
+        let currentPosition = 0; // Tracks the ball's current position
 
         function playRound() {
             const speed = parseFloat(document.getElementById("speed").value);
             const angle = parseFloat(document.getElementById("angle").value);
             const clubMultiplier = parseInt(document.getElementById("club").value);
-            const wind = Math.random() * 20 - 10; // Random wind factor between -10 and 10
 
             if (isNaN(speed) || isNaN(angle) || speed < 1 || speed > 10 || angle < 1 || angle > 90) {
                 document.getElementById("message").innerText = "Please enter valid speed and angle values!";
@@ -79,21 +81,36 @@
             const radianAngle = (Math.PI / 180) * angle;
             const distance = Math.round((initialVelocity ** 2 * Math.sin(2 * radianAngle)) / 9.8);
 
+            // Update current position
+            currentPosition += distance;
+
             // Get the current hole distance
             const holeDistance = holes[currentRound];
-            const distanceToHole = Math.abs(holeDistance - distance);
+            const distanceToHole = Math.abs(holeDistance - currentPosition);
 
-            // Update the round or end the game
+            // Update the round or continue
             if (distanceToHole < 5) {
                 document.getElementById("message").innerText = `Hole ${currentRound + 1}: You hit the ball ${distance} meters. 🎉 Hole in one!`;
                 currentRound++;
+                if (currentRound < holes.length) {
+                    // Prepare for the next hole
+                    currentPosition = 0;
+                    wind = Math.random() * 20 - 10; // New wind for the next round
+                    document.getElementById("windMessage").innerText = `New Wind: ${wind.toFixed(1)} m/s`;
+                }
             } else {
-                document.getElementById("message").innerText = `Hole ${currentRound + 1}: You hit the ball ${distance} meters. You're ${distanceToHole} meters from the hole. Wind: ${wind.toFixed(1)} m/s`;
+                document.getElementById("message").innerText = `Hole ${currentRound + 1}: You hit the ball ${distance} meters. You're ${distanceToHole} meters from the hole.`;
             }
 
+            // Display wind
+            document.getElementById("windMessage").innerText = `Current Wind: ${wind.toFixed(1)} m/s`;
+
+            // End the game
             if (currentRound >= holes.length) {
                 document.getElementById("message").innerText += "\nGame Over! Thanks for playing!";
                 currentRound = 0; // Reset game
+                currentPosition = 0;
+                wind = Math.random() * 20 - 10; // Reset wind
             }
         }
     </script>
