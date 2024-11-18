@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Golf Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: pink;
+            color: white;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        .game-area {
+            padding: 20px;
+        }
+        .input-group {
+            margin: 10px;
+        }
+        button {
+            background-color: white;
+            color: pink;
+            padding: 10px 20px;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: lightgray;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-area">
+        <h1>Golf Game</h1>
+        <p>Try to get the ball into the hole!</p>
+        <div class="input-group">
+            <label for="speed">Initial Speed (1-10): </label>
+            <input type="number" id="speed" min="1" max="10" />
+        </div>
+        <div class="input-group">
+            <label for="angle">Angle (degrees): </label>
+            <input type="number" id="angle" min="1" max="90" />
+        </div>
+        <div class="input-group">
+            <label for="club">Choose Golf Club: </label>
+            <select id="club">
+                <option value="1">Putter</option>
+                <option value="2">Wedge</option>
+                <option value="3">Iron 1</option>
+                <option value="4">Iron 2</option>
+                <option value="5">Driver</option>
+            </select>
+        </div>
+        <div>
+            <button onclick="playRound()">Shoot!</button>
+        </div>
+        <p id="message"></p>
+    </div>
+    <script>
+        const holes = [200, 300, 400, 500, 1000]; // Distances of the holes
+        let currentRound = 0;
+
+        function playRound() {
+            const speed = parseFloat(document.getElementById("speed").value);
+            const angle = parseFloat(document.getElementById("angle").value);
+            const clubMultiplier = parseInt(document.getElementById("club").value);
+            const wind = Math.random() * 20 - 10; // Random wind factor between -10 and 10
+
+            if (isNaN(speed) || isNaN(angle) || speed < 1 || speed > 10 || angle < 1 || angle > 90) {
+                document.getElementById("message").innerText = "Please enter valid speed and angle values!";
+                return;
+            }
+
+            // Calculate ball position
+            const initialVelocity = speed * clubMultiplier + wind;
+            const radianAngle = (Math.PI / 180) * angle;
+            const distance = Math.round((initialVelocity ** 2 * Math.sin(2 * radianAngle)) / 9.8);
+
+            // Get the current hole distance
+            const holeDistance = holes[currentRound];
+            const distanceToHole = Math.abs(holeDistance - distance);
+
+            // Update the round or end the game
+            if (distanceToHole < 5) {
+                document.getElementById("message").innerText = `Hole ${currentRound + 1}: You hit the ball ${distance} meters. 🎉 Hole in one!`;
+                currentRound++;
+            } else {
+                document.getElementById("message").innerText = `Hole ${currentRound + 1}: You hit the ball ${distance} meters. You're ${distanceToHole} meters from the hole. Wind: ${wind.toFixed(1)} m/s`;
+            }
+
+            if (currentRound >= holes.length) {
+                document.getElementById("message").innerText += "\nGame Over! Thanks for playing!";
+                currentRound = 0; // Reset game
+            }
+        }
+    </script>
+</body>
+</html>
