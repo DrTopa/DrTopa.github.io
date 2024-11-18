@@ -93,7 +93,7 @@
 </head>
 <body>
     <h1>⛳️Comme dans une caverne⛳️</h1>
-    div id="instructions">
+    <div id="instructions">
         <p>La ceinture magique entra dans la salle où tout le monde l’attendait. « Allez, plus que deux époques à visiter ! 2004 et 2001 ! En route pour 2004 ! » annonça-t-elle avec énergie. RaseToiLaMoustache, débordant de curiosité, se mit aussitôt à courir partout, parcourant chaque coin de la pièce, impatient de voir ce que cette nouvelle époque réservait. Dans son élan, son sabot trébucha sur un tapis et, sa tête heurta une des chaises en bois de l’église. Il retomba lourdement, la tête en sang.</p>
  <p>La ceinture magique, saisie d’effroi, l’emmena sans attendre à l’hôpital. Les infirmières examinèrent rapidement la plaie et, bien que l’anesthésiste soit en grève, l’une d’elles proposa une petite dose de sédatif pour aider à calmer la douleur pendant les points de suture. Sous l’effet de l’héroïne, RaseToiLaMoustache sombra dans un état étrange, entre rêves et hallucinations, entre lapins magiques et éléphants roses.</p>
  <p>Pendant que Dudley, Grinchemie et Topapa attendaient dans le couloir, Bébé Romain resta au chevet de RaseToiLaMoustache, observant avec une affection silencieuse son camarade en proie à des délires absurdes. RaseToiLaMoustache, les yeux mi-clos, murmura : « Beurk, cet éléphant... il ne porte même pas de slip ! ».</p>
@@ -271,7 +271,6 @@
         function nextHole() {
             if (currentRound >= holes.length - 1) {
                 document.getElementById("message").innerText = "Game Over!";
-                highestScore=totalShots;
                 saveScore();
                 document.getElementById("nextButton").style.display = "none"; // Hide "Next Hole" button
                 return;
@@ -289,14 +288,15 @@
 
               async function saveScore() {
             try {
+                highestScore = 100-(3*totalShots);
                 const gameData = { score: highestScore, playCount: totalPlayCountGame20, timestamp: new Date() };
                 await addDoc(collection(db, 'users', userId, 'Game20'), gameData);
                 await updateDoc(doc(db, 'users', userId), { totalPlayCountGame20: totalPlayCountGame20 });
                 console.log("Saving score:", highestScore);
                 
                 const userRef = doc(db, 'users', userId);
+                
                 if (totalPlayCountGame20 <= 2 && highestScore > highestScoreGame20) {
-                    highestScore = player.score;
                     await updateDoc(userRef, { highestScoreGame20: highestScore });
                     highestScoreDisplay.innerText = `Meilleur score: ${highestScore}`; // Update display for highest score
                 }
