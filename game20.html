@@ -44,6 +44,17 @@
             background-color: white;
             border-radius: 50%;
         }
+        #flag {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 20px;
+            height: 40px;
+            background-color: yellow;
+            border: 2px solid black;
+            border-radius: 2px;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -79,6 +90,7 @@
 
         <div id="gameCanvas" style="width: 600px; height: 100px;">
             <div id="ball"></div>
+            <div id="flag"></div>
         </div>
     </div>
 
@@ -149,6 +161,11 @@
             const canvas = document.getElementById("gameCanvas");
             const holePosition = (holes[currentRound] / 1000) * canvas.offsetWidth; // Scale distance to canvas width
             const stepSize = 5; // Speed of animation (higher value = faster)
+
+            // Position the flag at the hole
+            const flag = document.getElementById("flag");
+            flag.style.left = holePosition + "px";
+            flag.style.display = "block"; // Show the flag
 
             let currentLeft = parseFloat(ball.style.left) || 0;
             let moveInterval = setInterval(() => {
