@@ -134,8 +134,8 @@
             </select>
         </div>
         <div>
-            <button onclick="playRound()">Tire!</button>
-            <button onclick="nextHole()" id="nextButton" style="display: none;">Prochain trou</button>
+            <button id="playButton">Tire!</button>
+            <button id="nextButton" style="display: none;">Prochain trou</button>
         </div>
         <p id="shootCount"></p>
         <p id="totalShootCount"></p>
@@ -310,6 +310,16 @@
         const startButton = document.getElementById("startButton");
         if (startButton) {
             startButton.addEventListener("click", startGame); // Attach the startGame function
+        }
+         const playButton = document.getElementById("playButton");
+        if (playButton) {
+            playButton.addEventListener("click", playRound); // Attach the playRound function
+        }
+
+        // Get the "Prochain trou" button and add a click event listener
+        const nextButton = document.getElementById("nextButton");
+        if (nextButton) {
+            nextButton.addEventListener("click", nextHole); // Attach the nextHole function
         }
            });
     </script>
