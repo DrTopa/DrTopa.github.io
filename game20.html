@@ -34,6 +34,8 @@
             margin-top: 20px;
             border: 2px solid white;
             position: relative;
+            width: 100%;
+            height: 100px;
         }
         #ball {
             position: absolute;
@@ -47,12 +49,9 @@
         #flag {
             position: absolute;
             top: 0;
-            left: 0;
-            width: 20px;
-            height: 40px;
-            background-color: yellow;
-            border: 2px solid black;
-            border-radius: 2px;
+            width: 5px;
+            height: 30px;
+            background-color: black;
             display: none;
         }
     </style>
@@ -88,19 +87,22 @@
         <p id="totalShootCount"></p>
         <p id="message"></p>
 
-        <div id="gameCanvas" style="width: 600px; height: 100px;">
+        <div id="gameCanvas">
             <div id="ball"></div>
             <div id="flag"></div>
         </div>
     </div>
 
     <script>
-        const holes = [200, 300, 400, 500, 1000]; // Distances of the holes
+        const holes = [200, 300, 400, 500, 1000]; // Distances of the holes (meters)
         let currentRound = 0;
         let wind = Math.random() * 20 - 10; // Random wind factor between -10 and 10
         let currentPosition = 0; // Tracks the ball's current position
         let shootCounter = 0; // Counts the number of times the user presses "Shoot" in the current round
         let totalShots = 0; // Cumulative count of shots taken across all rounds
+
+        const canvas = document.getElementById("gameCanvas");
+        const holePosition = (holes[currentRound] / 1500) * canvas.offsetWidth; // Convert hole position to pixels
 
         // Function to update and display round details and wind
         function updateRoundDetails() {
@@ -111,6 +113,33 @@
         // Display the initial wind and round details
         updateRoundDetails();
 
+        // Initialize the game area with a line of 1500 meters (scaled to canvas width)
+        function drawCourseLine() {
+            const courseLine = document.createElement('div');
+            courseLine.style.position = 'absolute';
+            courseLine.style.top = '50%';
+            courseLine.style.left = '0';
+            courseLine.style.width = '100%';
+            courseLine.style.height = '2px';
+            courseLine.style.backgroundColor = 'white';
+            canvas.appendChild(courseLine);
+        }
+
+        // Place the flag based on the round and its distance
+        function placeFlag() {
+            const holeXPos = (holes[currentRound] / 1500) * canvas.offsetWidth;
+            const flag = document.getElementById("flag");
+            flag.style.left = holeXPos + "px";
+            flag.style.display = "block";
+        }
+
+        // Place the ball at the origin (0m)
+        function placeBall() {
+            const ball = document.getElementById("ball");
+            ball.style.left = "0px";
+        }
+
+        // Function to handle the shooting action
         function playRound() {
             const speed = parseFloat(document.getElementById("speed").value);
             let angle = parseFloat(document.getElementById("angle").value);
@@ -138,13 +167,7 @@
             const holeDistance = holes[currentRound];
             const distanceToHole = Math.abs(holeDistance - currentPosition);
 
-            // Handle overshooting
-            if (currentPosition > holeDistance) {
-                angle = 180 - angle; // Flip the angle
-                document.getElementById("message").innerText += `\nYou overshot the hole! Adjusting angle to ${angle} degrees.`;
-            }
-
-            // Animate the ball moving toward the hole
+            // Animate ball movement
             animateBall(distance);
 
             // Update the round or continue
@@ -156,38 +179,26 @@
             }
         }
 
-function animateBall(distance) {
-    const ball = document.getElementById("ball");
-    const canvas = document.getElementById("gameCanvas");
+        // Animate the ball moving toward the hole
+        function animateBall(distance) {
+            const ball = document.getElementById("ball");
+            const stepSize = 5; // Speed of animation (higher value = faster)
+            const holePosition = (holes[currentRound] / 1500) * canvas.offsetWidth;
 
-    // Calculate hole position scaled to canvas width
-    const holePosition = (holes[currentRound] / 1000) * canvas.offsetWidth;
+            let currentLeft = 0; // Start from the origin
+            ball.style.left = currentLeft + "px"; // Ensure the ball starts at the beginning
 
-    // Log the hole position to the console for debugging
-    console.log(`Hole Position for Round ${currentRound + 1}: ${holePosition}px`);
-
-    const stepSize = 5; // Speed of animation (higher value = faster)
-
-    // Position the flag at the hole
-    const flag = document.getElementById("flag");
-    flag.style.left = holePosition + "px";
-    flag.style.display = "block"; // Show the flag
-
-    // Ensure ball starts at the beginning of the canvas (reset position)
-    let currentLeft = 0;
-    ball.style.left = currentLeft + "px";
-
-    // Animate ball movement
-    let moveInterval = setInterval(() => {
-        if (currentLeft < holePosition + 20) {  // Allow the ball to move past the hole
-            currentLeft += stepSize; // Move the ball
-            ball.style.left = currentLeft + "px";
-        } else {
-            clearInterval(moveInterval); // Stop animation when the ball passes the hole
+            let moveInterval = setInterval(() => {
+                if (currentLeft < holePosition) {
+                    currentLeft += stepSize; // Move the ball
+                    ball.style.left = currentLeft + "px";
+                } else {
+                    clearInterval(moveInterval); // Stop animation when the ball passes the hole
+                }
+            }, 20);
         }
-    }, 20);
-}
 
+        // Function to handle moving to the next hole
         function nextHole() {
             if (currentRound >= holes.length - 1) {
                 document.getElementById("message").innerText = "Game Over! Thanks for playing!";
@@ -199,11 +210,4 @@ function animateBall(distance) {
             currentPosition = 0; // Reset position for the new hole
             shootCounter = 0; // Reset shoot counter for the current round
             wind = Math.random() * 20 - 10; // Generate new wind
-            updateRoundDetails(); // Update wind and round details
-            document.getElementById("message").innerText = ""; // Clear previous messages
-            document.getElementById("shootCount").innerText = ""; // Clear shoot count for the current round
-            document.getElementById("nextButton").style.display = "none"; // Hide "Next Hole" button
-        }
-    </script>
-</body>
-</html>
+            updateRoundDetails
