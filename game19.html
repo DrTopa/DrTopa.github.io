@@ -83,6 +83,9 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
+	const highestScoreDisplay = document.getElementById('highest-score');
+        const totalPlayCountDisplay = document.getElementById('total-play-count');
+
     window.addDoc = addDoc;
     window.updateDoc = updateDoc;
     window.getAuth = getAuth;
@@ -96,6 +99,9 @@
 	window.db = db;
 	window.collection = collection;
 
+	window.highestScoreDisplay = highestScoreDisplay;
+	window.totalPlayCountDisplay = totalPlayCountDisplay;
+
          window.userId = '';
    	 window.totalPlayCountGame19 = 0;
    	 window.highestScoreGame19 = 0;
@@ -107,6 +113,8 @@
                 const userRef = doc(db, 'users', userId);
                 const docSnap = await getDoc(userRef);
 
+
+		
                 if (!docSnap.exists()) {
                     await setDoc(userRef, { userId: userId, totalPlayCountGame19: 0, highestScoreGame19: 0, UserEmail: user.email });
                 } else {
@@ -114,7 +122,8 @@
                     window.totalPlayCountGame19 = userData.totalPlayCountGame19 || 0;
                     window.highestScoreGame19 = userData.highestScoreGame19 || 0;
                     UserEmail: user.email
-                   
+                    highestScoreDisplay.innerText = `Meilleur score: ${window.highestScoreGame19}`;
+                    totalPlayCountDisplay.innerText = `Jeux joués: ${window.totalPlayCountGame19}`;
                     
                     
                 }
@@ -125,10 +134,8 @@
 
 	</script>
 	<script type="text/javascript">
-		const highestScoreDisplay = document.getElementById('highest-score');
-        	const totalPlayCountDisplay = document.getElementById('total-play-count');
-		    highestScoreDisplay.innerText = `Meilleur score: ${window.highestScoreGame19}`;
-                    totalPlayCountDisplay.innerText = `Jeux joués: ${window.totalPlayCountGame19}`;
+
+
 
 		async function saveScore(currentScore) {
             try {
@@ -141,12 +148,12 @@
                 await window.addDoc(window.collection(window.db, 'users', window.userId, 'Game19'), gameData);
                 
                 await window.updateDoc(window.doc(window.db, 'users', window.userId), { totalPlayCountGame19: window.totalPlayCountGame19 });
-                totalPlayCountDisplay.innerText = `Jeux joués: ${window.totalPlayCountGame19}`;  // Update display for total play count
+                window.totalPlayCountDisplay.innerText = `Jeux joués: ${window.totalPlayCountGame19}`;  // Update display for total play count
                 const userRef = window.doc(window.db, 'users', window.userId);
                 if (window.totalPlayCountGame19 <= 10 && currentScore > window.highestScoreGame19) {
                     window.highestScoreGame19 = currentScore;
                     await window.updateDoc(userRef, { highestScoreGame19: window.highestScoreGame19 });
-			highestScoreDisplay.innerText = `Meilleur score: ${window.highestScoreGame19}`; // Update display for highest score
+			window.highestScoreDisplay.innerText = `Meilleur score: ${window.highestScoreGame19}`; // Update display for highest score
                 }
             } catch (error) {
                 console.error("Error saving score:", error);
@@ -2170,7 +2177,7 @@ button:hover {
             margin-left: 20px;
             font-size: 1.2em;
             font-size: 1.5em;
-            color: #ffcb05;
+            color: #000000;
         }
      
         #highest-score, #total-play-count {
@@ -2669,7 +2676,7 @@ html[subframe] body {
             margin-left: 20px;
             font-size: 1.2em;
             font-size: 1.5em;
-            color: #ffcb05;
+            color: #000000;
         }
      
         #highest-score, #total-play-count {
