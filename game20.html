@@ -71,8 +71,14 @@
         let shootCounter = 0; // Counts the number of times the user presses "Shoot" in the current round
         let totalShots = 0; // Cumulative count of shots taken across all rounds
 
-        // Display the initial wind
-        document.getElementById("windMessage").innerText = `Current Wind: ${wind.toFixed(1)} m/s`;
+        // Function to update and display round details and wind
+        function updateRoundDetails() {
+            const roundDistance = holes[currentRound];
+            document.getElementById("windMessage").innerText = `Current Wind: ${wind.toFixed(1)} m/s | Round ${currentRound + 1}/5: Distance ${roundDistance}m`;
+        }
+
+        // Display the initial wind and round details
+        updateRoundDetails();
 
         function playRound() {
             const speed = parseFloat(document.getElementById("speed").value);
@@ -127,7 +133,7 @@
             currentPosition = 0; // Reset position for the new hole
             shootCounter = 0; // Reset shoot counter for the current round
             wind = Math.random() * 20 - 10; // Generate new wind
-            document.getElementById("windMessage").innerText = `New Wind: ${wind.toFixed(1)} m/s`;
+            updateRoundDetails(); // Update wind and round details
             document.getElementById("message").innerText = ""; // Clear previous messages
             document.getElementById("shootCount").innerText = ""; // Clear shoot count for the current round
             document.getElementById("nextButton").style.display = "none"; // Hide "Next Hole" button
