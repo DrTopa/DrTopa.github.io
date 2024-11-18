@@ -89,10 +89,24 @@
             margin: 15px;
             color: #1565c0;
         }
+
+          .decoration {
+    position: relative; /* Change to relative */
+    display: flex; /* Use flexbox for centering */
+    justify-content: center; /* Horizontally center */
+    align-items: center; /* Vertically center */
+    height: 100vh; /* Full viewport height to center */
+    padding: 20px 0;
+}
+
+#santa {
+    height: 400px;
+    width: auto;
+}
     </style>
 </head>
 <body>
-    <h1>Gen Z Vs Gen Téléteubé</h1>
+    <h1>🤓Gen Z Vs Gen Téléteubé🤓</h1>
     
     <!-- Game instructions -->
     <div id="instructions">
@@ -112,9 +126,9 @@
 <p>Il continua sa liste, puis hésita en lisant une mention particulière : « Oh, et cette journée spéciale avec Moman, Locklear et Squeezie sur Mario Party Jamboreeee en mode IRL, ça, c’est confirmé ? »</p>
 <p>Dudley écarquilla les yeux. « Attends, c’est quoi cette journée IRL avec mes stars et mes modèles de vie? »</p>
 <p>Topapa, se rendant compte de sa boulette, fit une grimace. « Ah... my baaad, c’était ton cadeau pour cette année. Bon, bah, c’est spoilé. Je vais devoir l’offrir à un autre gamin, plus méritant. »</p>
-<p>Dudley lança un regard désespéré. « Sérieusement ? Alors cette année, si tu ne veux pas que je te footstep, tu as intérêt à atteindre la soixantaine, comme ton âge. Compris, fossile ? »</p>
+<p>Dudley lança un regard désespéré. « Sérieusement ? Alors cette année, tu vas arrêter de faire de la D. Si tu ne veux pas que je te footstep, tu as intérêt à atteindre la soixantaine, comme ton âge. Compris, fossile ? »</p>
 
-<p>Topapa, bien qu’accoutumé aux Dudley avec leurs piques habituelles, sentit un léger agacement à l’idée d’être traité de vieux. « Écoute, gamin, » rétorqua-t-il d’un ton ferme mais amusé, « je te propose un petit défi. On va faire des jeux de réflexe, et on verra bien qui est le vieux ici. »</p>
+<p>Topapa, bien qu’accoutumé aux Dudley avec leurs piques habituelles, sentit un léger agacement à l’idée d’être traité de vieux. Il hésita à le daronned mais se ravisa. « Écoute, gamin, » rétorqua-t-il d’un ton ferme mais amusé, « je te propose un petit défi. On va faire des jeux de réflexe, et on verra bien qui est le vieux ici. »</p>
 <p>Malheureusement, il se souvint avec un soupir que la WII était hors service, et donc pas de « photo d’ovni » à l'horizon. « Mais pas de souci, j’ai d’autres idées en tête. » Un sourire malicieux se dessina sur ses lèvres alors qu’il commençait à réfléchir aux différentes manières de défier ce petit insolent.</p>
 <p>Explication du jeu : Vous devez recopier le plus de mots possibles en 1 minute. Chaque mot augmente votre score de 1 mais un mot mal orthographié le réduit de 0.5. A la fin, votre score total est mulitiplié par 2. Vous avez maximum 15 essais pour améliorer votre meilleur score. 
 </p>
@@ -122,7 +136,7 @@
 <p>Possible sur Smartphone (bonus pour le correcteur orthographique) comme sur clavier (bonus pour la dextérité des doigts). 
 </p>
     </div>
-
+     <img id="santa" class="decoration" src="https://i.imgur.com/RDytUiU.jpeg" alt="Santa Claus">
     <div id="userStatus"></div>
     <div id="gameArea">
         <button id="start-btn">Commencer le jeu</button>
