@@ -5,17 +5,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Golf Game</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
+                body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            background-color: #ffebcd;
+            background-image: url('https://www.transparenttextures.com/patterns/snow.png');
+            margin: 0;
+            overflow-y: auto;  /* Added for scrolling if needed */
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #d32f2f;
+            font-family: 'Comic Sans MS', cursive;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+
+        
+        /* User status */
+        #userStatus {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.2em;
+            color: #a23636;
+        }
+               /* Instructions section */
+        #instructions {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            text-align: center;
+            max-width: 1000px;
+            font-size: 1.2em;
+            color: #333;
+            overflow-y: auto;  /* Added for scrolling if needed */
+            max-height: 400px; /* Set a maximum height */
+
+        }
+       
+        .game-area {
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, sans-serif;;
             background-color: pink;
             color: white;
             text-align: center;
             margin: 0;
-            padding: 0;
         }
-        .game-area {
-            padding: 20px;
-        }
+        
         .input-group {
             margin: 10px;
         }
@@ -34,23 +78,45 @@
             font-size: 20px;
             padding: 15px 30px;
         }
+
+            #highest-score, #total-play-count {
+            margin-left: 20px;
+            font-size: 1.2em;
+            font-size: 1.5em;
+            color: #ffcb05;
+        }
+        
+        #highest-score, #total-play-count {
+    margin-top: 10px; /* Ensure there’s space between the score and the others */
+}
     </style>
 </head>
 <body>
+    <h1>⛳️Comme dans une caverne⛳️</h1>
+    div id="instructions">
+        <p>La ceinture magique entra dans la salle où tout le monde l’attendait. « Allez, plus que deux époques à visiter ! 2004 et 2001 ! En route pour 2004 ! » annonça-t-elle avec énergie. RaseToiLaMoustache, débordant de curiosité, se mit aussitôt à courir partout, parcourant chaque coin de la pièce, impatient de voir ce que cette nouvelle époque réservait. Dans son élan, son sabot trébucha sur un tapis et, sa tête heurta une des chaises en bois de l’église. Il retomba lourdement, la tête en sang.</p>
+ <p>La ceinture magique, saisie d’effroi, l’emmena sans attendre à l’hôpital. Les infirmières examinèrent rapidement la plaie et, bien que l’anesthésiste soit en grève, l’une d’elles proposa une petite dose de sédatif pour aider à calmer la douleur pendant les points de suture. Sous l’effet de l’héroïne, RaseToiLaMoustache sombra dans un état étrange, entre rêves et hallucinations, entre lapins magiques et éléphants roses.</p>
+ <p>Pendant que Dudley, Grinchemie et Topapa attendaient dans le couloir, Bébé Romain resta au chevet de RaseToiLaMoustache, observant avec une affection silencieuse son camarade en proie à des délires absurdes. RaseToiLaMoustache, les yeux mi-clos, murmura : « Beurk, cet éléphant... il ne porte même pas de slip ! ».</p>
+ <p>Bébé Romain, touché par la situation, ne rit pas, trop inquiet pour s’amuser des propos de son ami. Il restait concentré sur son bien-être, espérant que l’accident ne laisserait pas de séquelles. Les minutes passaient, et Bébé Romain, sans bouger de son siège, veillait patiemment, rassurant son camarade sans dire un mot, montrant une fidélité discrète mais indéfectible. C'était dans sa nature profonde. Bébé Romain était toujours préoccupé par le bien-être de ses compagnons, débordant d'empathie. Il avait ce don de s’inquiéter pour les autres avant de penser à lui-même, de veiller discrètement à ce que chacun se sente bien, en sécurité. Sa seule présence suffisait à rassurer RaseToiLaMoustache, qui trouvait en lui un repère apaisant. Il émanait de Bébé Romain une aura sérieuse et rassurante, qui donnait le sentiment que, peu importe les défis ou les imprévus, tout irait bien tant qu’il était là. Sa présence donnait la stabilité et le calme nécessaire à cette équipe pour avancer. Alors, quand Topapa, Grinchémie et Dudley attendaient, il ne s’inquietaient pas. Car il savait que Bébé Romain était là et que tout irait bien.</p>
+ <p>« Eh regardez ! » dit Topapa, alors que la vieille console de jeu se mettait à émettre un bruit. Les trois amis se tournèrent vers l'écran. « Ah, c'est Tetris… Pas génial, mais bon, on n'a que ça à faire en attendant que l'autre fragile se remette sur pied », lança Dudley.</p>
+ <p>Explication du jeu : Il s'agit du Tetris classique. Le premier jeu développé par votre programmeur préféré à l'INSA. La vitesse augmente à mesure que vous marquez des points, et réaliser des combos (en complétant plusieurs lignes en même temps) rapporte plus de points. (1 point pour une ligne, 3 points pour deux, 6 points pour trois, et 10 points si quatre lignes sont complètes simultanément). Impossible sur Smartphone</p>
+<p>Petit bug à noter : après une partie le tableau se vide et une nouvelle partie est lancée parfois automatiquement. Si ça arrive, vous pouvez revenir en arrière. Votre nombre de parties n'augmente ici que lorsque vous appuyez sur Start Button.</p>
+         </div>
+    
     <!-- Start Button (Initially visible) -->
     <div id="startScreen">
-        <h1>Golf Game</h1>
-        <p>Welcome! Click below to start the game.</p>
+        <p>Appuyez pour démarrer le jeu</p>
         <button id="startButton" onclick="startGame()">Start Game</button>
     </div>
-
+    <div id="userStatus"></div>
+    <div id="highest-score">Meilleur score: 0</div>
+    <div id="total-play-count">Jeux joués: 0</div>
+    
     <!-- Game Area (Initially hidden) -->
     <div class="game-area" id="gameArea" style="display: none;">
-        <h1>Golf Game</h1>
-        <p>Try to get the ball into the hole!</p>
         <p id="windMessage"></p>
         <div class="input-group">
-            <label for="speed">Initial Speed (1-10): </label>
+            <label for="speed">Vitesse initiale (1-10): </label>
             <input type="number" id="speed" min="1" max="10" />
         </div>
         <div class="input-group">
@@ -58,7 +124,7 @@
             <input type="number" id="angle" min="-90" max="90" />
         </div>
         <div class="input-group">
-            <label for="club">Choose Golf Club: </label>
+            <label for="club">Choisis ton club: </label>
             <select id="club">
                 <option value="1">Putter</option>
                 <option value="2">Wedge</option>
@@ -68,15 +134,42 @@
             </select>
         </div>
         <div>
-            <button onclick="playRound()">Shoot!</button>
-            <button onclick="nextHole()" id="nextButton" style="display: none;">Next Hole</button>
+            <button onclick="playRound()">Tire!</button>
+            <button onclick="nextHole()" id="nextButton" style="display: none;">Prochain trou</button>
         </div>
         <p id="shootCount"></p>
         <p id="totalShootCount"></p>
         <p id="message"></p>
     </div>
 
-    <script>
+   <script defer type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyC4bjg7lVwd8FU8MREaPhBsBENv5qmiYYM",
+            authDomain: "calendrier-de-l-avent-54e3a.firebaseapp.com",
+            databaseURL: "https://calendrier-de-l-avent-54e3a-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "calendrier-de-l-avent-54e3a",
+            storageBucket: "calendrier-de-l-avent-54e3a.appspot.com",
+            messagingSenderId: "850639567855",
+            appId: "1:850639567855:web:0d799a1ecca005fcff141a",
+            measurementId: "G-PC1W7RYVEH"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        let userId = '';
+        let totalPlayCountGame20 = 0;
+        let highestScore = 0;
+
+        const highestScoreDisplay = document.getElementById('highest-score');
+        const totalPlayCountDisplay = document.getElementById('total-play-count');
+
+       
         const holes = [200, 300, 400, 500, 1000]; // Distances of the holes
         let currentRound = 0;
         let wind = Math.random() * 20 - 10; // Random wind factor between -10 and 10
@@ -84,10 +177,38 @@
         let shootCounter = 0; // Counts the number of times the user presses "Shoot" in the current round
         let totalShots = 0; // Cumulative count of shots taken across all rounds
 
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                userId = user.uid;
+                document.getElementById('userStatus').innerText = `Bienvenue : ${user.email}`;
+
+                const userRef = doc(db, 'users', userId);
+                const docSnap = await getDoc(userRef);
+
+                if (!docSnap.exists()) {
+                    await setDoc(userRef, { userId: userId, totalPlayCountGame20: 0, highestScoreGame20: 0, UserEmail: user.email });
+                } else {
+                    const userData = docSnap.data();
+                    totalPlayCountGame20 = userData.totalPlayCountGame20 || 0;
+                    highestScore = userData.highestScoreGame20 || 0;
+
+                    UserEmail: user.email
+                    
+                    highestScoreDisplay.innerText = `Meilleur score: ${highestScore}`;
+                    totalPlayCountDisplay.innerText = `Jeux joués: ${totalPlayCountGame20}`;
+                    
+                    
+                }
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
+
         // Function to update and display round details and wind
         function updateRoundDetails() {
             const roundDistance = holes[currentRound];
-            document.getElementById("windMessage").innerText = `Current Wind: ${wind.toFixed(1)} m/s | Round ${currentRound + 1}/5: Distance ${roundDistance}m`;
+            document.getElementById("windMessage").innerText = `Vent: ${wind.toFixed(1)} m/s | Round ${currentRound + 1}/5: Distance ${roundDistance}m`;
         }
 
         // Display the initial wind and round details
@@ -95,6 +216,8 @@
 
         // Start the game
         function startGame() {
+             totalPlayCountGame20 += 1;
+             totalPlayCountDisplay.innerText = `Jeux joués: ${totalPlayCountGame20}`;  // Update display for total play count
             // Hide the start screen and show the game area
             document.getElementById("startScreen").style.display = "none";
             document.getElementById("gameArea").style.display = "block";
@@ -109,14 +232,14 @@
             const clubMultiplier = parseInt(document.getElementById("club").value);
 
             if (isNaN(speed) || isNaN(angle) || speed < 1 || speed > 10 || angle < -90 || angle > 90) {
-                document.getElementById("message").innerText = "Please enter valid speed and angle values!";
+                document.getElementById("message").innerText = "La valeur de la vitesse ou de l'angle n'est pas correcte";
                 return;
             }
 
             shootCounter++; // Increment shoot counter
             totalShots++; // Increment total shots
-            document.getElementById("shootCount").innerText = `Shots taken this round: ${shootCounter}`;
-            document.getElementById("totalShootCount").innerText = `Total shots: ${totalShots}`;
+            document.getElementById("shootCount").innerText = `Tirs effectués à ce round: ${shootCounter}`;
+            document.getElementById("totalShootCount").innerText = `Nombre total de tirs: ${totalShots}`;
 
             // Calculate ball position
             const initialVelocity = speed * clubMultiplier + wind;
@@ -138,16 +261,18 @@
 
             // Update the round or continue
             if (distanceToHole < 5) {
-                document.getElementById("message").innerText = `Hole ${currentRound + 1}:  It took you ${shootCounter} shots this round.`;
+                document.getElementById("message").innerText = `Hole ${currentRound + 1}:  Cela t'a pris ${shootCounter} tirs pour réussir ce round`;
                 document.getElementById("nextButton").style.display = "inline"; // Show "Next Hole" button
             } else {
-                document.getElementById("message").innerText = `Hole ${currentRound + 1}: You hit the ball ${distance} meters. You're ${distanceToHole} meters from the hole.`;
+                document.getElementById("message").innerText = `Hole ${currentRound + 1}: Tu as frappé la balle sur ${distance} metres. Tu es à ${distanceToHole} metres du trou.`;
             }
         }
 
         function nextHole() {
             if (currentRound >= holes.length - 1) {
-                document.getElementById("message").innerText = "Game Over! Thanks for playing!";
+                document.getElementById("message").innerText = "Game Over!";
+                highestScore=totalShots;
+                saveScore();
                 document.getElementById("nextButton").style.display = "none"; // Hide "Next Hole" button
                 return;
             }
@@ -160,6 +285,24 @@
             document.getElementById("message").innerText = ""; // Clear previous messages
             document.getElementById("shootCount").innerText = ""; // Clear shoot count for the current round
             document.getElementById("nextButton").style.display = "none"; // Hide "Next Hole" button
+        }
+
+              async function saveScore() {
+            try {
+                const gameData = { score: highestScore, playCount: totalPlayCountGame20, timestamp: new Date() };
+                await addDoc(collection(db, 'users', userId, 'Game20'), gameData);
+                await updateDoc(doc(db, 'users', userId), { totalPlayCountGame20: totalPlayCountGame20 });
+                console.log("Saving score:", highestScore);
+                
+                const userRef = doc(db, 'users', userId);
+                if (totalPlayCountGame20 <= 2 && highestScore > highestScoreGame20) {
+                    highestScore = player.score;
+                    await updateDoc(userRef, { highestScoreGame20: highestScore });
+                    highestScoreDisplay.innerText = `Meilleur score: ${highestScore}`; // Update display for highest score
+                }
+            } catch (error) {
+                console.error("Error saving score:", error);
+            }
         }
     </script>
 </body>
