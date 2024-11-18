@@ -83,7 +83,7 @@
             margin-left: 20px;
             font-size: 1.2em;
             font-size: 1.5em;
-            color: #ffcb05;
+            color: #00000;
         }
         
         #highest-score, #total-play-count {
@@ -102,15 +102,15 @@
  <p>Explication du jeu : Il s'agit du Tetris classique. Le premier jeu développé par votre programmeur préféré à l'INSA. La vitesse augmente à mesure que vous marquez des points, et réaliser des combos (en complétant plusieurs lignes en même temps) rapporte plus de points. (1 point pour une ligne, 3 points pour deux, 6 points pour trois, et 10 points si quatre lignes sont complètes simultanément). Impossible sur Smartphone</p>
 <p>Petit bug à noter : après une partie le tableau se vide et une nouvelle partie est lancée parfois automatiquement. Si ça arrive, vous pouvez revenir en arrière. Votre nombre de parties n'augmente ici que lorsque vous appuyez sur Start Button.</p>
          </div>
+    <div id="highest-score">Meilleur score: 0</div>
+    <div id="total-play-count">Jeux joués: 0</div>
+     <div id="userStatus"></div>
     
     <!-- Start Button (Initially visible) -->
     <div id="startScreen">
-        <p>Appuyez pour démarrer le jeu</p>
         <button id="startButton" onclick="startGame()">Start Game</button>
     </div>
-    <div id="userStatus"></div>
-    <div id="highest-score">Meilleur score: 0</div>
-    <div id="total-play-count">Jeux joués: 0</div>
+   
     
     <!-- Game Area (Initially hidden) -->
     <div class="game-area" id="gameArea" style="display: none;">
