@@ -12,10 +12,10 @@
             justify-content: center;
             align-items: center;
             flex-direction: column;
-            height: 100vh;
             background-color: #ffebcd;
             background-image: url('https://www.transparenttextures.com/patterns/snow.png');
             margin: 0;
+            overflow-y: auto;
         }
 
         /* Christmas themed title */
@@ -93,24 +93,19 @@
             color: #1565c0;
         }
 
-        /* Christmas Tree and Santa decoration */
-        .decoration {
-            position: absolute;
-        }
+       .decoration {
+    position: relative; /* Change to relative */
+    display: flex; /* Use flexbox for centering */
+    justify-content: center; /* Horizontally center */
+    align-items: center; /* Vertically center */
+    height: 100vh; /* Full viewport height to center */
+}
 
-        #tree {
-            bottom: 20px;
-            left: 10px;
-            height: 200px;
-            width: auto;
-        }
+#santa {
+    height: 400px;
+    width: auto;
+}
 
-        #santa {
-            bottom: 20px;
-            right: 10px;
-            height: 200px;
-            width: auto;
-        }
     </style>
 </head>
 <body>
@@ -139,7 +134,6 @@
     </div>
 
     <!-- Christmas Tree and Santa Images -->
-    <img id="tree" class="decoration" src="https://upload.wikimedia.org/wikipedia/commons/d/d1/Xmas_tree.svg" alt="Christmas Tree">
     <img id="santa" class="decoration" src="https://i.imgur.com/yld0RO7.png" alt="Santa Claus">
 
 
