@@ -165,6 +165,7 @@
         let userId = '';
         let totalPlayCountGame20 = 0;
         let highestScore = 0;
+        let highestScoreGame20 = 0
 
         const highestScoreDisplay = document.getElementById('highest-score');
         const totalPlayCountDisplay = document.getElementById('total-play-count');
@@ -190,7 +191,7 @@
                 } else {
                     const userData = docSnap.data();
                     totalPlayCountGame20 = userData.totalPlayCountGame20 || 0;
-                    highestScore = userData.highestScoreGame20 || 0;
+                    highestScoreGame20 = userData.highestScoreGame20 || 0;
 
                     UserEmail: user.email
                     
