@@ -30,10 +30,22 @@
         button:hover {
             background-color: lightgray;
         }
+        #startButton {
+            font-size: 20px;
+            padding: 15px 30px;
+        }
     </style>
 </head>
 <body>
-    <div class="game-area">
+    <!-- Start Button (Initially visible) -->
+    <div id="startScreen">
+        <h1>Golf Game</h1>
+        <p>Welcome! Click below to start the game.</p>
+        <button id="startButton" onclick="startGame()">Start Game</button>
+    </div>
+
+    <!-- Game Area (Initially hidden) -->
+    <div class="game-area" id="gameArea" style="display: none;">
         <h1>Golf Game</h1>
         <p>Try to get the ball into the hole!</p>
         <p id="windMessage"></p>
@@ -63,6 +75,7 @@
         <p id="totalShootCount"></p>
         <p id="message"></p>
     </div>
+
     <script>
         const holes = [200, 300, 400, 500, 1000]; // Distances of the holes
         let currentRound = 0;
@@ -79,6 +92,16 @@
 
         // Display the initial wind and round details
         updateRoundDetails();
+
+        // Start the game
+        function startGame() {
+            // Hide the start screen and show the game area
+            document.getElementById("startScreen").style.display = "none";
+            document.getElementById("gameArea").style.display = "block";
+
+            // Initialize the game
+            updateRoundDetails();
+        }
 
         function playRound() {
             const speed = parseFloat(document.getElementById("speed").value);
