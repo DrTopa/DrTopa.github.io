@@ -156,7 +156,7 @@
             }
         }
 
-        function animateBall(distance) {
+function animateBall(distance) {
             const ball = document.getElementById("ball");
             const canvas = document.getElementById("gameCanvas");
             const holePosition = (holes[currentRound] / 1000) * canvas.offsetWidth; // Scale distance to canvas width
@@ -169,11 +169,11 @@
 
             let currentLeft = parseFloat(ball.style.left) || 0;
             let moveInterval = setInterval(() => {
-                if (currentLeft < holePosition) {
+                if (currentLeft < holePosition + 20) {  // Allow the ball to move past the flag
                     currentLeft += stepSize; // Move the ball
                     ball.style.left = currentLeft + "px";
                 } else {
-                    clearInterval(moveInterval); // Stop animation when the hole is reached
+                    clearInterval(moveInterval); // Stop animation when the ball passes the hole
                 }
             }, 20);
         }
