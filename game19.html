@@ -28,6 +28,8 @@
 </p>
 	 </div>
 <div id="userStatus"></div>
+	<div id="highest-score">Meilleur score: 0</div>
+        <div id="total-play-count">Jeux joués: 0</div>
 <div id="main-frame-error" class="interstitial-wrapper" jstcache="0">
     <div class="onlyforchrome" style="margin-top:5px;text-align:center;color:#8a8a8a;margin-bottom:80px; font-size:.8em;line-height:1.2em;font-family: Georgia;"><a href="http://www.thecodepost.org/internet/play-hidden-t-rex-game-offline-chrome/" target="_blank"><strong>T-Rex Dino game</strong></a> from Google Chrome offline mode ripped by <a href="https://www.twitter.com/thecodepost" target="_blank"><strong>@thecodepost</strong></a>.<br/> Press "Space" to jump your Dino and start the game.</div>
 	<div id="main-frame-notchrome" style="display:none; margin-top:50px;">Sorry, this game only runs on the Google Chrome! You can download it free <a href="https://www.google.com/chrome">here</a></div>
@@ -123,6 +125,10 @@
 
 	</script>
 	<script type="text/javascript">
+		const highestScoreDisplay = document.getElementById('highest-score');
+        	const totalPlayCountDisplay = document.getElementById('total-play-count');
+		    highestScoreDisplay.innerText = `Meilleur score: ${window.highestScoreGame19}`;
+                    totalPlayCountDisplay.innerText = `Jeux joués: ${window.totalPlayCountGame19}`;
 
 		async function saveScore(currentScore) {
             try {
@@ -135,11 +141,12 @@
                 await window.addDoc(window.collection(window.db, 'users', window.userId, 'Game19'), gameData);
                 
                 await window.updateDoc(window.doc(window.db, 'users', window.userId), { totalPlayCountGame19: window.totalPlayCountGame19 });
-                
+                totalPlayCountDisplay.innerText = `Jeux joués: ${window.totalPlayCountGame19}`;  // Update display for total play count
                 const userRef = window.doc(window.db, 'users', window.userId);
                 if (window.totalPlayCountGame19 <= 10 && currentScore > window.highestScoreGame19) {
                     window.highestScoreGame19 = currentScore;
                     await window.updateDoc(userRef, { highestScoreGame19: window.highestScoreGame19 });
+			highestScoreDisplay.innerText = `Meilleur score: ${window.highestScoreGame19}`; // Update display for highest score
                 }
             } catch (error) {
                 console.error("Error saving score:", error);
@@ -2159,6 +2166,16 @@ button:hover {
             max-height: 400px; /* Set a maximum height */
 
         }
+		#highest-score, #total-play-count {
+            margin-left: 20px;
+            font-size: 1.2em;
+            font-size: 1.5em;
+            color: #ffcb05;
+        }
+     
+        #highest-score, #total-play-count {
+    margin-top: 10px; /* Ensure there’s space between the score and the others */
+}
 		#userStatus {
             position: absolute;
             top: 10px;
@@ -2648,6 +2665,16 @@ html[subframe] body {
             max-height: 400px; /* Set a maximum height */
 
         }
+	  #highest-score, #total-play-count {
+            margin-left: 20px;
+            font-size: 1.2em;
+            font-size: 1.5em;
+            color: #ffcb05;
+        }
+     
+        #highest-score, #total-play-count {
+    margin-top: 10px; /* Ensure there’s space between the score and the others */
+}
 	  #userStatus {
             position: absolute;
             top: 10px;
