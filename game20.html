@@ -43,7 +43,7 @@
         </div>
         <div class="input-group">
             <label for="angle">Angle (degrees): </label>
-            <input type="number" id="angle" min="1" max="90" />
+            <input type="number" id="angle" min="-90" max="90" />
         </div>
         <div class="input-group">
             <label for="club">Choose Golf Club: </label>
@@ -60,6 +60,7 @@
             <button onclick="nextHole()" id="nextButton" style="display: none;">Next Hole</button>
         </div>
         <p id="shootCount"></p>
+        <p id="totalShootCount"></p>
         <p id="message"></p>
     </div>
     <script>
@@ -67,7 +68,8 @@
         let currentRound = 0;
         let wind = Math.random() * 20 - 10; // Random wind factor between -10 and 10
         let currentPosition = 0; // Tracks the ball's current position
-        let shootCounter = 0; // Counts the number of times the user presses "Shoot"
+        let shootCounter = 0; // Counts the number of times the user presses "Shoot" in the current round
+        let totalShots = 0; // Cumulative count of shots taken across all rounds
 
         // Display the initial wind
         document.getElementById("windMessage").innerText = `Current Wind: ${wind.toFixed(1)} m/s`;
@@ -77,13 +79,15 @@
             let angle = parseFloat(document.getElementById("angle").value);
             const clubMultiplier = parseInt(document.getElementById("club").value);
 
-            if (isNaN(speed) || isNaN(angle) || speed < 1 || speed > 10 || angle < 1 || angle > 90) {
+            if (isNaN(speed) || isNaN(angle) || speed < 1 || speed > 10 || angle < -90 || angle > 90) {
                 document.getElementById("message").innerText = "Please enter valid speed and angle values!";
                 return;
             }
 
             shootCounter++; // Increment shoot counter
-            document.getElementById("shootCount").innerText = `Shots taken: ${shootCounter}`;
+            totalShots++; // Increment total shots
+            document.getElementById("shootCount").innerText = `Shots taken this round: ${shootCounter}`;
+            document.getElementById("totalShootCount").innerText = `Total shots: ${totalShots}`;
 
             // Calculate ball position
             const initialVelocity = speed * clubMultiplier + wind;
@@ -105,7 +109,7 @@
 
             // Update the round or continue
             if (distanceToHole < 5) {
-                document.getElementById("message").innerText = `Hole ${currentRound + 1}: 🎉 Hole in one! It took you ${shootCounter} shots.`;
+                document.getElementById("message").innerText = `Hole ${currentRound + 1}: 🎉 Hole in one! It took you ${shootCounter} shots this round.`;
                 document.getElementById("nextButton").style.display = "inline"; // Show "Next Hole" button
             } else {
                 document.getElementById("message").innerText = `Hole ${currentRound + 1}: You hit the ball ${distance} meters. You're ${distanceToHole} meters from the hole.`;
@@ -121,11 +125,11 @@
 
             currentRound++; // Move to the next round
             currentPosition = 0; // Reset position for the new hole
-            shootCounter = 0; // Reset shoot counter
+            shootCounter = 0; // Reset shoot counter for the current round
             wind = Math.random() * 20 - 10; // Generate new wind
             document.getElementById("windMessage").innerText = `New Wind: ${wind.toFixed(1)} m/s`;
             document.getElementById("message").innerText = ""; // Clear previous messages
-            document.getElementById("shootCount").innerText = ""; // Clear shoot count
+            document.getElementById("shootCount").innerText = ""; // Clear shoot count for the current round
             document.getElementById("nextButton").style.display = "none"; // Hide "Next Hole" button
         }
     </script>
