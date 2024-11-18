@@ -30,6 +30,20 @@
         button:hover {
             background-color: lightgray;
         }
+        #gameCanvas {
+            margin-top: 20px;
+            border: 2px solid white;
+            position: relative;
+        }
+        #ball {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            border-radius: 50%;
+        }
     </style>
 </head>
 <body>
@@ -62,7 +76,12 @@
         <p id="shootCount"></p>
         <p id="totalShootCount"></p>
         <p id="message"></p>
+
+        <div id="gameCanvas" style="width: 600px; height: 100px;">
+            <div id="ball"></div>
+        </div>
     </div>
+
     <script>
         const holes = [200, 300, 400, 500, 1000]; // Distances of the holes
         let currentRound = 0;
@@ -113,6 +132,9 @@
                 document.getElementById("message").innerText += `\nYou overshot the hole! Adjusting angle to ${angle} degrees.`;
             }
 
+            // Animate the ball moving toward the hole
+            animateBall(distance);
+
             // Update the round or continue
             if (distanceToHole < 5) {
                 document.getElementById("message").innerText = `Hole ${currentRound + 1}: 🎉 Hole in one! It took you ${shootCounter} shots this round.`;
@@ -120,6 +142,23 @@
             } else {
                 document.getElementById("message").innerText = `Hole ${currentRound + 1}: You hit the ball ${distance} meters. You're ${distanceToHole} meters from the hole.`;
             }
+        }
+
+        function animateBall(distance) {
+            const ball = document.getElementById("ball");
+            const canvas = document.getElementById("gameCanvas");
+            const holePosition = (holes[currentRound] / 1000) * canvas.offsetWidth; // Scale distance to canvas width
+            const stepSize = 5; // Speed of animation (higher value = faster)
+
+            let currentLeft = parseFloat(ball.style.left) || 0;
+            let moveInterval = setInterval(() => {
+                if (currentLeft < holePosition) {
+                    currentLeft += stepSize; // Move the ball
+                    ball.style.left = currentLeft + "px";
+                } else {
+                    clearInterval(moveInterval); // Stop animation when the hole is reached
+                }
+            }, 20);
         }
 
         function nextHole() {
