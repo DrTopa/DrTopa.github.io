@@ -79,6 +79,21 @@
         #start-btn:hover {
            background-color: #2e7d32;
         }
+
+                .decoration {
+    position: relative; /* Change to relative */
+    display: flex; /* Use flexbox for centering */
+    justify-content: center; /* Horizontally center */
+    align-items: center; /* Vertically center */
+    height: 100vh; /* Full viewport height to center */
+    padding: 20px 0;
+}
+
+#santa {
+    height: 400px;
+    width: auto;
+}
+        
     </style>
 </head>
 <body>
@@ -103,6 +118,7 @@
 </p>
 <p>Explication du jeu : Il s'agit tout simplement d'un Snake. Faites bouger le serpent pour manger les pommes et grandir. Chaque pomme vaut 5 points. La vitesse augmente en fonction du nombre de pommes mangés.Impossible sur smartphone.</p>
     </div>
+     <img id="santa" class="decoration" src="https://i.imgur.com/DNxEbuK.png" alt="Santa Claus">
     <div id="userStatus"></div>
     <div id="score">Score actuel: 0</div>
     <div id="highest-score">Meilleur score: 0</div>
