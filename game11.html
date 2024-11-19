@@ -112,11 +112,25 @@
             font-size: 20px;
             margin-left: 20px;
         }
+
+        .decoration {
+    position: relative; /* Change to relative */
+    display: flex; /* Use flexbox for centering */
+    justify-content: center; /* Horizontally center */
+    align-items: center; /* Vertically center */
+    height: 100vh; /* Full viewport height to center */
+    padding: 20px 0;
+}
+
+#santa {
+    height: 400px;
+    width: auto;
+}
     </style>
 </head>
 <body>
 
-    <h1>Mexico mais sans lapin et sans mouvement 💣</h1>
+    <h1>💣Mexico mais sans lapin et sans mouvement 💣</h1>
 
     <div id="instructions">
         <p>La magie de la ceinture de Noël faisait son effet : nos camarades, malgré leurs différences d’âge, de poils ou de tempérament, étaient devenus des alliés complices. Mais alors qu’ils se laissaient emporter par ce moment de fraternité, un claquement sonore fit trembler le sol sous leurs pieds. En un instant, une nouvelle trappe s’ouvrit, les aspirant dans un tourbillon chaotique avant de les déposer dans une pièce étrangement familière.  </p>
@@ -134,7 +148,7 @@
  <p>Impossible sur Smartphone
         </p>
     </div>
-
+ <img id="santa" class="decoration" src="https://i.imgur.com/0Yg7mMk.jpeg" alt="Santa Claus">
     
     <div id="userStatus"></div>
     <div id="status" class="status"></div>
