@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LES COMPTES SONT PAS BONS KEVIN - Jeu 10 😊</title>
+    <title>LES COMPTES SONT PAS BONS KEVIN ⏳</title>
     <style>
         /* General body styling */
         body {
@@ -22,9 +22,11 @@
         h1 {
             font-size: 2.5em;
             margin-bottom: 20px;
-            color: #1b5e20;
+            color: #d32f2f;
+            font-family: 'Comic Sans MS', cursive;
             text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
         }
+
 
         /* User status */
         #userStatus {
@@ -123,10 +125,24 @@
             color: #d32f2f;
             margin-top: 10px;
         }
+
+               .decoration {
+    position: relative; /* Change to relative */
+    display: flex; /* Use flexbox for centering */
+    justify-content: center; /* Horizontally center */
+    align-items: center; /* Vertically center */
+    height: 100vh; /* Full viewport height to center */
+    padding: 20px 0;
+}
+
+#santa {
+    height: 400px;
+    width: auto;
+}
     </style>
 </head>
 <body>
-    <h1>LES COMPTES SONT PAS BONS KEVIN - Jeu 10 😊</h1>
+    <h1>⏳Les comptes sont pas bons Kevin ⏳</h1>
 
     <!-- Instructions -->
     <div id="instructions">
@@ -150,7 +166,7 @@
 <p>C’est possible de jouer sur smartphone
 </p>
     </div>
-
+   <img id="santa" class="decoration" src="https://i.imgur.com/9NtlrOj.jpeg" alt="Santa Claus">
     <div id="userStatus"></div>
     <div id="score">Score total: 0</div>
     <div id="roundScore">Score du tour: 0</div>
