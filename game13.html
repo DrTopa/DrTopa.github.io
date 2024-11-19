@@ -42,7 +42,7 @@
             font-size: 1.2em;
             color: #333;
             overflow-y: auto;  /* Added for scrolling if needed */
-            max-height: 300px; /* Set a maximum height */
+            max-height: 400px; /* Set a maximum height */
         }
         #gameArea {
             display: flex;
@@ -93,6 +93,20 @@
             margin: 10px;
             width: 300px;
         }
+
+                .decoration {
+    position: relative; /* Change to relative */
+    display: flex; /* Use flexbox for centering */
+    justify-content: center; /* Horizontally center */
+    align-items: center; /* Vertically center */
+    height: 100vh; /* Full viewport height to center */
+    padding: 20px 0;
+}
+
+#santa {
+    height: 400px;
+    width: auto;
+}
       
       
 
@@ -115,6 +129,8 @@
   <p>Petites règles sur la syntaxe : Pas d’accents dans la réponse, si c’est une saga de films (comme Star Wars), inutile de préciser le numéro et les majuscules ne sont pas nécessaires (mais acceptées). Les noms des films sont les noms connus en France (exemple : Lord of the rings devient « le seigneur des anneaux » mais « Your Name » ne devient pas « Ton Prénom »). Filmez-vous ! Si une réponse est correcte mais rejetée à cause d'un caractère manquant ou d’un espace en trop, je pourrai ajuster votre score pour réparer cette injustice. Vous n’avez qu’une tentative pour battre votre meilleur score au quiz.
 </p>
     </div>
+
+    <img id="santa" class="decoration" src="https://i.imgur.com/gA0Dxcs.jpeg" alt="Santa Claus">
     
     <div id="gameArea">
         <button id="start-btn">🎅Start Game🎅</button>
