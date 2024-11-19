@@ -20,7 +20,8 @@
         h1 {
             font-size: 2.5em;
             margin-bottom: 20px;
-            color: #1b5e20;
+            color: #d32f2f;
+            font-family: 'Comic Sans MS', cursive;
             text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
         }
 
@@ -83,10 +84,24 @@
         #start-btn:hover {
             background-color: #2e7d32;
         }
+
+               .decoration {
+    position: relative; /* Change to relative */
+    display: flex; /* Use flexbox for centering */
+    justify-content: center; /* Horizontally center */
+    align-items: center; /* Vertically center */
+    height: 100vh; /* Full viewport height to center */
+    padding: 20px 0;
+}
+
+#santa {
+    height: 400px;
+    width: auto;
+}
     </style>
 </head>
 <body>
-    <h1>Photo de Pluie Etoilée 🌟- Jeu 9 </h1>
+    <h1>🌟Photo de Pluie Etoilée 🌟 </h1>
 
     <div id="instructions">
         <p>En sortant de la salle, les protagonistes prirent soin de bien refermer la porte derrière eux. Pour la première fois depuis le début de cette aventure, ils affichaient tous un sourire sincère. Ils avaient bien ri ensemble, se lançant des piques et partageant des fous rires.</p>
@@ -107,6 +122,7 @@
 </p>
 <p> Vous avez 15 essais pour améliorer votre score. Pensez à refresh la page pour actualiser le nombre de parties et le meilleur score   </p>    
     </div>
+       <img id="santa" class="decoration" src="https://i.imgur.com/d82fVfY.jpeg" alt="Santa Claus">
 
     <div id="userStatus"></div>
     <div id="gameStats">
