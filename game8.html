@@ -23,7 +23,8 @@
         h1 {
             font-size: 2.5em;
             margin-bottom: 20px;
-            color: #1b5e20;
+            color: #d32f2f;
+            font-family: 'Comic Sans MS', cursive;
             text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
         }
 
@@ -98,10 +99,23 @@
         #start-btn:hover {
             background-color: #2e7d32;
         }
+              .decoration {
+    position: relative; /* Change to relative */
+    display: flex; /* Use flexbox for centering */
+    justify-content: center; /* Horizontally center */
+    align-items: center; /* Vertically center */
+    height: 100vh; /* Full viewport height to center */
+    padding: 20px 0;
+}
+
+#santa {
+    height: 400px;
+    width: auto;
+}
     </style>
 </head>
 <body>
-    <h1>Ce jeu intemporel de la calculatrice 🐦</h1>
+    <h1>🐦Ce jeu intemporel de la calculatrice 🐦</h1>
 
     <!-- Instructions -->
     <div id="instructions">
@@ -129,6 +143,7 @@
 <p>Attention2 : Avant de cliquer sur « Commencer le Jeu » (pour rejouer), attendez que les obstacles soient passés, sinon le jeu va démarrer en prenant en compte les obstacles visibles. Mais vous allez comprendre. </p>
 </p>
     </div>
+     <img id="santa" class="decoration" src="https://i.imgur.com/NbG6Zaz.jpeg" alt="Santa Claus">
 
     <div id="userStatus"></div>
     <div id="score">Score: 0</div>
