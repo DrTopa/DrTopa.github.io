@@ -15,6 +15,7 @@
             background-color: #ffebcd;
             background-image: url('https://www.transparenttextures.com/patterns/snow.png');
             margin: 0;
+             overflow-y: auto;
         }
 
         /* Title styling */
@@ -86,6 +87,19 @@
             margin: 15px;
             color: #1565c0;
         }
+            .decoration {
+    position: relative; /* Change to relative */
+    display: flex; /* Use flexbox for centering */
+    justify-content: center; /* Horizontally center */
+    align-items: center; /* Vertically center */
+    height: 100vh; /* Full viewport height to center */
+    padding: 20px 0;
+}
+
+#santa {
+    height: 400px;
+    width: auto;
+}
     </style>
 </head>
 <body>
@@ -106,6 +120,7 @@
 <p>Explication du jeu : Simple chifoumi. Vous mettez 5 points par manche gagnée. En cas d’égalité, on recommence la manche. Au bout de 20 manches, le jeu s’arrête. Vous n’avez le droit qu’à 3 essais pour améliorer votre score. Que le plus chanceux avec Math.random l’emporte. </p>
 <p> Possible sur Smartphone comme sur Ordi</p>
     </div>
+    <img id="santa" class="decoration" src="https://i.imgur.com/yld0RO7.png" alt="Santa Claus">
 
     <div id="userStatus"></div>
     <div id="gameArea">
