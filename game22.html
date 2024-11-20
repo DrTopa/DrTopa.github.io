@@ -50,6 +50,20 @@
             max-height: 400px; /* Set a maximum height */
 
         }
+
+                      .decoration {
+    position: relative; /* Change to relative */
+    display: flex; /* Use flexbox for centering */
+    justify-content: center; /* Horizontally center */
+    align-items: center; /* Vertically center */
+    height: 100vh; /* Full viewport height to center */
+    padding: 20px 0;
+}
+
+#santa {
+    height: 400px;
+    width: auto;
+}
        
        
     </style>
@@ -66,7 +80,7 @@
  <p>Topapa soupira. « La classique. »</p>
  <p>Phasme leva une tête misérable et grogna d’une voix rauque : « Pas si fort, chef… Le bateau commençait tout juste à s’arrêter de tanguer… »</p>
  <p>Topapa secoua la tête, déçu mais pas surpris. « Noël est dans trois jours ! Allez, il est temps de vous remettre en forme. »</p>
- <p>Dudley, enthousiaste, intervint. « Laissez-moi faire. Je vais leur donner un bon entraînement. »</p>
+ <p>Dudley, enthousiaste à la vue de cette daronnade, intervint. « Laissez-moi faire. Je vais leur donner un bon entraînement. »</p>
  <p>De retour à l’atelier, Topapa constata que l’ambiance était bouillonnante. Les Bébés Romain travaillaient à une vitesse impressionnante, multipliant les jouets, empaquetant les cadeaux et finalisant les moindres détails.</p>
  <p>« Sacré rythme ici, » commenta Topapa en levant les yeux. Il aperçut alors Grinchémie, debout sur la mezzanine, dominant la scène comme un général au front.</p>
  <p>« Félicitations, Grinchémie, » lança-t-il. « Je ne sais pas comment tu as réussi à les motiver, mais quel travail d’équipe ! »</p>
@@ -86,7 +100,7 @@
  <p>Explication du jeu : Ca part sur un barbu. Votre score sera soustrait à 100 et ajouté à la base de données. Mais de manche à valets cette fois, enfin, sauf si la majorité le souhaite … 
 </p>
          </div>
-  
+      <img id="santa" class="decoration" src="https://i.imgur.com/CRHPcfH.jpeg" alt="Santa Claus">
     <div id="highest-score">Meilleur score: 0</div>
      <div id="userStatus"></div>
 
