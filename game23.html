@@ -51,6 +51,20 @@
             max-height: 400px; /* Set a maximum height */
 
         }
+
+                      .decoration {
+    position: relative; /* Change to relative */
+    display: flex; /* Use flexbox for centering */
+    justify-content: center; /* Horizontally center */
+    align-items: center; /* Vertically center */
+    height: 100vh; /* Full viewport height to center */
+    padding: 20px 0;
+}
+
+#santa {
+    height: 400px;
+    width: auto;
+}
        
        
     </style>
@@ -78,7 +92,7 @@
  <p>Explication du jeu : Petit Mhugo des familles. Votre score final est multiplié par deux et soustrait à 100 pour avoir votre « High score de la game 23 ». 
 </p>
          </div>
-  
+   <img id="santa" class="decoration" src="https://i.imgur.com/zZgtAEn.jpeg" alt="Santa Claus">
     <div id="highest-score">Meilleur score: 0</div>
      <div id="userStatus"></div>
 
