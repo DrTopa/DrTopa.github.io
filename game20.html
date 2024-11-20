@@ -89,6 +89,20 @@
         #highest-score, #total-play-count {
     margin-top: 10px; /* Ensure there’s space between the score and the others */
 }
+        .decoration {
+    position: relative; /* Change to relative */
+    display: flex; /* Use flexbox for centering */
+    justify-content: center; /* Horizontally center */
+    align-items: center; /* Vertically center */
+    height: 100vh; /* Full viewport height to center */
+    padding: 20px 0;
+}
+
+#santa {
+    height: 400px;
+    width: auto;
+}
+        
     </style>
 </head>
 <body>
@@ -127,6 +141,7 @@
 <p>Vous n’avez le droit qu’à 2 essais. Sachant que la première manche permet de se chauffer et que pendant la 2e, la moitié d’entre vous seront déjà en train de faire les calculs pour craquer le code derrière. 
 </p>
          </div>
+     <img id="santa" class="decoration" src="https://i.imgur.com/REAhcdA.jpeg" alt="Santa Claus">
     <div id="highest-score">Meilleur score: 0</div>
     <div id="total-play-count">Jeux joués: 0</div>
      <div id="userStatus"></div>
