@@ -147,6 +147,8 @@
 
     <div id="userStatus"></div>
     <div id="score">Score: 0</div>
+     <div id="highest-score">Meilleur score: 0</div>
+     <div id="total-play-count">Jeux joués: 0</div>
     <button id="start-btn">Commencer le jeu</button>
     <div id="gameArea">
         <div id="bird" class="bird"></div>
@@ -184,6 +186,8 @@
         let birdY = 200;
         let velocity = 0;
         let obstacleSpeed = 3; // Initial speed for obstacles
+        const highestScoreDisplay = document.getElementById('highest-score');
+        const totalPlayCountDisplay = document.getElementById('total-play-count');
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
@@ -199,6 +203,9 @@
                     const userData = docSnap.data();
                     totalPlayCountGame8 = userData.totalPlayCountGame8 || 0;
                     highestScore = userData.highestScoreGame8 || 0;
+
+                    highestScoreDisplay.innerText = `Meilleur score: ${highestScore}`;
+                    totalPlayCountDisplay.innerText = `Jeux joués: ${totalPlayCountGame8}`;
                 }
             } else {
                 window.location.href = 'login.html';
@@ -360,12 +367,14 @@ function createDoubleObstacle() {
                 await addDoc(collection(db, 'users', userId, 'Game8'), gameData);
                 const userRef = doc(db, 'users', userId);
                 
-                if (totalPlayCountGame8 < 15 && currentScore > highestScore) {
+                if (totalPlayCountGame8 < 15 && (currentScore/50) > highestScore) {
                    highestScore = Math.ceil(currentScore / 50);
                     await updateDoc(doc(db, 'users', userId), { highestScoreGame8: highestScore });
                 }
             totalPlayCountGame8 += 1;
-            await updateDoc(userRef, { totalPlayCountGame8 });
+            await updateDoc(userRef, { totalPlayCountGame8 :totalPlayCountGame8  });
+            highestScoreDisplay.innerText = `Meilleur score: ${highestScore}`;
+            totalPlayCountDisplay.innerText = `Jeux joués: ${totalPlayCountGame1}`;
             } catch (error) {
                 console.error("Erreur en sauvegardant le score:", error);
             }
