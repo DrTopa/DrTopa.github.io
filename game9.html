@@ -120,7 +120,7 @@
  <p>Dans l’obscurité du champ, leurs éclats de rire et leurs compétitions amicales se fondaient avec la magie de la nuit étoilée. Mais le plus heureux des sourires se cachait au loin, celui de la ceinture magique de Noël. </p>
  <p>Explication du jeu : Le jeu ressemble à photo d’Ovni, version Wish. Un cercle part d’un sommet de l’aire de jeu et le traverse en diagonale à un moment random. Vous devez appuyer sur la barre espace pour arrêter le cercle au plus près du centre du carré. Préparez-vous le cercle est rapide. On retire la moitié de la distance entre la position du cercle et la postion du centre à votre score initial qui est de 100 points.
 </p>
-<p> Vous avez 15 essais pour améliorer votre score. Pensez à refresh la page pour actualiser le nombre de parties et le meilleur score   </p>    
+<p> Vous avez 10 essais pour améliorer votre score.</p>    
     </div>
        <img id="santa" class="decoration" src="https://i.imgur.com/d82fVfY.jpeg" alt="Santa Claus">
 
@@ -290,11 +290,12 @@
                 totalPlayCountGame9 += 1;
                 await updateDoc(userRef, { totalPlayCountGame9 });
                 
-                if (totalPlayCountGame9 < 16 &&currentScore > highestScore) {
+                if (totalPlayCountGame9 < 11 &&currentScore > highestScore) {
                     highestScore = currentScore;
                     await updateDoc(userRef, { highestScoreGame9: highestScore });
                 }
-
+                    totalPlayCountDisplay.innerText = totalPlayCountGame9;
+                    highScoreDisplay.innerText = highestScore;
             } catch (error) {
                 console.error("Erreur en sauvegardant le score:", error);
             }
