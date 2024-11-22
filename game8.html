@@ -374,7 +374,7 @@ function createDoubleObstacle() {
             totalPlayCountGame8 += 1;
             await updateDoc(userRef, { totalPlayCountGame8 :totalPlayCountGame8  });
             highestScoreDisplay.innerText = `Meilleur score: ${highestScore}`;
-            totalPlayCountDisplay.innerText = `Jeux joués: ${totalPlayCountGame1}`;
+            totalPlayCountDisplay.innerText = `Jeux joués: ${totalPlayCountGame8}`;
             } catch (error) {
                 console.error("Erreur en sauvegardant le score:", error);
             }
