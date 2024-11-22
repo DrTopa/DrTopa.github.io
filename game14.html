@@ -449,9 +449,8 @@
             try {
                 const gameData = { score: score, playCount: playCount, timestamp: new Date() };
                 await addDoc(collection(db, 'users', userId, 'Game14'), gameData);
-
-                
                 const userRef = doc(db, 'users', userId);
+                await updateDoc(doc(db, 'users', userId), { totalPlayCountGame14: totalPlayCountGame14 });
                 if (totalPlayCountGame14 <= 7 && score > highestScore) {
                     highestScore = Math.ceil(score / 2);
                     await updateDoc(userRef, { highestScoreGame14: highestScore });
@@ -487,7 +486,6 @@
             clearInterval(gameInterval);
             gameInterval = setInterval(createShape, 400);
             totalPlayCountGame14 += 1;
-            await updateDoc(doc(db, 'users', userId), { totalPlayCountGame14: totalPlayCountGame14 });
             totalPlayCountDisplay.innerText = `Jeux joués: ${totalPlayCountGame14}`;  // Update display for total play count
            
         });
