@@ -117,7 +117,7 @@
  <p>Tous se regardèrent. Mais la décision était prise. Le CHIFOUMI allait décider de leur sort.</p>
  <p>Alors que chacun se préparait à lancer son coup de pierre-papier-ciseaux, la fameuse Ceinture Magique de Noël, fit irruption: "Euh… sinon, je peux en faire deux autres, ça réglerait tout, non ?"</p>
  <p>Mais il était trop tard. Déjà, les poings étaient levés, les esprits échauffés, les regards défiants. Le Topapa de Noël lança les règles : "Et celui qui fait Feuille avant que je dise Mi, il prend 3 crabby crabs !"</p>
-<p>Explication du jeu : Simple chifoumi. Vous mettez 5 points par manche gagnée. En cas d’égalité, on recommence la manche. Au bout de 20 manches, le jeu s’arrête. Vous n’avez le droit qu’à 3 essais pour améliorer votre score. Que le plus chanceux avec Math.random l’emporte. </p>
+<p>Explication du jeu : Simple chifoumi. Vous mettez 5 points par manche gagnée. En cas d’égalité, on recommence la manche. Au bout de 20 manches, le jeu s’arrête. Vous n’avez le droit qu’à 5 essais pour améliorer votre score. Vous pouve rejouer en rafraichissant la page. Que le plus chanceux avec Math.random l’emporte. </p>
 <p> Possible sur Smartphone comme sur Ordi</p>
     </div>
     <img id="santa" class="decoration" src="https://i.imgur.com/rs3gHyE.jpeg" alt="Santa Claus">
@@ -129,6 +129,8 @@
         <button class="choice-btn" id="btnCiseaux">Ciseaux</button>
         <div id="score">Score actuel: 0</div>
         <div id="rounds">Manches jouées: 0</div>
+        <div id="highest-score">Meilleur score: 0</div>
+        <div id="total-play-count">Jeux joués: 0</div>
         <div id="computerChoice">Choix de l'ordinateur : -</div>
         <div id="resultMessage"></div>
     </div>
@@ -164,6 +166,8 @@
         const roundsDisplay = document.getElementById('rounds');
         const computerChoiceDisplay = document.getElementById('computerChoice');
         const resultMessageDisplay = document.getElementById('resultMessage');
+        const highestScoreDisplay = document.getElementById('highest-score');
+        const totalPlayCountDisplay = document.getElementById('total-play-count');
 
         const choices = ['Pierre', 'Feuille', 'Ciseaux'];
 
@@ -195,6 +199,8 @@
                     const userData = docSnap.data();
                     totalPlayCountGame7 = userData.totalPlayCountGame7 || 0;
                     highestScore = userData.highestScoreGame7 || 0;
+                    highestScoreDisplay.innerText = `Meilleur score: ${highestScore}`;
+                    totalPlayCountDisplay.innerText = `Jeux joués: ${totalPlayCountGame7}`;
                 }
             } else {
                 window.location.href = 'login.html';
@@ -243,11 +249,13 @@
                 const userRef = doc(db, 'users', userId);
                 totalPlayCountGame7 += 1;
                 await updateDoc(userRef, { totalPlayCountGame7 });
-                if (totalPlayCountGame7 <= 20 && finalScore > highestScore) {
+                if (totalPlayCountGame7 <= 5 && finalScore > highestScore) {
                     highestScore = finalScore;
                     await updateDoc(userRef, { highestScoreGame7: highestScore });
+                
                 }
-
+                highestScoreDisplay.innerText = `Meilleur score: ${highestScore}`;
+                totalPlayCountDisplay.innerText = `Jeux joués: ${totalPlayCountGame7}`;
 
             } catch (error) {
                 console.error("Erreur en sauvegardant le score :", error);
