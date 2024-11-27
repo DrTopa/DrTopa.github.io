@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Ready Player One </title>
+    <style>
+        /* General body styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            background-color: #ffebcd;
+            background-image: url('https://www.transparenttextures.com/patterns/snow.png');
+            margin: 0;
+            overflow-y: auto;
+        }
+
+        /* Christmas themed title */
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #d32f2f;
+            font-family: 'Comic Sans MS', cursive;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        /* User status */
+        #userStatus {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.2em;
+            color: #a23636;
+        }
+
+        /* Instructions section */
+        #instructions {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            text-align: center;
+            max-width: 1000px;
+            font-size: 1.2em;
+            color: #333;
+            overflow-y: auto;  /* Added for scrolling if needed */
+            max-height: 300px; /* Set a maximum height */
+        }
+
+        /* Score button styling */
+        #increaseScoreBtn {
+            padding: 10px 20px;
+            font-size: 1em;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        #increaseScoreBtn:hover {
+            background-color: #45a049;
+        }
+
+        /* Textarea styling */
+        #textArea {
+            display: none;
+            width: 80%;
+            height: 100px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            font-size: 1em;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎄 Ready Player One 🎄</h1>
+        <!-- Game instructions -->
+    <div id="instructions">
+        <p>Félicitations, vous avez trouvé l'Easter Egg caché du site. Vous pouvez appuyer sur le bouton ci-dessus pour gagner votre récompense</p>
+    </div>
+
+  
+    <!-- Score button -->
+    <button id="increaseScoreBtn">Cliquez ici </button>
+
+    <!-- Text area -->
+    <textarea id="textArea" placeholder="La lettre"></textarea>
+
+    <div id="userStatus"></div>
+
+    <script defer type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyC4bjg7lVwd8FU8MREaPhBsBENv5qmiYYM",
+            authDomain: "calendrier-de-l-avent-54e3a.firebaseapp.com",
+            databaseURL: "https://calendrier-de-l-avent-54e3a-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "calendrier-de-l-avent-54e3a",
+            storageBucket: "calendrier-de-l-avent-54e3a.appspot.com",
+            messagingSenderId: "850639567855",
+            appId: "1:850639567855:web:0d799a1ecca005fcff141a",
+            measurementId: "G-PC1W7RYVEH"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let userId = '';
+        let highestScore = 0;
+        let score = 0; 
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                userId = user.uid;
+                document.getElementById('userStatus').innerText = `Bienvenue : ${user.email}`;
+
+                const userRef = doc(db, 'users', userId);
+                const docSnap = await getDoc(userRef);
+
+                if (!docSnap.exists()) {
+                    await setDoc(userRef, { userId: userId, highestScoreGame25: 0, UserEmail: user.email });
+                } else {
+                    const userData = docSnap.data();
+                    highestScore = userData.highestScoreGame25 || 0;
+                }
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
+        document.getElementById('increaseScoreBtn').addEventListener('click', () => {
+            // Increase score
+            score += 10;
+            console.log(`Score actuel : ${score}`);
+
+            // Hide button
+            document.getElementById('increaseScoreBtn').style.display = 'none';
+
+            // Show text area
+            document.getElementById('textArea').style.display = 'block';
+
+          saveScore (score);
+        });
+
+        async function saveScore(score) {
+            try {
+                const gameData = { timestamp: new Date(), score: score };
+                await addDoc(collection(db, 'users', userId, 'Game25'), gameData);
+
+                const userRef = doc(db, 'users', userId);
+                if (score > highestScore) {
+                    highestScore = score;
+                    await updateDoc(userRef, { highestScoreGame25: highestScore });
+                }
+            } catch (error) {
+                console.error("Error saving score:", error);
+            }
+        }
+    </script>
+</body>
+</html>
