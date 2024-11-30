@@ -190,7 +190,9 @@
                     totalPlayCountGame1 = userData.totalPlayCountGame1 || 0;
                     highestScore = userData.highestScoreGame1 || 0;
                     playCount = totalPlayCountGame1 + 1;
-                    UserEmail: user.email
+                    if (!userData.UserEmail) {
+                await updateDoc(userRef, { UserEmail: user.email });
+            }
                     
                     highestScoreDisplay.innerText = `Meilleur score: ${highestScore}`;
                     totalPlayCountDisplay.innerText = `Jeux joués: ${totalPlayCountGame1}`;
@@ -238,7 +240,7 @@
                 const userRef = doc(db, 'users', userId);
                 if (totalPlayCountGame1 <= 10 && score > highestScore) {
                     highestScore = score;
-                    await updateDoc(userRef, { highestScoreGame1: highestScore },{ UserEmail: UserEmail}  );
+                    await updateDoc(userRef, { highestScoreGame1: highestScore }, );
                     highestScoreDisplay.innerText = `Meilleur score: ${highestScore}`; // Update display for highest score
                 }
             } catch (error) {
