@@ -138,7 +138,7 @@
 <p>Une fois à l’intérieur, ils aperçurent l’homme au chapeau qui les attendait au centre de la pièce, les bras croisés, entouré d’une volée d’oiseaux déjantés.</p>
 <p>Dudley, le cœur battant, prit son courage à deux mains et décida d’avancer dans l’autre direction, appeuré par les potentiels reproches du paysan. L’homme s’approchait « Bienvenue dans Flappy Bird version Wish, » annonça-t-il d’une voix qui résonnait dans toute la salle.</p>
 <p>Explication du jeu : Possible seulement sur ordinateur. Eviter les obstacles en appuyant sur la touche Espace. </p>
-<p>Eviter les obstacles pour mettre des points. Votre score sera divisé par 50 et les points seront ajoutés au LeaderBoard. Vous avez 15 essais pour améliorer votre score.</p> 
+<p>Eviter les obstacles pour mettre des points. Votre score sera divisé par 50 et les points seront ajoutés au LeaderBoard. Vous avez 10 essais pour améliorer votre score.</p> 
 <p>Attention, rester appuyé ne marche pas. Juste après avoir appuyé sur « Commencer le jeu », appuyer sur la barre Espace sinon c’est la chute directe. </p>
 <p>Attention2 : Avant de cliquer sur « Commencer le Jeu » (pour rejouer), attendez que les obstacles soient passés, sinon le jeu va démarrer en prenant en compte les obstacles visibles. Mais vous allez comprendre. </p>
 </p>
@@ -367,7 +367,7 @@ function createDoubleObstacle() {
                 await addDoc(collection(db, 'users', userId, 'Game8'), gameData);
                 const userRef = doc(db, 'users', userId);
                 
-                if (totalPlayCountGame8 < 15 && (currentScore/50) > highestScore) {
+                if (totalPlayCountGame8 < 11 && (currentScore/50) > highestScore) {
                    highestScore = Math.ceil(currentScore / 50);
                     await updateDoc(doc(db, 'users', userId), { highestScoreGame8: highestScore });
                 }
