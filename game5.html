@@ -129,7 +129,7 @@
 
 <p>Topapa, bien qu’accoutumé aux Dudley avec leurs piques habituelles, sentit un léger agacement à l’idée d’être traité de vieux. Il hésita à le daronned mais se ravisa. « Écoute, gamin, » rétorqua-t-il d’un ton ferme mais amusé, « je te propose un petit défi. On va faire des jeux de réflexe, et on verra bien qui est le vieux ici. »</p>
 <p>Malheureusement, il se souvint avec un soupir que la WII était hors service, et donc pas de « photo d’ovni » à l'horizon. « Mais pas de souci, j’ai d’autres idées en tête. » Un sourire malicieux se dessina sur ses lèvres alors qu’il commençait à réfléchir aux différentes manières de défier ce petit insolent.</p>
-<p>Explication du jeu : Vous devez recopier le plus de mots possibles en 1 minute. Chaque mot augmente votre score de 1 mais un mot mal orthographié le réduit de 0.5. A la fin, votre score total est mulitiplié par 2. Vous avez maximum 15 essais pour améliorer votre meilleur score. 
+<p>Explication du jeu : Vous devez recopier le plus de mots possibles en 1 minute. Chaque mot augmente votre score de 1 mais un mot mal orthographié le réduit de 0.5. A la fin, votre score total est mulitiplié par 2. Vous avez maximum 10 essais pour améliorer votre meilleur score. 
 </p>
 <p>Trois mots seront affichés séparés d'une virgule, il faut donc recopier le premier mot, puis le 2e, ... Et non pas la liste bande de téléteubés </p>
 <p>Possible sur Smartphone (bonus pour le correcteur orthographique) comme sur clavier (bonus pour la dextérité des doigts). 
@@ -418,7 +418,7 @@
                 await addDoc(collection(db, 'users', userId, 'Game5'), gameData);
 
                 const userRef = doc(db, 'users', userId);
-                if (totalPlayCountGame5 <= 15 && score > highestScore) {
+                if (totalPlayCountGame5 <= 10 && score > highestScore) {
                     highestScore = score;
                     await updateDoc(userRef, { highestScoreGame5: highestScore });
                 }
