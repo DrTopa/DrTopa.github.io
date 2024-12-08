@@ -290,7 +290,7 @@
                 totalPlayCountGame9 += 1;
                 await updateDoc(userRef, { totalPlayCountGame9 });
                 
-                if (totalPlayCountGame9 < 11 &&currentScore > highestScore) {
+                if (totalPlayCountGame9 < 6 &&currentScore > highestScore) {
                     highestScore = currentScore;
                     await updateDoc(userRef, { highestScoreGame9: highestScore });
                 }
