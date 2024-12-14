@@ -404,7 +404,7 @@
 
 
                 await updateDoc(userRef, { totalPlayCountGame11: playCount });
-                if (totalPlayCountGame11 <= 20 && score > highestScore) {
+                if (totalPlayCountGame11 <= 5 && score > highestScore) {
                     highestScore = score;
                     await updateDoc(userRef, { highestScoreGame11: highestScore });
                     highestScoreDisplay.innerText = `Meilleur score: ${highestScore}`; // Update display for highest score
