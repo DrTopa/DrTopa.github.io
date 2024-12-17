@@ -438,12 +438,13 @@
         };
 
         // Game Over handling
-        function gameOver() {
-            document.getElementById('start-btn').style.display = 'block';
-            saveScore();
-           
-            
-        }
+       function gameOver() {
+    alert(`Game Over! Your score: ${player.score}`);
+    saveScore();
+    document.getElementById('start-btn').style.display = 'block';
+    document.getElementById('game-container').style.display = 'none';
+}
+
 
         // Start game when the start button is clicked
         document.getElementById('start-btn').addEventListener('click', () => {
