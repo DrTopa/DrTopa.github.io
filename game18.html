@@ -302,24 +302,35 @@
             });
         }
 
-        function rotate(matrix, dir) {
-            for (let y = 0; y < matrix.length; ++y) {
-                for (let x = 0; x < y; ++x) {
-                    [
-                        matrix[x][y],
-                        matrix[y][x],
-                    ] = [
-                        matrix[y][x],
-                        matrix[x][y],
-                    ];
-                }
-            }
-            if (dir > 0) {
-                matrix.forEach(row => row.reverse());
-            } else {
-                matrix.reverse();
-            }
+function rotate(matrix, dir) {
+    // Transpose the matrix
+    for (let y = 0; y < matrix.length; ++y) {
+        for (let x = 0; x < y; ++x) {
+            [matrix[x][y], matrix[y][x]] = [matrix[y][x], matrix[x][y]];
         }
+    }
+
+    // Reverse rows or columns based on direction
+    if (dir > 0) {
+        matrix.forEach(row => row.reverse());
+    } else {
+        matrix.reverse();
+    }
+
+    // Wall kick: Adjust position if out of bounds or colliding
+    let offset = 1;
+    while (collide(arena, player)) {
+        player.pos.x += offset; // Try shifting the piece
+        offset = -(offset + (offset > 0 ? 1 : -1)); // Alternate left and right
+        if (offset > matrix[0].length) {
+            // If no valid position, undo rotation
+            rotate(matrix, -dir);
+            player.pos.x -= offset; // Reset position
+            return;
+        }
+    }
+}
+
 
         function playerDrop() {
             player.pos.y++;
@@ -458,20 +469,25 @@
             gameLoopId = requestAnimationFrame(update); // Start the game loop
         });
 
-        document.addEventListener('keydown', event => {
-            if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
-        event.preventDefault();
+document.addEventListener('keydown', event => {
+    if (event.key === 'ArrowUp') {
+        playerRotate(1); // Clockwise rotation
+    } else if (event.key === 'ArrowDown') {
+        playerDrop();
+    } else if (event.key === 'ArrowLeft') {
+        playerMove(-1);
+    } else if (event.key === 'ArrowRight') {
+        playerMove(1);
     }
-            if (event.key === 'ArrowLeft') {
-                playerMove(-1);
-            } else if (event.key === 'ArrowRight') {
-                playerMove(1);
-            } else if (event.key === 'ArrowDown') {
-                playerDrop();
-            } else if (event.key === 'ArrowUp') {
-                rotate(player.matrix, 1);
-            }
-        });
+});
+
+function playerRotate(dir) {
+    const pos = player.pos.x; // Save the current position
+    rotate(player.matrix, dir);
+    if (collide(arena, player)) {
+        player.pos.x = pos; // Revert to original position if collision occurs
+    }
+}
 
        async function saveScore() {
             try {
