@@ -444,17 +444,17 @@
             
         }
 
-        // Start game when the start button is clicked
-        document.getElementById('start-btn').addEventListener('click', () => {
-            document.getElementById('game-container').style.display = 'flex';
-            document.getElementById('start-btn').style.display = 'none';
-            
-            playerReset();
-            player.score = 0;
-            updateScore();
-            arena.forEach(row => row.fill(0)); // Clear the arena
-            gameLoopId = requestAnimationFrame(update); // Start the game loop
-        });
+       document.getElementById('start-btn').addEventListener('click', () => {
+    resetGame();
+});
+
+function resetGame() {
+    arena.forEach(row => row.fill(0));
+    playerReset();
+    player.score = 0;
+    updateScore();
+    gameLoopId = requestAnimationFrame(update);
+}
 
         document.addEventListener('keydown', event => {
             if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
