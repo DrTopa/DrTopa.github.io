@@ -269,7 +269,7 @@ async function saveScore(score) {
                 await addDoc(collection(db, 'users', userId, 'Game17'), gameData);
 
                 const userRef = doc(db, 'users', userId);
-                if ( score > highestScore) {
+                if ( score > (highestScore*100)) {
                     highestScore = score;
                     await updateDoc(userRef, { highestScoreGame17: highestScore });
                 }
